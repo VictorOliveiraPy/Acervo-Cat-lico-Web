@@ -1,0 +1,145 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+
+import {
+  Breadcrumbs,
+  MetaList,
+  SourceList,
+  StatusMessage,
+  TagList,
+} from "@/components/Editorial";
+import { ApiError, getErrorMessage } from "@/lib/api";
+import { CATEGORY_LABELS, categoryPath } from "@/lib/categories";
+import { entryMetaFields, entryOrdinal, paragraphs } from "@/lib/entryDisplay";
+import { isCategorySlug, type CategorySlug, type Entry } from "@/lib/schemas";
+import { fetchEntry } from "@/lib/services/acervoService";
+
+type Params = { categoria: string; slug: string };
+
+/**
+ * Carrega a entrada, transformando "não existe" em 404 do Next.
+ *
+ * Só o 404 da API vira `notFound()`; qualquer outra falha continua sendo erro,
+ * porque uma instabilidade momentânea não pode ser apresentada como "esta
+ * entrada não existe".
+ */
+async function loadEntry(categoria: CategorySlug, slug: string): Promise<Entry> {
+  try {
+    return await fetchEntry(categoria, slug);
+  } catch (error: unknown) {
+    if (error instanceof ApiError && error.isNotFound) notFound();
+    throw error;
+  }
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Params;
+}): Promise<Metadata> {
+  if (!isCategorySlug(params.categoria)) return { title: "Entrada" };
+
+  try {
+    const entry = await fetchEntry(params.categoria, params.slug);
+    return { title: entry.titulo, description: entry.resumo };
+  } catch (error: unknown) {
+    // Metadados não valem uma página quebrada: sem o dado, cai no genérico.
+    if (error instanceof ApiError) {
+      return { title: CATEGORY_LABELS[params.categoria].heading };
+    }
+    throw error;
+  }
+}
+
+export default async function EntryPage({ params }: { params: Params }) {
+  if (!isCategorySlug(params.categoria)) notFound();
+
+  const categoria: CategorySlug = params.categoria;
+  const label = CATEGORY_LABELS[categoria];
+
+  let entry: Entry;
+  try {
+    entry = await loadEntry(categoria, params.slug);
+  } catch (error: unknown) {
+    if (!(error instanceof ApiError)) throw error;
+    return (
+      <div className="mx-auto max-w-shell px-4 py-12 sm:px-6">
+        <StatusMessage title="Não foi possível abrir esta entrada" tone="error">
+          <p>{getErrorMessage(error)}</p>
+          <p className="mt-3">
+            Volte para{" "}
+            <Link
+              href={categoryPath(categoria)}
+              className="text-bordeaux underline underline-offset-4"
+            >
+              {label.nav}
+            </Link>{" "}
+            e tente novamente.
+          </p>
+        </StatusMessage>
+      </div>
+    );
+  }
+
+  const ordinal = entryOrdinal(entry);
+  const fields = entryMetaFields(entry);
+  const blocks = paragraphs(entry.corpo);
+
+  return (
+    <article className="mx-auto max-w-shell px-4 py-10 sm:px-6">
+      <Breadcrumbs
+        trail={[
+          { label: "Acervo", href: "/" },
+          { label: label.nav, href: categoryPath(categoria) },
+          { label: entry.titulo },
+        ]}
+      />
+
+      <header className="border-b border-rule-faint pb-8">
+        <p className="kicker">{[label.nav, ordinal].filter(Boolean).join(" · ")}</p>
+        <h1 className="mt-2 max-w-measure font-display text-title-lg text-ink md:text-title-xl">
+          {entry.titulo}
+        </h1>
+        <p className="mt-4 max-w-measure text-lead text-ink-muted">{entry.resumo}</p>
+      </header>
+
+      {fields.length > 0 ? (
+        <section aria-label="Dados da entrada" className="mt-8">
+          <MetaList fields={fields} />
+        </section>
+      ) : null}
+
+      <div className="reading-column mt-12">
+        {blocks.map((block, index) => (
+          <p key={index}>{block}</p>
+        ))}
+      </div>
+
+      <footer className="mt-section grid gap-10 border-t-2 border-gold pt-8 md:grid-cols-2">
+        <section aria-labelledby="temas">
+          <h2 id="temas" className="kicker">
+            Temas relacionados
+          </h2>
+          <p className="mt-2 max-w-measure text-meta text-ink-muted">
+            Cada tema abre a busca por ele em todas as categorias do acervo.
+          </p>
+          <div className="mt-3">
+            <TagList tags={entry.tags} />
+          </div>
+        </section>
+
+        <SourceList sources={entry.fontes} />
+      </footer>
+
+      <p className="mt-10">
+        <Link
+          href={categoryPath(categoria)}
+          className="text-meta text-bordeaux underline underline-offset-4 hover:text-bordeaux-soft"
+        >
+          ← Todas as entradas de {label.nav}
+        </Link>
+      </p>
+    </article>
+  );
+}

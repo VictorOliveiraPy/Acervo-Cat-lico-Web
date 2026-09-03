@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Estilos de base do acervo.
+ *
+ * Só o que é global de verdade mora aqui: superfície da página, tipografia de
+ * corpo, foco visível e o filete de régua reaproveitado nas listagens. Tudo o
+ * mais é classe utilitária no componente, para não existirem dois lugares
+ * disputando a mesma decisão visual.
+ */
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-parchment text-ink font-body text-body antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display text-ink;
+    text-wrap: balance;
+  }
+
+  /* Foco sempre visível: o acervo é muito navegado por teclado (leitura). */
+  :focus-visible {
+    outline: 2px solid theme("colors.gold.DEFAULT");
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background-color: theme("colors.gold.wash");
+    color: theme("colors.ink.DEFAULT");
+  }
+}
+
+@layer components {
+  /* Rótulo de seção em caixa alta — o mesmo em cabeçalho, ficha e busca. */
+  .kicker {
+    @apply font-body text-label uppercase tracking-[0.09em] text-ink-muted;
+  }
+
+  /* Coluna de leitura do corpo das entradas. */
+  .reading-column p {
+    @apply max-w-measure text-lead text-ink;
+  }
+
+  .reading-column p + p {
+    @apply mt-6;
+  }
+
+  /*
+   * Capitular no primeiro parágrafo da entrada: é o único ornamento
+   * tipográfico do projeto, e marca onde a leitura começa de fato.
+   */
+  .reading-column > p:first-of-type::first-letter {
+    @apply font-display text-bordeaux;
+    float: left;
+    font-size: 3.4rem;
+    line-height: 2.6rem;
+    padding: 0.35rem 0.55rem 0 0;
+  }
+}
