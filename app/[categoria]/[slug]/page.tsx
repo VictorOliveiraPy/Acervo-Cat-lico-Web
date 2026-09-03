@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import {
   Breadcrumbs,
   MetaList,
+  PrayerText,
   SourceList,
   StatusMessage,
   TagList,
@@ -105,6 +106,12 @@ export default async function EntryPage({ params }: { params: Params }) {
         <p className="mt-4 max-w-measure text-lead text-ink-muted">{entry.resumo}</p>
       </header>
 
+      {entry.categoria === "oracoes" ? (
+        <div className="mt-8">
+          <PrayerText texto={entry.texto} />
+        </div>
+      ) : null}
+
       {entry.imagem ? (
         <figure className="mt-8">
           {/* Altura fixa + `fill`: as imagens vêm da Wikimedia Commons com
@@ -137,6 +144,9 @@ export default async function EntryPage({ params }: { params: Params }) {
       ) : null}
 
       <div className="reading-column mt-12">
+        {entry.categoria === "oracoes" ? (
+          <h2 className="kicker mb-4">Sobre esta oração</h2>
+        ) : null}
         {blocks.map((block, index) => (
           <p key={index}>{block}</p>
         ))}

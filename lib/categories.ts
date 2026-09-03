@@ -69,6 +69,11 @@ export const CATEGORY_LABELS: Record<CategorySlug, CategoryLabel> = {
     heading: "Livros recomendados",
     tagline: "Clássicos da espiritualidade católica e obras de referência.",
   },
+  oracoes: {
+    nav: "Orações",
+    heading: "Orações",
+    tagline: "Textos para rezar, com origem e uso de cada oração.",
+  },
 };
 
 /** Categorias na ordem editorial da navegação. */

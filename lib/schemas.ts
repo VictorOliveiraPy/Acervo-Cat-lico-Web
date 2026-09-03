@@ -20,6 +20,7 @@ export const CATEGORY_SLUGS = [
   "concilios",
   "nossa-senhora",
   "livros",
+  "oracoes",
 ] as const;
 
 export type CategorySlug = (typeof CATEGORY_SLUGS)[number];
@@ -109,6 +110,13 @@ const livroSchema = baseEntrySchema.extend({
   genero: z.string().nullable().default(null),
 });
 
+const oracaoSchema = baseEntrySchema.extend({
+  categoria: z.literal("oracoes"),
+  texto: z.string(),
+  uso: z.string().nullable().default(null),
+  origem: z.string().nullable().default(null),
+});
+
 export const entrySchema = z.discriminatedUnion("categoria", [
   santoSchema,
   papaSchema,
@@ -120,6 +128,7 @@ export const entrySchema = z.discriminatedUnion("categoria", [
   periodoHistoricoSchema,
   nossaSenhoraSchema,
   livroSchema,
+  oracaoSchema,
 ]);
 
 export const categoryInfoSchema = z.object({

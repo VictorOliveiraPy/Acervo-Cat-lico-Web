@@ -56,6 +56,23 @@ export function EditorialNotice({ children }: { children: React.ReactNode }) {
   );
 }
 
+/**
+ * Texto de uma oração, para ler e rezar.
+ *
+ * `whitespace-pre-line` preserva as quebras de linha do dado (uma por
+ * verso/frase) sem precisar de `paragraphs()` — aqui a quebra de linha é
+ * parte do conteúdo, não formatação de prosa a ser recomposta. A borda
+ * dourada a distingue visualmente de `corpo` (a explicação em prosa que vem
+ * depois): esta é a parte para rezar, o resto é contexto sobre ela.
+ */
+export function PrayerText({ texto }: { texto: string }) {
+  return (
+    <blockquote className="max-w-measure border-l-2 border-gold py-1 pl-6 font-display text-lead italic text-ink">
+      <p className="whitespace-pre-line">{texto}</p>
+    </blockquote>
+  );
+}
+
 /** Ficha de dados próprios da entrada (festa, pontificado, local, anos). */
 export function MetaList({ fields }: { fields: MetaField[] }) {
   if (fields.length === 0) return null;

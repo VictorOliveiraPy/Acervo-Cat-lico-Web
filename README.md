@@ -1,8 +1,9 @@
 # Acervo Católico — Frontend (Next.js)
 
-Interface de leitura do acervo católico curado em 10 categorias: **santos,
+Interface de leitura do acervo católico curado em 11 categorias: **santos,
 papas, concílios, milagres eucarísticos, doutores da Igreja, catecismo,
-crisma, história, Nossa Senhora e livros**. Consome a API do repositório irmão
+crisma, história, Nossa Senhora, livros e orações**. Consome a API do
+repositório irmão
 [`Acervo-Cat-lico-API`](https://github.com/VictorOliveiraPy/Acervo-Cat-lico-API).
 
 ## Como executar

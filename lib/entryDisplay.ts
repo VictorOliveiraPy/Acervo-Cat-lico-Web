@@ -121,6 +121,8 @@ export function entryHighlight(entry: Entry): string | null {
       return [marianTypeLabel(entry.tipo), entry.ano].filter(Boolean).join(" · ") || null;
     case "livros":
       return [entry.autor, entry.ano_publicacao].filter(Boolean).join(" · ") || null;
+    case "oracoes":
+      return entry.uso;
   }
 }
 
@@ -204,6 +206,8 @@ export function entryMetaFields(entry: Entry): MetaField[] {
         ...field("Publicação", entry.ano_publicacao),
         ...field("Gênero", entry.genero),
       ];
+    case "oracoes":
+      return [...field("Uso", entry.uso), ...field("Origem", entry.origem)];
   }
 }
 
