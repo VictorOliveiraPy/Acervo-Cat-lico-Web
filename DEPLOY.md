@@ -17,7 +17,7 @@ subir primeiro.
    automaticamente, não precisa de `vercel.json`.
 3. Em **Environment Variables**, adicione:
    ```
-   NEXT_PUBLIC_API_URL=https://SUA-URL-DO-RENDER.onrender.com/api
+   API_URL=https://SUA-URL-DO-RENDER.onrender.com/api
    ```
    (a URL pública do backend, com `/api` no final — é o que
    `getApiBaseUrl()` espera, ver `lib/api.ts`).
@@ -30,7 +30,7 @@ subir primeiro.
 
 - [ ] Site no Vercel carrega a home e pelo menos uma categoria sem erro
       no console (rede/CORS).
-- [ ] `NEXT_PUBLIC_API_URL` aponta para o backend de produção, não
+- [ ] `API_URL` aponta para o backend de produção, não
       `localhost`.
 - [ ] CORS do backend está travado nessa URL do Vercel — ver checklist em
       `Acervo-Cat-lico-API/DEPLOY.md`.

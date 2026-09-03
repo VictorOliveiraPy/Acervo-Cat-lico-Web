@@ -11,7 +11,7 @@ Requer Node.js 18.17+.
 
 ```bash
 npm install
-cp .env.example .env.local   # ajuste NEXT_PUBLIC_API_URL se necessário
+cp .env.example .env.local   # ajuste API_URL se necessário
 npm run dev
 ```
 
@@ -68,9 +68,9 @@ npm audit           # dependências vulneráveis
 
 | Variável | Default (dev) | Descrição |
 |---|---|---|
-| `NEXT_PUBLIC_API_URL` | `http://localhost:8000/api` | Base URL da API (ver `Acervo-Cat-lico-API`) |
+| `API_URL` | `http://localhost:8000/api` | Base URL da API (ver `Acervo-Cat-lico-API`) |
 
-Em produção (Vercel), configure `NEXT_PUBLIC_API_URL` apontando para a URL
+Em produção (Vercel), configure `API_URL` apontando para a URL
 pública do backend no Render, com `/api` no final. Ver `DEPLOY.md`.
 
 ---

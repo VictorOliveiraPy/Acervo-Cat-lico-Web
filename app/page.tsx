@@ -4,7 +4,7 @@ import { CategoryCard } from "@/components/CategoryCard";
 import { EntryList } from "@/components/EntryList";
 import { SearchField } from "@/components/SearchField";
 import { StatusMessage } from "@/components/Editorial";
-import { ApiError, getErrorMessage } from "@/lib/api";
+import { ApiError, getApiBaseUrl, getErrorMessage } from "@/lib/api";
 import { CATEGORY_SLUGS, type CategoryInfo, type Entry } from "@/lib/schemas";
 import { fetchCategories, fetchEntryPage } from "@/lib/services/acervoService";
 
@@ -54,7 +54,7 @@ export default async function HomePage() {
           <p>{getErrorMessage(error)}</p>
           <p className="mt-3">
             Confira se a API está no ar em{" "}
-            <code className="text-ink">{process.env.NEXT_PUBLIC_API_URL}</code> e
+            <code className="text-ink">{getApiBaseUrl()}</code> e
             recarregue a página.
           </p>
         </StatusMessage>

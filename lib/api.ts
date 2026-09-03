@@ -77,7 +77,7 @@ export type GetOptions = {
  * "Failed to parse URL from /categories".
  */
 export function getApiBaseUrl(): string {
-  const raw = process.env.NEXT_PUBLIC_API_URL || DEFAULT_BASE_URL;
+  const raw = process.env.API_URL || DEFAULT_BASE_URL;
   return raw.replace(/\/+$/, "");
 }
 
