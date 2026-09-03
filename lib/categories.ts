@@ -1,8 +1,8 @@
 /**
- * Rótulos e rotas das oito categorias do acervo.
+ * Rótulos e rotas das categorias do acervo.
  *
  * Os nomes ficam aqui, e não vêm de `/api/categories`, porque a navegação do
- * cabeçalho aparece em toda página: buscar oito rótulos na API só para
+ * cabeçalho aparece em toda página: buscar os rótulos na API só para
  * desenhar o menu atrasaria o primeiro byte de qualquer rota. Os totais e o
  * aviso editorial, que mudam com o conteúdo, continuam vindo da API.
  */
@@ -58,6 +58,16 @@ export const CATEGORY_LABELS: Record<CategorySlug, CategoryLabel> = {
     nav: "Concílios",
     heading: "Concílios ecumênicos",
     tagline: "Assembleias que definiram a fé, de Niceia ao Vaticano II.",
+  },
+  "nossa-senhora": {
+    nav: "Nossa Senhora",
+    heading: "Nossa Senhora",
+    tagline: "Dogmas marianos, aparições aprovadas e títulos de devoção.",
+  },
+  livros: {
+    nav: "Livros",
+    heading: "Livros recomendados",
+    tagline: "Clássicos da espiritualidade católica e obras de referência.",
   },
 };
 

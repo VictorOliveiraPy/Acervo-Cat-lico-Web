@@ -8,7 +8,7 @@
  */
 
 import { CATEGORY_LABELS } from "@/lib/categories";
-import type { Entry } from "@/lib/schemas";
+import type { Entry, EntryOf } from "@/lib/schemas";
 
 /** Par rótulo/valor exibido na ficha de uma entrada. */
 export type MetaField = {
@@ -117,6 +117,22 @@ export function entryHighlight(entry: Entry): string | null {
       return entry.titulo_honorifico;
     case "historia":
       return entry.periodo;
+    case "nossa-senhora":
+      return [marianTypeLabel(entry.tipo), entry.ano].filter(Boolean).join(" · ") || null;
+    case "livros":
+      return [entry.autor, entry.ano_publicacao].filter(Boolean).join(" · ") || null;
+  }
+}
+
+/** Rótulo em português de cada tipo de entrada mariana. */
+function marianTypeLabel(tipo: EntryOf<"nossa-senhora">["tipo"]): string {
+  switch (tipo) {
+    case "dogma":
+      return "Dogma";
+    case "aparicao":
+      return "Aparição";
+    case "titulo":
+      return "Título";
   }
 }
 
@@ -176,6 +192,18 @@ export function entryMetaFields(entry: Entry): MetaField[] {
       ];
     case "historia":
       return [...field("Período", entry.periodo)];
+    case "nossa-senhora":
+      return [
+        ...field("Tipo", marianTypeLabel(entry.tipo)),
+        ...field("Ano", entry.ano),
+        ...field("Local", entry.local),
+      ];
+    case "livros":
+      return [
+        ...field("Autor", entry.autor),
+        ...field("Publicação", entry.ano_publicacao),
+        ...field("Gênero", entry.genero),
+      ];
   }
 }
 
