@@ -22,6 +22,7 @@ function baseFields(slug: string) {
     corpo: "Corpo",
     tags: [],
     imagem: null,
+    imagem_credito: null,
     fontes: [],
   };
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -103,6 +104,31 @@ export default async function EntryPage({ params }: { params: Params }) {
         </h1>
         <p className="mt-4 max-w-measure text-lead text-ink-muted">{entry.resumo}</p>
       </header>
+
+      {entry.imagem ? (
+        <figure className="mt-8">
+          {/* Altura fixa + `fill`: as imagens vêm da Wikimedia Commons com
+              proporções bem diferentes entre si (ícone quadrado, retrato,
+              afresco panorâmico) — uma faixa de altura constante evita
+              layout shift e mantém o ritmo editorial da página, ao custo de
+              recortar (`object-cover`) o excesso lateral ou vertical. */}
+          <div className="relative h-72 w-full max-w-measure overflow-hidden border border-rule-faint sm:h-96">
+            <Image
+              src={entry.imagem}
+              alt={entry.titulo}
+              fill
+              sizes="(min-width: 1024px) 68ch, 100vw"
+              className="object-cover"
+              priority
+            />
+          </div>
+          {entry.imagem_credito ? (
+            <figcaption className="mt-2 max-w-measure text-meta text-ink-muted">
+              {entry.imagem_credito}
+            </figcaption>
+          ) : null}
+        </figure>
+      ) : null}
 
       {fields.length > 0 ? (
         <section aria-label="Dados da entrada" className="mt-8">

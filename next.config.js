@@ -13,6 +13,14 @@
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  images: {
+    // Todas as imagens do acervo são hotlinks para arquivos de domínio
+    // público / CC verificados manualmente na Wikimedia Commons (ver
+    // app/data/*.json no backend) — único host liberado de propósito.
+    remotePatterns: [
+      { protocol: "https", hostname: "upload.wikimedia.org", pathname: "/**" },
+    ],
+  },
 };
 
 module.exports = nextConfig;

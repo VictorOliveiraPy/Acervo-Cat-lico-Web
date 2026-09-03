@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { CATEGORY_LABELS, entryPath } from "@/lib/categories";
@@ -41,6 +42,16 @@ export function EntryList({ entries, showCategory = false }: Props) {
               <p className="kicker shrink-0 sm:w-44 sm:pt-1.5">
                 {leftLabel ?? "Entrada"}
               </p>
+
+              {entry.imagem ? (
+                <Image
+                  src={entry.imagem}
+                  alt=""
+                  width={96}
+                  height={96}
+                  className="h-24 w-24 shrink-0 rounded-edge border border-rule-faint object-cover"
+                />
+              ) : null}
 
               <div className="min-w-0">
                 <h3 className="font-display text-title-sm text-ink group-hover:text-bordeaux">

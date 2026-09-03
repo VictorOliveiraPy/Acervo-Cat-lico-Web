@@ -37,6 +37,7 @@ const baseEntrySchema = z.object({
   corpo: z.string(),
   tags: z.array(z.string()).default([]),
   imagem: z.string().nullable().default(null),
+  imagem_credito: z.string().nullable().default(null),
   fontes: z.array(z.string()).default([]),
 });
 
