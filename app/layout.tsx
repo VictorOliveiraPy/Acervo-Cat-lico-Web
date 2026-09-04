@@ -25,8 +25,8 @@ const body = Karla({
 
 export const metadata: Metadata = {
   title: {
-    default: "Acervo Católico",
-    template: "%s · Acervo Católico",
+    default: "Compêndio Católico",
+    template: "%s · Compêndio Católico",
   },
   description:
     "Catálogo de consulta sobre santos, papas, milagres eucarísticos, Catecismo, Crisma, história da Igreja, Doutores e concílios.",

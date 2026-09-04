@@ -3,16 +3,16 @@
 > Preparado sem gastar token de API — é configuração de infraestrutura,
 > não geração de código.
 
-Este é o repositório do **frontend** (`Acervo-Cat-lico-Web`). O backend
+Este é o repositório do **frontend** (`Compendio-Catolico-Web`). O backend
 mora no repositório irmão
-[`Acervo-Cat-lico-API`](https://github.com/VictorOliveiraPy/Acervo-Cat-lico-API),
+[`Compendio-Catolico-API`](https://github.com/VictorOliveiraPy/Compendio-Catolico-API),
 deploy no Render — ver `DEPLOY.md` de lá, incluindo por que o backend deve
 subir primeiro.
 
 ## Deploy no Vercel
 
 1. No Vercel: **Add New > Project**, importe este repositório
-   (`Acervo-Cat-lico-Web`).
+   (`Compendio-Catolico-Web`).
 2. **Root Directory**: deixe a raiz (`.`) — o Vercel detecta Next.js
    automaticamente, não precisa de `vercel.json`.
 3. Em **Environment Variables**, adicione:
@@ -23,7 +23,7 @@ subir primeiro.
    `getApiBaseUrl()` espera, ver `lib/api.ts`).
 4. Deploy. Anote a URL pública, algo como
    `https://acervo-catolico-web.vercel.app`.
-5. Volte no backend (`Acervo-Cat-lico-API`, `DEPLOY.md`) e trave o
+5. Volte no backend (`Compendio-Catolico-API`, `DEPLOY.md`) e trave o
    `CORS_ORIGINS` nessa URL real.
 
 ## Checklist antes de considerar o deploy "pronto"
@@ -33,4 +33,4 @@ subir primeiro.
 - [ ] `API_URL` aponta para o backend de produção, não
       `localhost`.
 - [ ] CORS do backend está travado nessa URL do Vercel — ver checklist em
-      `Acervo-Cat-lico-API/DEPLOY.md`.
+      `Compendio-Catolico-API/DEPLOY.md`.

@@ -1,10 +1,10 @@
-# Acervo Católico — Frontend (Next.js)
+# Compêndio Católico — Frontend (Next.js)
 
 Interface de leitura do acervo católico curado em 11 categorias: **santos,
 papas, concílios, milagres eucarísticos, doutores da Igreja, catecismo,
 crisma, história, Nossa Senhora, livros e orações**. Consome a API do
 repositório irmão
-[`Acervo-Cat-lico-API`](https://github.com/VictorOliveiraPy/Acervo-Cat-lico-API).
+[`Compendio-Catolico-API`](https://github.com/VictorOliveiraPy/Compendio-Catolico-API).
 
 ## Como executar
 
@@ -69,7 +69,7 @@ npm audit           # dependências vulneráveis
 
 | Variável | Default (dev) | Descrição |
 |---|---|---|
-| `API_URL` | `http://localhost:8000/api` | Base URL da API (ver `Acervo-Cat-lico-API`) |
+| `API_URL` | `http://localhost:8000/api` | Base URL da API (ver `Compendio-Catolico-API`) |
 
 Em produção (Vercel), configure `API_URL` apontando para a URL
 pública do backend no Render, com `/api` no final. Ver `DEPLOY.md`.
@@ -77,6 +77,6 @@ pública do backend no Render, com `/api` no final. Ver `DEPLOY.md`.
 ---
 
 > Este repositório é o irmão de
-> [`Acervo-Cat-lico-API`](https://github.com/VictorOliveiraPy/Acervo-Cat-lico-API)
+> [`Compendio-Catolico-API`](https://github.com/VictorOliveiraPy/Compendio-Catolico-API)
 > (backend FastAPI) — mesma convenção usada em `melhorperfil-api`/`melhorperfil-web`
 > e `santo-guardiao-api`/`santo-guardiao-web`.

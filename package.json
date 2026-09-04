@@ -1,8 +1,8 @@
 {
-  "name": "acervo-catolico-web",
+  "name": "compendio-catolico-web",
   "version": "0.1.0",
   "private": true,
-  "description": "Frontend Next.js do acervo católico (catálogo somente-leitura).",
+  "description": "Frontend Next.js do Compêndio Católico (catálogo somente-leitura).",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
