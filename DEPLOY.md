@@ -17,14 +17,41 @@ subir primeiro.
    automaticamente, não precisa de `vercel.json`.
 3. Em **Environment Variables**, adicione:
    ```
-   API_URL=https://SUA-URL-DO-RENDER.onrender.com/api
+   API_URL=https://api.compendio-catolico.com/api
    ```
    (a URL pública do backend, com `/api` no final — é o que
    `getApiBaseUrl()` espera, ver `lib/api.ts`).
-4. Deploy. Anote a URL pública, algo como
-   `https://acervo-catolico-web.vercel.app`.
-5. Volte no backend (`Compendio-Catolico-API`, `DEPLOY.md`) e trave o
-   `CORS_ORIGINS` nessa URL real.
+4. Deploy.
+5. Configure o domínio próprio: Settings → Domains → adicione
+   `compendio-catolico.com` marcando "Include apex and www variants" →
+   Connect to an Environment: Production. O Vercel mostra os registros
+   pendentes (A `76.76.21.21` na raiz, CNAME `cname.vercel-dns.com` no
+   `www`) — crie/edite esses registros na Cloudflare (DNS only) e
+   aguarde o certificado ser emitido.
+6. Volte no backend (`Compendio-Catolico-API`, `DEPLOY.md`) e confirme
+   que o `CORS_ORIGINS` está travado em `https://compendio-catolico.com`
+   e `https://www.compendio-catolico.com`.
+
+## Domínio e DNS
+
+Ver a seção "Domínio de produção" em `Compendio-Catolico-API/DEPLOY.md` —
+é lá que está documentado o desenho completo (HostGator como registrador,
+Cloudflare como DNS, e-mail Titan preservado).
+
+## SEO
+
+- `app/robots.ts` e `app/sitemap.ts` geram `/robots.txt` e `/sitemap.xml`
+  dinamicamente (o sitemap busca todas as categorias e entradas na API —
+  ver `lib/site.ts` para a URL base usada nesses arquivos e nos metadados).
+- Cada categoria e cada entrada define seu próprio `title`/`description`/
+  `openGraph`/`canonical` via `generateMetadata` (ver
+  `app/[categoria]/page.tsx` e `app/[categoria]/[slug]/page.tsx`).
+- `app/opengraph-image.tsx` e `app/icon.tsx` geram a prévia de
+  compartilhamento e o favicon (sem depender de arquivo de imagem
+  estático — `next/og` desenha na hora, na paleta do site).
+- Página de entrada também injeta dados estruturados (`CreativeWork` +
+  `BreadcrumbList`); a home injeta `WebSite` com `SearchAction` (habilita
+  a caixa de busca nos resultados do Google, quando indexado).
 
 ## Checklist antes de considerar o deploy "pronto"
 
@@ -32,5 +59,7 @@ subir primeiro.
       no console (rede/CORS).
 - [ ] `API_URL` aponta para o backend de produção, não
       `localhost`.
-- [ ] CORS do backend está travado nessa URL do Vercel — ver checklist em
+- [ ] CORS do backend está travado nesse domínio — ver checklist em
       `Compendio-Catolico-API/DEPLOY.md`.
+- [ ] `https://compendio-catolico.com/robots.txt` e
+      `/sitemap.xml` respondem 200 com o domínio de produção nas URLs.

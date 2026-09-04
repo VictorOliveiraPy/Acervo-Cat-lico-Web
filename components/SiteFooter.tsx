@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { CATEGORY_NAV, categoryPath } from "@/lib/categories";
 import { ApiError } from "@/lib/api";
+import { HIMETRICA_SHARE_URL } from "@/lib/himetricaShareUrl";
 import { fetchHealth } from "@/lib/services/acervoService";
 import type { HealthStatus } from "@/lib/schemas";
 
@@ -67,6 +68,19 @@ export async function SiteFooter() {
             </ul>
           </nav>
         </div>
+
+        {HIMETRICA_SHARE_URL ? (
+          <p className="mt-8 border-t border-rule-faint pt-4 text-meta text-ink-muted">
+            <a
+              href={HIMETRICA_SHARE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline-offset-4 hover:text-bordeaux hover:underline"
+            >
+              Estatísticas do site →
+            </a>
+          </p>
+        ) : null}
       </div>
     </footer>
   );

@@ -12,10 +12,11 @@ import {
   TagList,
 } from "@/components/Editorial";
 import { ApiError, getErrorMessage } from "@/lib/api";
-import { CATEGORY_LABELS, categoryPath } from "@/lib/categories";
+import { CATEGORY_LABELS, categoryPath, entryPath } from "@/lib/categories";
 import { entryMetaFields, entryOrdinal, paragraphs } from "@/lib/entryDisplay";
 import { isCategorySlug, type CategorySlug, type Entry } from "@/lib/schemas";
 import { fetchEntry } from "@/lib/services/acervoService";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 type Params = { categoria: string; slug: string };
 
@@ -44,7 +45,18 @@ export async function generateMetadata({
 
   try {
     const entry = await fetchEntry(params.categoria, params.slug);
-    return { title: entry.titulo, description: entry.resumo };
+    const path = entryPath(params.categoria, params.slug);
+    return {
+      title: entry.titulo,
+      description: entry.resumo,
+      alternates: { canonical: path },
+      openGraph: {
+        title: entry.titulo,
+        description: entry.resumo,
+        url: path,
+        images: entry.imagem ? [{ url: entry.imagem }] : undefined,
+      },
+    };
   } catch (error: unknown) {
     // Metadados não valem uma página quebrada: sem o dado, cai no genérico.
     if (error instanceof ApiError) {
@@ -87,9 +99,48 @@ export default async function EntryPage({ params }: { params: Params }) {
   const ordinal = entryOrdinal(entry);
   const fields = entryMetaFields(entry);
   const blocks = paragraphs(entry.corpo);
+  const path = entryPath(categoria, params.slug);
+
+  // Dados estruturados: CreativeWork identifica a entrada em si (título,
+  // resumo, imagem), BreadcrumbList espelha a navegação visível logo abaixo
+  // — os dois juntos são o que habilita o Google a mostrar a migalha de
+  // caminho no resultado de busca em vez de só a URL crua.
+  const entryJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: entry.titulo,
+    description: entry.resumo,
+    url: `${SITE_URL}${path}`,
+    inLanguage: "pt-BR",
+    isPartOf: { "@type": "WebSite", name: SITE_NAME, url: SITE_URL },
+    ...(entry.imagem ? { image: entry.imagem } : {}),
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Acervo", item: SITE_URL },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: label.nav,
+        item: `${SITE_URL}${categoryPath(categoria)}`,
+      },
+      { "@type": "ListItem", position: 3, name: entry.titulo, item: `${SITE_URL}${path}` },
+    ],
+  };
 
   return (
     <article className="mx-auto max-w-shell px-4 py-10 sm:px-6">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(entryJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <Breadcrumbs
         trail={[
           { label: "Acervo", href: "/" },

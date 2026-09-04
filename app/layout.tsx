@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { EB_Garamond, Karla } from "next/font/google";
+import Script from "next/script";
 
 import "@/app/globals.css";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
 /*
  * As duas fontes do projeto, expostas como as variáveis CSS que o
@@ -23,13 +25,31 @@ const body = Karla({
   variable: "--font-body",
 });
 
+// metadataBase resolve as URLs relativas de OG/Twitter/canonical pro domínio
+// de produção — sem isso, renderizado fora de produção (preview, local), o
+// Next cairia no host do próprio deploy em vez de compendio-catolico.com.
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Compêndio Católico",
-    template: "%s · Compêndio Católico",
+    default: SITE_NAME,
+    template: `%s · ${SITE_NAME}`,
   },
-  description:
-    "Catálogo de consulta sobre santos, papas, milagres eucarísticos, Catecismo, Crisma, história da Igreja, Doutores e concílios.",
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    siteName: SITE_NAME,
+    url: SITE_URL,
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+  },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({
@@ -51,6 +71,19 @@ export default function RootLayout({
           {children}
         </main>
         <SiteFooter />
+        {/* Himetrica é um tracker client-side (a chave é feita pra rodar no
+            navegador — não é segredo, é padrão deles mesmos, igual site ID
+            do Plausible/PostHog). Mesmo setup do melhorperfil-web:
+            strategy="afterInteractive" e só carrega se a env var estiver
+            configurada (Vercel → NEXT_PUBLIC_HIMETRICA_API_KEY) — sem ela,
+            undefined viraria a string "undefined" no atributo. */}
+        {process.env.NEXT_PUBLIC_HIMETRICA_API_KEY && (
+          <Script
+            src="https://cdn.himetrica.com/tracker.js"
+            strategy="afterInteractive"
+            data-api-key={process.env.NEXT_PUBLIC_HIMETRICA_API_KEY}
+          />
+        )}
       </body>
     </html>
   );

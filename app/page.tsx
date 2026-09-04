@@ -7,6 +7,22 @@ import { StatusMessage } from "@/components/Editorial";
 import { ApiError, getApiBaseUrl, getErrorMessage } from "@/lib/api";
 import { CATEGORY_SLUGS, type CategoryInfo, type Entry } from "@/lib/schemas";
 import { fetchCategories, fetchEntryPage } from "@/lib/services/acervoService";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
+
+// WebSite + SearchAction: dado estruturado que habilita a caixa de busca do
+// Google embaixo do resultado do site (sitelinks search box). Só faz sentido
+// na home, que é a página que o Google trata como identidade do site.
+const WEBSITE_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: SITE_NAME,
+  url: SITE_URL,
+  potentialAction: {
+    "@type": "SearchAction",
+    target: `${SITE_URL}/busca?q={search_term_string}`,
+    "query-input": "required name=search_term_string",
+  },
+};
 
 /** Termos que provam, em um clique, que a busca atravessa as categorias. */
 const SUGGESTED_TERMS = ["eucaristia", "Espírito Santo", "Trento", "oração"];
@@ -67,6 +83,10 @@ export default async function HomePage() {
 
   return (
     <div className="mx-auto max-w-shell px-4 sm:px-6">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBSITE_JSON_LD) }}
+      />
       <section className="border-b border-rule-faint py-12 md:py-16">
         <p className="kicker">Consulta em {categories.length} categorias</p>
         <h1 className="mt-3 max-w-measure font-display text-title-lg text-ink md:text-title-xl">

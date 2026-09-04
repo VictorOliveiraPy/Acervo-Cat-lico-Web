@@ -33,7 +33,13 @@ export function generateStaticParams(): Params[] {
 export function generateMetadata({ params }: { params: Params }): Metadata {
   if (!isCategorySlug(params.categoria)) return { title: "Categoria" };
   const label = CATEGORY_LABELS[params.categoria];
-  return { title: label.heading, description: label.tagline };
+  const path = categoryPath(params.categoria);
+  return {
+    title: label.heading,
+    description: label.tagline,
+    alternates: { canonical: path },
+    openGraph: { title: label.heading, description: label.tagline, url: path },
+  };
 }
 
 /** Busca a ficha da categoria (nome, descrição e aviso editorial) na API. */
