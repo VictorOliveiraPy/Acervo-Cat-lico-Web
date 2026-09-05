@@ -13,7 +13,8 @@ export function SiteHeader() {
     <header className="bg-parchment">
       <div className="mx-auto flex max-w-shell flex-col gap-band px-4 py-band sm:px-6 md:flex-row md:items-center md:justify-between">
         <Link href="/" className="group flex flex-col">
-          <span className="font-display text-title-md leading-none text-bordeaux">
+          <span className="flex items-center gap-2 font-display text-title-md leading-none text-bordeaux">
+            <span aria-hidden="true">🇻🇦</span>
             Compêndio Católico
           </span>
           <span className="kicker mt-1 group-hover:text-ink">

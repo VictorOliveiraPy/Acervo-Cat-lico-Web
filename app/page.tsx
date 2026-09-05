@@ -99,10 +99,9 @@ export default async function HomePage() {
           Uma busca só para todo o mundo católico.
         </h1>
         <p className="mt-5 max-w-measure text-lead text-ink-muted">
-          Digite um nome, um tema ou um lugar: a busca varre título, tags, resumo
-          e o corpo de todas as {totalEntries} entradas do acervo, em{" "}
-          {categories.length} categorias — de santos e papas a pecados, orações
-          e a Missa — sem exigir acento nem caixa correta.
+          Digite um nome, um tema ou um lugar: a busca cobre {totalEntries}{" "}
+          entradas em {categories.length} categorias — de santos e papas a
+          pecados, orações e a Missa.
         </p>
 
         <div className="mt-8 max-w-2xl">

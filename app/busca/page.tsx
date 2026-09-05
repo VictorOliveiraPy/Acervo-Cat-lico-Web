@@ -127,7 +127,7 @@ export default async function SearchPage({
       <PageHeader
         kicker="Busca no acervo"
         title="Buscar em todas as categorias"
-        description="Um termo só percorre todo o acervo — santos, papas, doutrina, sacramentos, orações, pecados, história da Igreja e mais — sem precisar de acento nem de caixa correta."
+        description="Um termo só percorre todo o acervo — santos, papas, doutrina, sacramentos, orações, pecados, história da Igreja e mais."
       />
       <div className="mt-8 max-w-2xl">
         <SearchField
