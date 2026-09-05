@@ -84,6 +84,41 @@ export const CATEGORY_LABELS: Record<CategorySlug, CategoryLabel> = {
     heading: "Vida litúrgica",
     tagline: "A Missa do Rito Romano, a Confissão e a adoração ao Santíssimo.",
   },
+  sacramentos: {
+    nav: "Sacramentos",
+    heading: "Sacramentos",
+    tagline: "Os sete sacramentos: matéria, forma, ministro e efeitos de cada um.",
+  },
+  virtudes: {
+    nav: "Virtudes",
+    heading: "Virtudes",
+    tagline: "Teologais, cardeais, dons do Espírito, bem-aventuranças e obras de misericórdia.",
+  },
+  mandamentos: {
+    nav: "Mandamentos",
+    heading: "Mandamentos",
+    tagline: "Os Dez Mandamentos comentados um a um, e os preceitos da Igreja.",
+  },
+  biblia: {
+    nav: "Bíblia",
+    heading: "Bíblia",
+    tagline: "Os 73 livros do cânon católico, um a um.",
+  },
+  devocoes: {
+    nav: "Devoções",
+    heading: "Devoções",
+    tagline: "Via-Sacra, novenas, Sagrado Coração, escapulário e outras práticas devocionais.",
+  },
+  glossario: {
+    nav: "Glossário",
+    heading: "Glossário",
+    tagline: "Termos litúrgicos, canônicos e devocionais explicados.",
+  },
+  "calendario-liturgico": {
+    nav: "Calendário Litúrgico",
+    heading: "Calendário litúrgico",
+    tagline: "Tempos, cores e datas móveis do Ano Litúrgico.",
+  },
 };
 
 /** Categorias na ordem editorial da navegação. */

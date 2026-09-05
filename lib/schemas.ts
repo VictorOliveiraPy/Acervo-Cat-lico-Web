@@ -23,6 +23,13 @@ export const CATEGORY_SLUGS = [
   "oracoes",
   "pecados",
   "liturgia",
+  "sacramentos",
+  "virtudes",
+  "mandamentos",
+  "biblia",
+  "devocoes",
+  "glossario",
+  "calendario-liturgico",
 ] as const;
 
 export type CategorySlug = (typeof CATEGORY_SLUGS)[number];
@@ -131,6 +138,65 @@ const liturgiaSchema = baseEntrySchema.extend({
   paragrafos_ccc: z.array(z.string()).default([]),
 });
 
+const sacramentoSchema = baseEntrySchema.extend({
+  categoria: z.literal("sacramentos"),
+  ordem: z.number().int().nullable().default(null),
+  materia: z.string().nullable().default(null),
+  forma: z.string().nullable().default(null),
+  ministro: z.string().nullable().default(null),
+  efeitos: z.string().nullable().default(null),
+  paragrafos_ccc: z.array(z.string()).default([]),
+});
+
+const virtudeSchema = baseEntrySchema.extend({
+  categoria: z.literal("virtudes"),
+  tipo: z.enum([
+    "teologal",
+    "cardeal",
+    "dom_espirito_santo",
+    "fruto_espirito_santo",
+    "bem_aventuranca",
+    "obra_misericordia_corporal",
+    "obra_misericordia_espiritual",
+  ]),
+  ordem: z.number().int().nullable().default(null),
+  referencia_biblica: z.string().nullable().default(null),
+});
+
+const mandamentoSchema = baseEntrySchema.extend({
+  categoria: z.literal("mandamentos"),
+  tipo: z.enum(["decalogo", "igreja"]),
+  ordem: z.number().int().nullable().default(null),
+  referencia_biblica: z.string().nullable().default(null),
+  paragrafos_ccc: z.array(z.string()).default([]),
+});
+
+const livroBibliaSchema = baseEntrySchema.extend({
+  categoria: z.literal("biblia"),
+  ordem: z.number().int().nullable().default(null),
+  testamento: z.enum(["antigo", "novo"]),
+  genero_literario: z.string().nullable().default(null),
+  autor_tradicional: z.string().nullable().default(null),
+  data_composicao: z.string().nullable().default(null),
+  deuterocanonico: z.boolean().default(false),
+});
+
+const devocaoSchema = baseEntrySchema.extend({
+  categoria: z.literal("devocoes"),
+  ordem: z.number().int().nullable().default(null),
+  origem: z.string().nullable().default(null),
+});
+
+const termoGlossarioSchema = baseEntrySchema.extend({
+  categoria: z.literal("glossario"),
+});
+
+const tempoLiturgicoSchema = baseEntrySchema.extend({
+  categoria: z.literal("calendario-liturgico"),
+  ordem: z.number().int().nullable().default(null),
+  cor_liturgica: z.string().nullable().default(null),
+});
+
 export const entrySchema = z.discriminatedUnion("categoria", [
   santoSchema,
   papaSchema,
@@ -145,6 +211,13 @@ export const entrySchema = z.discriminatedUnion("categoria", [
   oracaoSchema,
   pecadoSchema,
   liturgiaSchema,
+  sacramentoSchema,
+  virtudeSchema,
+  mandamentoSchema,
+  livroBibliaSchema,
+  devocaoSchema,
+  termoGlossarioSchema,
+  tempoLiturgicoSchema,
 ]);
 
 export const categoryInfoSchema = z.object({

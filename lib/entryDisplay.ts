@@ -91,6 +91,12 @@ export function entryOrdinal(entry: Entry): string | null {
       return entry.ordem === null ? null : `Tema ${entry.ordem}`;
     case "pecados":
       return entry.ordem === null ? null : `${entry.ordem}º pecado capital`;
+    case "sacramentos":
+      return entry.ordem === null ? null : `${entry.ordem}º sacramento`;
+    case "mandamentos":
+      return entry.tipo === "decalogo" && entry.ordem !== null
+        ? `${entry.ordem}º mandamento`
+        : null;
     default:
       return null;
   }
@@ -129,6 +135,24 @@ export function entryHighlight(entry: Entry): string | null {
       return entry.virtude_oposta ? `Virtude oposta: ${entry.virtude_oposta}` : null;
     case "liturgia":
       return formatCatechismParagraphs(entry.paragrafos_ccc);
+    case "sacramentos":
+      return entry.ministro ? `Ministro: ${entry.ministro}` : null;
+    case "virtudes":
+      return [virtudeTypeLabel(entry.tipo), entry.referencia_biblica]
+        .filter(Boolean)
+        .join(" · ") || null;
+    case "mandamentos":
+      return entry.referencia_biblica;
+    case "biblia":
+      return [testamentoLabel(entry.testamento), entry.genero_literario]
+        .filter(Boolean)
+        .join(" · ") || null;
+    case "devocoes":
+      return entry.origem;
+    case "glossario":
+      return null;
+    case "calendario-liturgico":
+      return entry.cor_liturgica ? `Cor: ${entry.cor_liturgica}` : null;
   }
 }
 
@@ -141,6 +165,46 @@ function marianTypeLabel(tipo: EntryOf<"nossa-senhora">["tipo"]): string {
       return "Aparição";
     case "titulo":
       return "Título";
+  }
+}
+
+/** Rótulo em português de cada tipo de virtude/dom/bem-aventurança. */
+function virtudeTypeLabel(tipo: EntryOf<"virtudes">["tipo"]): string {
+  switch (tipo) {
+    case "teologal":
+      return "Virtude teologal";
+    case "cardeal":
+      return "Virtude cardeal";
+    case "dom_espirito_santo":
+      return "Dom do Espírito Santo";
+    case "fruto_espirito_santo":
+      return "Fruto do Espírito Santo";
+    case "bem_aventuranca":
+      return "Bem-aventurança";
+    case "obra_misericordia_corporal":
+      return "Obra de misericórdia corporal";
+    case "obra_misericordia_espiritual":
+      return "Obra de misericórdia espiritual";
+  }
+}
+
+/** Rótulo em português de cada tipo de mandamento. */
+function mandamentoTypeLabel(tipo: EntryOf<"mandamentos">["tipo"]): string {
+  switch (tipo) {
+    case "decalogo":
+      return "Dez Mandamentos";
+    case "igreja":
+      return "Preceito da Igreja";
+  }
+}
+
+/** Rótulo em português do testamento de um livro bíblico. */
+function testamentoLabel(testamento: EntryOf<"biblia">["testamento"]): string {
+  switch (testamento) {
+    case "antigo":
+      return "Antigo Testamento";
+    case "novo":
+      return "Novo Testamento";
   }
 }
 
@@ -218,6 +282,39 @@ export function entryMetaFields(entry: Entry): MetaField[] {
       return [...field("Virtude oposta", entry.virtude_oposta)];
     case "liturgia":
       return [...field("Parágrafos", formatCatechismParagraphs(entry.paragrafos_ccc))];
+    case "sacramentos":
+      return [
+        ...field("Matéria", entry.materia),
+        ...field("Forma", entry.forma),
+        ...field("Ministro", entry.ministro),
+        ...field("Efeitos", entry.efeitos),
+        ...field("Parágrafos", formatCatechismParagraphs(entry.paragrafos_ccc)),
+      ];
+    case "virtudes":
+      return [
+        ...field("Tipo", virtudeTypeLabel(entry.tipo)),
+        ...field("Referência bíblica", entry.referencia_biblica),
+      ];
+    case "mandamentos":
+      return [
+        ...field("Tipo", mandamentoTypeLabel(entry.tipo)),
+        ...field("Referência bíblica", entry.referencia_biblica),
+        ...field("Parágrafos", formatCatechismParagraphs(entry.paragrafos_ccc)),
+      ];
+    case "biblia":
+      return [
+        ...field("Testamento", testamentoLabel(entry.testamento)),
+        ...field("Gênero literário", entry.genero_literario),
+        ...field("Autor tradicional", entry.autor_tradicional),
+        ...field("Composição", entry.data_composicao),
+        ...(entry.deuterocanonico ? [{ label: "Cânon", value: "Deuterocanônico" }] : []),
+      ];
+    case "devocoes":
+      return [...field("Origem", entry.origem)];
+    case "glossario":
+      return [];
+    case "calendario-liturgico":
+      return [...field("Cor litúrgica", entry.cor_liturgica)];
   }
 }
 
