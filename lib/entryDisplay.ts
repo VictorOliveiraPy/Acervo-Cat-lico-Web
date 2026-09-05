@@ -153,6 +153,24 @@ export function entryHighlight(entry: Entry): string | null {
       return null;
     case "calendario-liturgico":
       return entry.cor_liturgica ? `Cor: ${entry.cor_liturgica}` : null;
+    case "novissimos":
+      return null;
+    case "ordens-religiosas":
+      return [entry.fundador, entry.ano_fundacao].filter(Boolean).join(" · ") || null;
+    case "estrutura-igreja":
+      return null;
+    case "santuarios":
+      return [entry.local, entry.pais].filter(Boolean).join(" · ") || null;
+    case "documentos-magisterio":
+      return [entry.tipo_documento, entry.ano].filter(Boolean).join(" · ") || null;
+    case "beatos-canonizacao":
+      return null;
+    case "igreja-brasil":
+      return null;
+    case "sacramentais":
+      return null;
+    case "apologetica":
+      return entry.objecao;
   }
 }
 
@@ -315,6 +333,36 @@ export function entryMetaFields(entry: Entry): MetaField[] {
       return [];
     case "calendario-liturgico":
       return [...field("Cor litúrgica", entry.cor_liturgica)];
+    case "novissimos":
+      return [];
+    case "ordens-religiosas":
+      return [
+        ...field("Fundador", entry.fundador),
+        ...field("Fundação", entry.ano_fundacao),
+        ...field("Carisma", entry.carisma),
+      ];
+    case "estrutura-igreja":
+      return [];
+    case "santuarios":
+      return [
+        ...field("Local", entry.local),
+        ...field("País", entry.pais),
+        ...field("Ano", entry.ano),
+      ];
+    case "documentos-magisterio":
+      return [
+        ...field("Tipo", entry.tipo_documento),
+        ...field("Autor", entry.papa_autor),
+        ...field("Ano", entry.ano),
+      ];
+    case "beatos-canonizacao":
+      return [];
+    case "igreja-brasil":
+      return [];
+    case "sacramentais":
+      return [];
+    case "apologetica":
+      return [...field("Objeção", entry.objecao)];
   }
 }
 

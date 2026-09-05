@@ -30,6 +30,15 @@ export const CATEGORY_SLUGS = [
   "devocoes",
   "glossario",
   "calendario-liturgico",
+  "novissimos",
+  "ordens-religiosas",
+  "estrutura-igreja",
+  "santuarios",
+  "documentos-magisterio",
+  "beatos-canonizacao",
+  "igreja-brasil",
+  "sacramentais",
+  "apologetica",
 ] as const;
 
 export type CategorySlug = (typeof CATEGORY_SLUGS)[number];
@@ -197,6 +206,57 @@ const tempoLiturgicoSchema = baseEntrySchema.extend({
   cor_liturgica: z.string().nullable().default(null),
 });
 
+const novissimoSchema = baseEntrySchema.extend({
+  categoria: z.literal("novissimos"),
+  ordem: z.number().int().nullable().default(null),
+});
+
+const ordemReligiosaSchema = baseEntrySchema.extend({
+  categoria: z.literal("ordens-religiosas"),
+  fundador: z.string().nullable().default(null),
+  ano_fundacao: z.string().nullable().default(null),
+  carisma: z.string().nullable().default(null),
+});
+
+const elementoEstruturalSchema = baseEntrySchema.extend({
+  categoria: z.literal("estrutura-igreja"),
+  ordem: z.number().int().nullable().default(null),
+});
+
+const santuarioSchema = baseEntrySchema.extend({
+  categoria: z.literal("santuarios"),
+  local: z.string().nullable().default(null),
+  pais: z.string().nullable().default(null),
+  ano: z.string().nullable().default(null),
+});
+
+const documentoMagisterioSchema = baseEntrySchema.extend({
+  categoria: z.literal("documentos-magisterio"),
+  tipo_documento: z.string().nullable().default(null),
+  papa_autor: z.string().nullable().default(null),
+  ano: z.string().nullable().default(null),
+});
+
+const processoCanonizacaoSchema = baseEntrySchema.extend({
+  categoria: z.literal("beatos-canonizacao"),
+  ordem: z.number().int().nullable().default(null),
+});
+
+const igrejaBrasilSchema = baseEntrySchema.extend({
+  categoria: z.literal("igreja-brasil"),
+  ordem: z.number().int().nullable().default(null),
+});
+
+const sacramentalSchema = baseEntrySchema.extend({
+  categoria: z.literal("sacramentais"),
+  ordem: z.number().int().nullable().default(null),
+});
+
+const questaoApologeticaSchema = baseEntrySchema.extend({
+  categoria: z.literal("apologetica"),
+  objecao: z.string().nullable().default(null),
+});
+
 export const entrySchema = z.discriminatedUnion("categoria", [
   santoSchema,
   papaSchema,
@@ -218,6 +278,15 @@ export const entrySchema = z.discriminatedUnion("categoria", [
   devocaoSchema,
   termoGlossarioSchema,
   tempoLiturgicoSchema,
+  novissimoSchema,
+  ordemReligiosaSchema,
+  elementoEstruturalSchema,
+  santuarioSchema,
+  documentoMagisterioSchema,
+  processoCanonizacaoSchema,
+  igrejaBrasilSchema,
+  sacramentalSchema,
+  questaoApologeticaSchema,
 ]);
 
 export const categoryInfoSchema = z.object({

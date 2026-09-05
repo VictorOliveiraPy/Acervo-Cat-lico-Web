@@ -119,6 +119,51 @@ export const CATEGORY_LABELS: Record<CategorySlug, CategoryLabel> = {
     heading: "Calendário litúrgico",
     tagline: "Tempos, cores e datas móveis do Ano Litúrgico.",
   },
+  novissimos: {
+    nav: "Novíssimos",
+    heading: "Novíssimos",
+    tagline: "Morte, juízo, céu, inferno e purgatório: as \"últimas coisas\".",
+  },
+  "ordens-religiosas": {
+    nav: "Ordens Religiosas",
+    heading: "Ordens religiosas",
+    tagline: "Fundador, origem e carisma das principais ordens e congregações católicas.",
+  },
+  "estrutura-igreja": {
+    nav: "Estrutura da Igreja",
+    heading: "Estrutura da Igreja",
+    tagline: "Do Papa à paróquia: como a Igreja Católica se organiza e se governa.",
+  },
+  santuarios: {
+    nav: "Santuários",
+    heading: "Santuários e basílicas",
+    tagline: "Os principais destinos de peregrinação católica no mundo.",
+  },
+  "documentos-magisterio": {
+    nav: "Documentos do Magistério",
+    heading: "Documentos do magistério",
+    tagline: "Encíclicas e constituições principais, com resumo e contexto.",
+  },
+  "beatos-canonizacao": {
+    nav: "Beatos e Canonização",
+    heading: "Beatos e processo de canonização",
+    tagline: "As etapas do processo, de Servo de Deus a Santo.",
+  },
+  "igreja-brasil": {
+    nav: "Igreja no Brasil",
+    heading: "Igreja no Brasil",
+    tagline: "Da primeira Missa de 1500 à CNBB e à Teologia da Libertação.",
+  },
+  sacramentais: {
+    nav: "Sacramentais",
+    heading: "Sacramentais",
+    tagline: "Água benta, bênçãos, medalhas e outros sinais sagrados.",
+  },
+  apologetica: {
+    nav: "Apologética",
+    heading: "Apologética",
+    tagline: "Respostas católicas a objeções clássicas sobre a fé e a prática da Igreja.",
+  },
 };
 
 /** Categorias na ordem editorial da navegação. */
