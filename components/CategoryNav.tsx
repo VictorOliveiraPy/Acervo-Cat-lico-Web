@@ -6,13 +6,13 @@ import { usePathname } from "next/navigation";
 import { CATEGORY_NAV, categoryPath } from "@/lib/categories";
 
 /**
- * Navegação das oito categorias, presente em toda página.
+ * Navegação das categorias do acervo, presente em toda página.
  *
  * É client component apenas por causa do estado ativo (`usePathname`): saber em
- * que categoria a pessoa está é o que impede o menu de virar oito links iguais.
+ * que categoria a pessoa está é o que impede o menu de virar vários links iguais.
  * Em telas estreitas a faixa rola na horizontal em vez de virar menu escondido —
- * as oito categorias são a estrutura do acervo, e esconder isso atrás de um
- * botão obrigaria a pessoa a adivinhar o que existe.
+ * as categorias são a estrutura do acervo, e esconder isso atrás de um botão
+ * obrigaria a pessoa a adivinhar o que existe.
  */
 export function CategoryNav() {
   const pathname = usePathname();

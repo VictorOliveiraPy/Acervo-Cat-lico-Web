@@ -59,7 +59,7 @@ export function SearchField({
         name="q"
         value={query}
         onChange={(event) => setQuery(event.target.value)}
-        placeholder="Buscar santos, papas, concílios, temas…"
+        placeholder="Buscar qualquer tema do mundo católico…"
         autoComplete="off"
         className={`${FIELD_STYLE[variant]} w-full rounded-edge border border-rule-faint bg-parchment-raised px-3 font-body text-ink placeholder:text-ink-muted/80 focus:border-bordeaux focus:outline-none`}
       />

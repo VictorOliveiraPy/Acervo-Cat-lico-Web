@@ -13,4 +13,4 @@ export const SITE_URL = "https://compendio-catolico.com";
 export const SITE_NAME = "Compêndio Católico";
 
 export const SITE_DESCRIPTION =
-  "Catálogo de consulta sobre santos, papas, milagres eucarísticos, Catecismo, Crisma, história da Igreja, Doutores e concílios.";
+  "Catálogo de consulta sobre o mundo católico: santos, papas, Catecismo, Crisma, sacramentos, orações, pecados, milagres eucarísticos, história da Igreja, Doutores, concílios e mais.";

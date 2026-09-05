@@ -60,8 +60,9 @@ export function fetchEntry(
 /**
  * Busca textual no acervo inteiro (ou restrita a uma categoria).
  *
- * Sem `categoria` a varredura cobre todas as oito — é o caminho principal do
- * site, e por isso o padrão. Termo curto devolve lista vazia sem ir à rede.
+ * Sem `categoria` a varredura cobre todas as categorias — é o caminho
+ * principal do site, e por isso o padrão. Termo curto devolve lista vazia
+ * sem ir à rede.
  */
 export async function searchAcervo({
   q,

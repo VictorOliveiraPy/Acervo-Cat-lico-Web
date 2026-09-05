@@ -25,7 +25,7 @@ import { PAGE_SIZE, fetchCategories, fetchEntryPage } from "@/lib/services/acerv
 type Params = { categoria: string };
 type SearchParams = { [key: string]: string | string[] | undefined };
 
-/** As oito categorias são conhecidas em build: viram rotas pré-renderizadas. */
+/** As categorias são conhecidas em build: viram rotas pré-renderizadas. */
 export function generateStaticParams(): Params[] {
   return CATEGORY_SLUGS.map((categoria) => ({ categoria }));
 }

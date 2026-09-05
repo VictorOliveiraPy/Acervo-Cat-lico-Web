@@ -21,6 +21,8 @@ export const CATEGORY_SLUGS = [
   "nossa-senhora",
   "livros",
   "oracoes",
+  "pecados",
+  "liturgia",
 ] as const;
 
 export type CategorySlug = (typeof CATEGORY_SLUGS)[number];
@@ -117,6 +119,18 @@ const oracaoSchema = baseEntrySchema.extend({
   origem: z.string().nullable().default(null),
 });
 
+const pecadoSchema = baseEntrySchema.extend({
+  categoria: z.literal("pecados"),
+  ordem: z.number().int().nullable().default(null),
+  virtude_oposta: z.string().nullable().default(null),
+});
+
+const liturgiaSchema = baseEntrySchema.extend({
+  categoria: z.literal("liturgia"),
+  ordem: z.number().int().nullable().default(null),
+  paragrafos_ccc: z.array(z.string()).default([]),
+});
+
 export const entrySchema = z.discriminatedUnion("categoria", [
   santoSchema,
   papaSchema,
@@ -129,6 +143,8 @@ export const entrySchema = z.discriminatedUnion("categoria", [
   nossaSenhoraSchema,
   livroSchema,
   oracaoSchema,
+  pecadoSchema,
+  liturgiaSchema,
 ]);
 
 export const categoryInfoSchema = z.object({

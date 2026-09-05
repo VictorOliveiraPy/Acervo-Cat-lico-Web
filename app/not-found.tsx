@@ -4,7 +4,7 @@ import { SearchField } from "@/components/SearchField";
 import { StatusMessage } from "@/components/Editorial";
 import { CATEGORY_NAV, categoryPath } from "@/lib/categories";
 
-/** Página 404: em vez de beco sem saída, oferece a busca e as oito categorias. */
+/** Página 404: em vez de beco sem saída, oferece a busca e as categorias. */
 export default function NotFound() {
   return (
     <div className="mx-auto max-w-shell px-4 py-16 sm:px-6">

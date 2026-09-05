@@ -17,7 +17,7 @@ export function SiteHeader() {
             Compêndio Católico
           </span>
           <span className="kicker mt-1 group-hover:text-ink">
-            Catálogo de consulta · santos, papas, doutrina e história
+            Catálogo de consulta · fé, doutrina e vida católica
           </span>
         </Link>
 

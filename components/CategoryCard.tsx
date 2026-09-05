@@ -7,8 +7,8 @@ import type { CategoryInfo } from "@/lib/schemas";
 /**
  * Card de categoria da página inicial.
  *
- * Aqui o card se justifica: são oito destinos concorrentes, e a moldura é o que
- * diz "cada um destes é um lugar para onde ir". O total vem da API, não é
+ * Aqui o card se justifica: são vários destinos concorrentes, e a moldura é o
+ * que diz "cada um destes é um lugar para onde ir". O total vem da API, não é
  * decorativo — é a prova de que a categoria tem conteúdo.
  */
 export function CategoryCard({ info }: { info: CategoryInfo }) {

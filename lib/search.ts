@@ -45,7 +45,7 @@ export function normalizeForMatch(text: string): string {
  * Agrupa os resultados por categoria, na ordem editorial da navegação.
  *
  * Categoria sem resultado é omitida: o agrupamento serve para mostrar onde a
- * busca encontrou algo, não para listar oito cabeçalhos vazios.
+ * busca encontrou algo, não para listar cabeçalhos vazios.
  */
 export function groupByCategory(results: readonly SearchResult[]): CategoryGroup[] {
   const groups: CategoryGroup[] = [];

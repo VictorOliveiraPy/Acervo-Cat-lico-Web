@@ -89,6 +89,8 @@ export function entryOrdinal(entry: Entry): string | null {
       return entry.ordem === null ? null : `Parte ${entry.ordem}`;
     case "crisma":
       return entry.ordem === null ? null : `Tema ${entry.ordem}`;
+    case "pecados":
+      return entry.ordem === null ? null : `${entry.ordem}º pecado capital`;
     default:
       return null;
   }
@@ -123,6 +125,10 @@ export function entryHighlight(entry: Entry): string | null {
       return [entry.autor, entry.ano_publicacao].filter(Boolean).join(" · ") || null;
     case "oracoes":
       return entry.uso;
+    case "pecados":
+      return entry.virtude_oposta ? `Virtude oposta: ${entry.virtude_oposta}` : null;
+    case "liturgia":
+      return formatCatechismParagraphs(entry.paragrafos_ccc);
   }
 }
 
@@ -208,6 +214,10 @@ export function entryMetaFields(entry: Entry): MetaField[] {
       ];
     case "oracoes":
       return [...field("Uso", entry.uso), ...field("Origem", entry.origem)];
+    case "pecados":
+      return [...field("Virtude oposta", entry.virtude_oposta)];
+    case "liturgia":
+      return [...field("Parágrafos", formatCatechismParagraphs(entry.paragrafos_ccc))];
   }
 }
 

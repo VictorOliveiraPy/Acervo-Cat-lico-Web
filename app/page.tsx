@@ -25,7 +25,13 @@ const WEBSITE_JSON_LD = {
 };
 
 /** Termos que provam, em um clique, que a busca atravessa as categorias. */
-const SUGGESTED_TERMS = ["eucaristia", "Espírito Santo", "Trento", "oração"];
+const SUGGESTED_TERMS = [
+  "eucaristia",
+  "Espírito Santo",
+  "Trento",
+  "oração",
+  "pecados capitais",
+];
 
 /** Categorias de onde vêm as entradas da amostra da página inicial. */
 const SAMPLE_CATEGORIES = ["santos", "milagres-eucaristicos", "concilios"] as const;
@@ -36,11 +42,11 @@ type HomeData = {
 };
 
 /**
- * Carrega o que a página inicial mostra: as oito categorias com seus totais e
- * uma amostra real de entradas.
+ * Carrega o que a página inicial mostra: todas as categorias com seus totais
+ * e uma amostra real de entradas.
  *
  * A amostra existe para a primeira tela provar o que o acervo contém, em vez de
- * ser uma casca com oito links e nenhum conteúdo.
+ * ser uma casca com vários links e nenhum conteúdo.
  */
 async function loadHome(): Promise<HomeData> {
   const [categories, ...pages] = await Promise.all([
@@ -90,12 +96,13 @@ export default async function HomePage() {
       <section className="border-b border-rule-faint py-12 md:py-16">
         <p className="kicker">Consulta em {categories.length} categorias</p>
         <h1 className="mt-3 max-w-measure font-display text-title-lg text-ink md:text-title-xl">
-          Uma busca só para santos, papas, doutrina, milagres e concílios.
+          Uma busca só para todo o mundo católico.
         </h1>
         <p className="mt-5 max-w-measure text-lead text-ink-muted">
           Digite um nome, um tema ou um lugar: a busca varre título, tags, resumo
-          e o corpo de todas as {totalEntries} entradas do acervo, sem exigir
-          acento nem caixa correta.
+          e o corpo de todas as {totalEntries} entradas do acervo, em{" "}
+          {categories.length} categorias — de santos e papas a pecados, orações
+          e a Missa — sem exigir acento nem caixa correta.
         </p>
 
         <div className="mt-8 max-w-2xl">

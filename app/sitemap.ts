@@ -27,7 +27,7 @@ async function fetchAllSlugs(categoria: CategorySlug): Promise<string[]> {
 }
 
 /**
- * `/sitemap.xml` — home, busca, as 11 categorias e cada entrada publicada.
+ * `/sitemap.xml` — home, busca, todas as categorias e cada entrada publicada.
  *
  * Busca todos os slugs na API em vez de assumir uma contagem fixa: o acervo
  * cresce por commit (ver `README.md`), e um sitemap desatualizado deixa

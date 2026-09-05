@@ -19,7 +19,7 @@ type SearchParams = { [key: string]: string | string[] | undefined };
 export const metadata: Metadata = {
   title: "Busca",
   description:
-    "Busca única em todas as categorias do acervo: santos, papas, milagres eucarísticos, Catecismo, Crisma, história, Doutores e concílios.",
+    "Busca única em todo o acervo católico: santos, papas, Catecismo, Crisma, sacramentos, orações, pecados, milagres eucarísticos, história, Doutores, concílios e mais.",
   // Sem canonical, cada combinação de `?q=`/`?categoria=` seria indexável
   // como página própria — a busca em si não é conteúdo, então aponta pra
   // versão sem parâmetros.
@@ -127,7 +127,7 @@ export default async function SearchPage({
       <PageHeader
         kicker="Busca no acervo"
         title="Buscar em todas as categorias"
-        description="Um termo só percorre santos, papas, milagres eucarísticos, Catecismo, Crisma, história da Igreja, Doutores e concílios — sem precisar de acento nem de caixa correta."
+        description="Um termo só percorre todo o acervo — santos, papas, doutrina, sacramentos, orações, pecados, história da Igreja e mais — sem precisar de acento nem de caixa correta."
       />
       <div className="mt-8 max-w-2xl">
         <SearchField
@@ -150,8 +150,9 @@ export default async function SearchPage({
     return shell(
       <StatusMessage title="Digite o que você procura">
         <p>
-          Vale nome de santo, tema de catequese, lugar de um milagre ou o nome de
-          um concílio. Os atalhos da página inicial mostram exemplos prontos.
+          Vale nome de santo, tema de catequese, uma oração, um pecado, uma parte
+          da Missa, lugar de um milagre ou o nome de um concílio — a busca cobre
+          o acervo inteiro. Os atalhos da página inicial mostram exemplos prontos.
         </p>
       </StatusMessage>,
     );

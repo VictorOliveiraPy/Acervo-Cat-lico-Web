@@ -74,6 +74,16 @@ export const CATEGORY_LABELS: Record<CategorySlug, CategoryLabel> = {
     heading: "Orações",
     tagline: "Textos para rezar, com origem e uso de cada oração.",
   },
+  pecados: {
+    nav: "Pecados",
+    heading: "Pecados",
+    tagline: "Os sete pecados capitais e a virtude que se opõe a cada um.",
+  },
+  liturgia: {
+    nav: "Vida Litúrgica",
+    heading: "Vida litúrgica",
+    tagline: "A Missa do Rito Romano, a Confissão e a adoração ao Santíssimo.",
+  },
 };
 
 /** Categorias na ordem editorial da navegação. */
