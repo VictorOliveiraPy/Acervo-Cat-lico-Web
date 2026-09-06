@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { CategoryCard } from "@/components/CategoryCard";
@@ -5,10 +6,11 @@ import { EntryList } from "@/components/EntryList";
 import { SearchField } from "@/components/SearchField";
 import { StatusMessage } from "@/components/Editorial";
 import { ApiError, getApiBaseUrl, getErrorMessage } from "@/lib/api";
-import { CATEGORY_SLUGS, type CategoryInfo, type Entry } from "@/lib/schemas";
 import { safeJsonLd } from "@/lib/jsonLd";
+import { CATEGORY_SLUGS, type CategoryInfo, type Entry } from "@/lib/schemas";
 import { fetchCategories, fetchEntryPage } from "@/lib/services/acervoService";
 import { SANTO_GUARDIAO_URL, SITE_NAME, SITE_URL } from "@/lib/site";
+import { VELA_TIPOS } from "@/lib/velas";
 
 // WebSite + SearchAction: dado estruturado que habilita a caixa de busca do
 // Google embaixo do resultado do site (sitelinks search box). Só faz sentido
@@ -120,6 +122,43 @@ export default async function HomePage() {
               {term}
             </Link>
           ))}
+        </div>
+      </section>
+
+      <section className="border-b border-rule-faint py-12">
+        <div className="flex flex-col items-start gap-6 rounded-edge border border-bordeaux bg-parchment-raised p-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-4">
+            <div className="flex shrink-0 -space-x-3">
+              {VELA_TIPOS.slice(0, 3).map((item) => (
+                <Image
+                  key={item.tipo}
+                  src={item.imagem}
+                  alt=""
+                  aria-hidden="true"
+                  width={56}
+                  height={56}
+                  className="h-12 w-12 rounded-edge border-2 border-parchment-raised object-cover"
+                />
+              ))}
+            </div>
+            <div className="max-w-measure">
+              <p className="kicker text-bordeaux">Oração</p>
+              <h2 className="mt-2 font-display text-title-sm text-ink">
+                Acenda uma vela por quem você ama
+              </h2>
+              <p className="mt-2 text-meta text-ink-muted">
+                Escolha entre Jesus, Nossa Senhora e outras devoções, escreva
+                seu nome e uma intenção — ela entra para o mural de quem já
+                passou por aqui rezando.
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/velas"
+            className="shrink-0 rounded-edge border border-bordeaux bg-bordeaux px-5 py-2.5 text-label uppercase tracking-[0.09em] text-parchment-raised transition-colors hover:bg-bordeaux-soft"
+          >
+            🕯️ Acender uma vela →
+          </Link>
         </div>
       </section>
 

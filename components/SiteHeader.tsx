@@ -37,7 +37,7 @@ export function SiteHeader() {
           </div>
           <Link
             href="/velas"
-            className="flex shrink-0 items-center justify-center gap-2 rounded-edge border border-gold bg-gold-wash/40 px-4 py-2.5 text-meta text-ink transition-colors hover:border-bordeaux hover:text-bordeaux"
+            className="flex shrink-0 items-center justify-center gap-2 rounded-edge border border-bordeaux bg-bordeaux px-4 py-2.5 text-label uppercase tracking-[0.09em] text-parchment-raised transition-colors hover:bg-bordeaux-soft"
           >
             <span aria-hidden="true">🕯️</span>
             Acender uma vela
