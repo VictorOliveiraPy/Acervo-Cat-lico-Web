@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { CategoryNav } from "@/components/CategoryNav";
@@ -16,6 +17,14 @@ export function SiteHeader() {
           <span className="flex items-center gap-2 font-display text-title-md leading-none text-bordeaux">
             <span aria-hidden="true">🇻🇦</span>
             Compêndio Católico
+            <Image
+              src="https://upload.wikimedia.org/wikipedia/commons/7/76/Campinas_-_13_de_setembro-96_%28cropped%29.jpg"
+              alt="Beato Carlo Acutis"
+              aria-hidden="true"
+              width={56}
+              height={56}
+              className="h-7 w-7 shrink-0 rounded-edge object-cover object-[50%_28%]"
+            />
           </span>
           <span className="kicker mt-1 group-hover:text-ink">
             Catálogo de consulta · fé, doutrina e vida católica
