@@ -1,6 +1,7 @@
 import Link from "next/link";
 
-import { CATEGORY_NAV, categoryPath } from "@/lib/categories";
+import { CATEGORY_LABELS, categoryPath } from "@/lib/categories";
+import { CATEGORY_GROUPS } from "@/lib/categoryGroups";
 import { ApiError } from "@/lib/api";
 import { HIMETRICA_SHARE_URL } from "@/lib/himetricaShareUrl";
 import { fetchHealth } from "@/lib/services/acervoService";
@@ -53,23 +54,7 @@ export async function SiteFooter() {
             )}
           </div>
 
-          <nav aria-label="Categorias" className="md:w-72">
-            <h2 className="kicker">Percorrer</h2>
-            <ul className="mt-3 grid grid-cols-2 gap-x-6 gap-y-2">
-              {CATEGORY_NAV.map(({ slug, label }) => (
-                <li key={slug}>
-                  <Link
-                    href={categoryPath(slug)}
-                    className="text-meta text-ink-muted underline-offset-4 hover:text-bordeaux hover:underline"
-                  >
-                    {label.nav}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          <div className="max-w-measure md:w-64">
+          <div className="max-w-measure md:w-72">
             <h2 className="kicker">Plataforma irmã</h2>
             <p className="mt-3 text-meta text-ink-muted">
               Quer viver a fé em forma de jogo? No{" "}
@@ -86,6 +71,33 @@ export async function SiteFooter() {
             </p>
           </div>
         </div>
+
+        {/* As 45 categorias soltas em duas colunas viraram cansativas de
+            escanear — o mesmo agrupamento por assunto usado no painel
+            "Todas as categorias" do header serve aqui de índice completo,
+            sem precisar de clique nenhum (o rodapé já é a área "quero ver
+            tudo"). */}
+        <nav aria-label="Categorias, por assunto" className="mt-10 border-t border-rule-faint pt-8">
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {CATEGORY_GROUPS.map((group) => (
+              <div key={group.title}>
+                <h3 className="kicker">{group.title}</h3>
+                <ul className="mt-3 flex flex-col gap-2">
+                  {group.slugs.map((slug) => (
+                    <li key={slug}>
+                      <Link
+                        href={categoryPath(slug)}
+                        className="text-meta text-ink-muted underline-offset-4 hover:text-bordeaux hover:underline"
+                      >
+                        {CATEGORY_LABELS[slug].nav}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </nav>
 
         {HIMETRICA_SHARE_URL ? (
           <p className="mt-8 border-t border-rule-faint pt-4 text-meta text-ink-muted">

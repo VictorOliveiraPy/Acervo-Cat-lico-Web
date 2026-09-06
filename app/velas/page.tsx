@@ -9,9 +9,10 @@ import { computePagination, parseOffset } from "@/lib/pagination";
 import { VELAS_PAGE_SIZE, fetchVelas } from "@/lib/services/velasService";
 import type { VelaPage } from "@/lib/velasSchemas";
 
-const TITLE = "Acender uma vela";
+const TITLE = "Acenda uma Vela";
+const KICKER = "Vamos seguir juntos na mesma oração";
 const DESCRIPTION =
-  "Escolha uma vela, escreva seu nome e, se quiser, uma intenção — ela entra para o mural de orações de quem passou por aqui.";
+  "Acender uma vela virtual é um jeito de manter acesa a chama da fé — por quem você ama, por uma causa difícil, ou para agradecer uma graça recebida. Escolha uma vela, escreva seu nome e, se quiser, uma intenção: ela entra para o mural de quem já passou por aqui rezando.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -42,7 +43,7 @@ export default async function VelasPage({
     <div className="mx-auto max-w-shell px-4 py-10 sm:px-6">
       <Breadcrumbs trail={[{ label: "Acervo", href: "/" }, { label: TITLE }]} />
 
-      <PageHeader kicker="Oração" title={TITLE} description={DESCRIPTION} />
+      <PageHeader kicker={KICKER} title={TITLE} description={DESCRIPTION} />
 
       <div className="mt-10">
         <VelaForm />
