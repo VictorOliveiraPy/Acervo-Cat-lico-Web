@@ -20,7 +20,10 @@ export function CategoryCard({ info }: { info: CategoryInfo }) {
       className="group flex h-full flex-col justify-between gap-6 rounded-edge border border-rule-faint bg-parchment-raised p-6 transition-colors hover:border-bordeaux"
     >
       <div>
-        <h3 className="font-display text-title-sm text-ink group-hover:text-bordeaux">
+        <span aria-hidden="true" className="text-title-md">
+          {label.icon}
+        </span>
+        <h3 className="mt-2 font-display text-title-sm text-ink group-hover:text-bordeaux">
           {label.nav}
         </h3>
         <p className="mt-2 text-meta text-ink-muted">{label.tagline}</p>
