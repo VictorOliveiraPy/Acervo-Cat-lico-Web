@@ -164,6 +164,86 @@ export const CATEGORY_LABELS: Record<CategorySlug, CategoryLabel> = {
     heading: "Apologética",
     tagline: "Respostas católicas a objeções clássicas sobre a fé e a prática da Igreja.",
   },
+  "jesus-cristo": {
+    nav: "Jesus Cristo",
+    heading: "Jesus Cristo",
+    tagline: "Os mistérios da vida de Cristo, seus títulos bíblicos e os dogmas sobre sua pessoa.",
+  },
+  "personagens-biblicos": {
+    nav: "Personagens Bíblicos",
+    heading: "Personagens bíblicos",
+    tagline: "Patriarcas, profetas, reis e mulheres da Bíblia, além dos livros que contam suas histórias.",
+  },
+  parabolas: {
+    nav: "Parábolas",
+    heading: "Parábolas de Jesus",
+    tagline: "As parábolas dos Evangelhos, com contexto e chave de interpretação.",
+  },
+  "milagres-de-jesus": {
+    nav: "Milagres de Jesus",
+    heading: "Milagres de Jesus",
+    tagline: "Curas, exorcismos, domínio sobre a natureza e ressurreições nos Evangelhos.",
+  },
+  "terra-santa": {
+    nav: "Terra Santa",
+    heading: "Terra Santa",
+    tagline: "Lugares da Palestina e de Israel ligados à vida de Cristo e à história bíblica.",
+  },
+  "padres-da-igreja": {
+    nav: "Padres da Igreja",
+    heading: "Padres da Igreja",
+    tagline: "Escritores eclesiásticos dos primeiros séculos, testemunhas da fé apostólica.",
+  },
+  "heresias-cismas": {
+    nav: "Heresias e Cismas",
+    heading: "Heresias e cismas",
+    tagline: "Os principais erros doutrinais e rupturas de comunhão, e a resposta da Igreja.",
+  },
+  "anjos-demonios": {
+    nav: "Anjos e Demônios",
+    heading: "Anjos e demônios",
+    tagline: "Arcanjos, os nove coros angélicos, o anjo da guarda e a doutrina sobre o demônio.",
+  },
+  "doutrina-social": {
+    nav: "Doutrina Social",
+    heading: "Doutrina Social da Igreja",
+    tagline: "Dignidade da pessoa, bem comum, subsidiariedade e os demais princípios sociais.",
+  },
+  "liturgia-das-horas": {
+    nav: "Liturgia das Horas",
+    heading: "Liturgia das Horas",
+    tagline: "Laudes, Vésperas, Completas e as demais horas do Ofício Divino.",
+  },
+  "ritos-orientais": {
+    nav: "Ritos Orientais",
+    heading: "Ritos e Igrejas Orientais Católicas",
+    tagline: "Bizantino, maronita, copta, siro-malabar e outras Igrejas em comunhão com Roma.",
+  },
+  "arte-sacra-simbolos": {
+    nav: "Arte Sacra",
+    heading: "Arte sacra e símbolos",
+    tagline: "IHS, Crismon, peixe, vestes litúrgicas e outros símbolos da fé católica.",
+  },
+  "direito-canonico": {
+    nav: "Direito Canônico",
+    heading: "Direito Canônico",
+    tagline: "Nulidade matrimonial, excomunhão, censuras e outros institutos jurídicos da Igreja.",
+  },
+  "vocacoes-estados-de-vida": {
+    nav: "Vocações",
+    heading: "Vocações e estados de vida",
+    tagline: "Matrimônio, vida consagrada, ministério ordenado e vida leiga como caminhos de santidade.",
+  },
+  "primeira-comunhao": {
+    nav: "Primeira Comunhão",
+    heading: "Primeira Comunhão",
+    tagline: "Trilha catequética de preparação para a Primeira Comunhão.",
+  },
+  "musica-sacra": {
+    nav: "Música Sacra",
+    heading: "Música Sacra",
+    tagline: "Canto gregoriano e os grandes hinos latinos da tradição católica.",
+  },
 };
 
 /** Categorias na ordem editorial da navegação. */

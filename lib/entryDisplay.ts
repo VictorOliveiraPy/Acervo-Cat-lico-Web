@@ -97,6 +97,22 @@ export function entryOrdinal(entry: Entry): string | null {
       return entry.tipo === "decalogo" && entry.ordem !== null
         ? `${entry.ordem}º mandamento`
         : null;
+    case "jesus-cristo":
+      return entry.ordem === null ? null : `Tema ${entry.ordem}`;
+    case "doutrina-social":
+      return entry.ordem === null ? null : `Princípio ${entry.ordem}`;
+    case "liturgia-das-horas":
+      return entry.ordem === null ? null : `Hora ${entry.ordem}`;
+    case "arte-sacra-simbolos":
+      return entry.ordem === null ? null : `Símbolo ${entry.ordem}`;
+    case "direito-canonico":
+      return entry.ordem === null ? null : `Tópico ${entry.ordem}`;
+    case "vocacoes-estados-de-vida":
+      return entry.ordem === null ? null : `Tema ${entry.ordem}`;
+    case "primeira-comunhao":
+      return entry.ordem === null ? null : `Tema ${entry.ordem}`;
+    case "musica-sacra":
+      return entry.ordem === null ? null : `Tema ${entry.ordem}`;
     default:
       return null;
   }
@@ -171,6 +187,42 @@ export function entryHighlight(entry: Entry): string | null {
       return null;
     case "apologetica":
       return entry.objecao;
+    case "jesus-cristo":
+      return [jesusTypeLabel(entry.tipo), entry.referencia_biblica]
+        .filter(Boolean)
+        .join(" · ") || null;
+    case "personagens-biblicos":
+      return [personagemBiblicoTypeLabel(entry.tipo), testamentoLabel(entry.testamento)]
+        .filter(Boolean)
+        .join(" · ") || null;
+    case "parabolas":
+      return entry.referencia_biblica;
+    case "milagres-de-jesus":
+      return milagreDeJesusTypeLabel(entry.tipo);
+    case "terra-santa":
+      return [entry.local, entry.pais].filter(Boolean).join(" · ") || null;
+    case "padres-da-igreja":
+      return [entry.regiao, entry.seculo].filter(Boolean).join(" · ") || null;
+    case "heresias-cismas":
+      return [heresiaCismaTypeLabel(entry.tipo), entry.seculo].filter(Boolean).join(" · ") || null;
+    case "anjos-demonios":
+      return anjoDemonioTypeLabel(entry.tipo);
+    case "doutrina-social":
+      return null;
+    case "liturgia-das-horas":
+      return null;
+    case "ritos-orientais":
+      return [entry.familia_liturgica, entry.regiao].filter(Boolean).join(" · ") || null;
+    case "arte-sacra-simbolos":
+      return null;
+    case "direito-canonico":
+      return null;
+    case "vocacoes-estados-de-vida":
+      return null;
+    case "primeira-comunhao":
+      return formatCatechismParagraphs(entry.paragrafos_ccc);
+    case "musica-sacra":
+      return entry.idioma;
   }
 }
 
@@ -216,13 +268,85 @@ function mandamentoTypeLabel(tipo: EntryOf<"mandamentos">["tipo"]): string {
   }
 }
 
-/** Rótulo em português do testamento de um livro bíblico. */
-function testamentoLabel(testamento: EntryOf<"biblia">["testamento"]): string {
+/** Rótulo em português do testamento de um livro bíblico (ou personagem). */
+function testamentoLabel(
+  testamento: EntryOf<"biblia">["testamento"] | EntryOf<"personagens-biblicos">["testamento"],
+): string {
   switch (testamento) {
     case "antigo":
       return "Antigo Testamento";
     case "novo":
       return "Novo Testamento";
+  }
+}
+
+/** Rótulo em português de cada tipo de entrada sobre Jesus Cristo. */
+function jesusTypeLabel(tipo: EntryOf<"jesus-cristo">["tipo"]): string {
+  switch (tipo) {
+    case "misterio_vida":
+      return "Mistério da vida";
+    case "titulo":
+      return "Título bíblico";
+    case "dogma_cristologico":
+      return "Dogma cristológico";
+  }
+}
+
+/** Rótulo em português de cada tipo de personagem bíblico. */
+function personagemBiblicoTypeLabel(tipo: EntryOf<"personagens-biblicos">["tipo"]): string {
+  switch (tipo) {
+    case "patriarca":
+      return "Patriarca";
+    case "profeta":
+      return "Profeta";
+    case "rei":
+      return "Rei";
+    case "apostolo":
+      return "Apóstolo";
+    case "mulher":
+      return "Mulher da Bíblia";
+    case "outro":
+      return "Outra figura bíblica";
+  }
+}
+
+/** Rótulo em português de cada tipo de milagre de Jesus. */
+function milagreDeJesusTypeLabel(tipo: EntryOf<"milagres-de-jesus">["tipo"]): string {
+  switch (tipo) {
+    case "cura":
+      return "Cura";
+    case "exorcismo":
+      return "Exorcismo";
+    case "natureza":
+      return "Domínio sobre a natureza";
+    case "ressureicao":
+      return "Ressurreição";
+  }
+}
+
+/** Rótulo em português de cada tipo de heresia/cisma. */
+function heresiaCismaTypeLabel(tipo: EntryOf<"heresias-cismas">["tipo"]): string {
+  switch (tipo) {
+    case "heresia":
+      return "Heresia";
+    case "cisma":
+      return "Cisma";
+  }
+}
+
+/** Rótulo em português de cada tipo de anjo/demônio. */
+function anjoDemonioTypeLabel(tipo: EntryOf<"anjos-demonios">["tipo"]): string {
+  switch (tipo) {
+    case "arcanjo":
+      return "Arcanjo";
+    case "coro_angelico":
+      return "Coro angélico";
+    case "anjo_da_guarda":
+      return "Anjo da guarda";
+    case "demonio":
+      return "Demônio";
+    case "conceito":
+      return "Conceito doutrinal";
   }
 }
 
@@ -363,6 +487,67 @@ export function entryMetaFields(entry: Entry): MetaField[] {
       return [];
     case "apologetica":
       return [...field("Objeção", entry.objecao)];
+    case "jesus-cristo":
+      return [
+        ...field("Tipo", jesusTypeLabel(entry.tipo)),
+        ...field("Referência bíblica", entry.referencia_biblica),
+        ...field("Parágrafos", formatCatechismParagraphs(entry.paragrafos_ccc)),
+      ];
+    case "personagens-biblicos":
+      return [
+        ...field("Tipo", personagemBiblicoTypeLabel(entry.tipo)),
+        ...field("Testamento", testamentoLabel(entry.testamento)),
+        ...field("Referência bíblica", entry.referencia_biblica),
+      ];
+    case "parabolas":
+      return [
+        ...field("Referência bíblica", entry.referencia_biblica),
+        ...listField("Evangelistas", entry.evangelistas),
+      ];
+    case "milagres-de-jesus":
+      return [
+        ...field("Tipo", milagreDeJesusTypeLabel(entry.tipo)),
+        ...field("Referência bíblica", entry.referencia_biblica),
+      ];
+    case "terra-santa":
+      return [
+        ...field("Local", entry.local),
+        ...field("País", entry.pais),
+        ...field("Tipo de local", entry.tipo_local),
+      ];
+    case "padres-da-igreja":
+      return [
+        ...field("Região", entry.regiao),
+        ...field("Século", entry.seculo),
+        ...(entry.e_doutor ? [{ label: "Também é", value: "Doutor da Igreja" }] : []),
+      ];
+    case "heresias-cismas":
+      return [
+        ...field("Tipo", heresiaCismaTypeLabel(entry.tipo)),
+        ...field("Século", entry.seculo),
+        ...field("Condenação", entry.condenacao),
+      ];
+    case "anjos-demonios":
+      return [...field("Tipo", anjoDemonioTypeLabel(entry.tipo))];
+    case "doutrina-social":
+      return [];
+    case "liturgia-das-horas":
+      return [];
+    case "ritos-orientais":
+      return [
+        ...field("Família litúrgica", entry.familia_liturgica),
+        ...field("Região", entry.regiao),
+      ];
+    case "arte-sacra-simbolos":
+      return [];
+    case "direito-canonico":
+      return [];
+    case "vocacoes-estados-de-vida":
+      return [];
+    case "primeira-comunhao":
+      return [...field("Parágrafos", formatCatechismParagraphs(entry.paragrafos_ccc))];
+    case "musica-sacra":
+      return [...field("Idioma", entry.idioma)];
   }
 }
 

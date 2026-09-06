@@ -39,6 +39,22 @@ export const CATEGORY_SLUGS = [
   "igreja-brasil",
   "sacramentais",
   "apologetica",
+  "jesus-cristo",
+  "personagens-biblicos",
+  "parabolas",
+  "milagres-de-jesus",
+  "terra-santa",
+  "padres-da-igreja",
+  "heresias-cismas",
+  "anjos-demonios",
+  "doutrina-social",
+  "liturgia-das-horas",
+  "ritos-orientais",
+  "arte-sacra-simbolos",
+  "direito-canonico",
+  "vocacoes-estados-de-vida",
+  "primeira-comunhao",
+  "musica-sacra",
 ] as const;
 
 export type CategorySlug = (typeof CATEGORY_SLUGS)[number];
@@ -257,6 +273,102 @@ const questaoApologeticaSchema = baseEntrySchema.extend({
   objecao: z.string().nullable().default(null),
 });
 
+const jesusSchema = baseEntrySchema.extend({
+  categoria: z.literal("jesus-cristo"),
+  tipo: z.enum(["misterio_vida", "titulo", "dogma_cristologico"]),
+  ordem: z.number().int().nullable().default(null),
+  referencia_biblica: z.string().nullable().default(null),
+  paragrafos_ccc: z.array(z.string()).default([]),
+});
+
+const personagemBiblicoSchema = baseEntrySchema.extend({
+  categoria: z.literal("personagens-biblicos"),
+  tipo: z.enum(["patriarca", "profeta", "rei", "apostolo", "mulher", "outro"]),
+  testamento: z.enum(["antigo", "novo"]),
+  referencia_biblica: z.string().nullable().default(null),
+});
+
+const parabolaSchema = baseEntrySchema.extend({
+  categoria: z.literal("parabolas"),
+  referencia_biblica: z.string().nullable().default(null),
+  evangelistas: z.array(z.string()).default([]),
+});
+
+const milagreDeJesusSchema = baseEntrySchema.extend({
+  categoria: z.literal("milagres-de-jesus"),
+  tipo: z.enum(["cura", "exorcismo", "natureza", "ressureicao"]),
+  referencia_biblica: z.string().nullable().default(null),
+});
+
+const localSagradoSchema = baseEntrySchema.extend({
+  categoria: z.literal("terra-santa"),
+  local: z.string().nullable().default(null),
+  pais: z.string().nullable().default(null),
+  tipo_local: z.string().nullable().default(null),
+});
+
+const padreDaIgrejaSchema = baseEntrySchema.extend({
+  categoria: z.literal("padres-da-igreja"),
+  regiao: z.string().nullable().default(null),
+  seculo: z.string().nullable().default(null),
+  e_doutor: z.boolean().default(false),
+});
+
+const heresiaCismaSchema = baseEntrySchema.extend({
+  categoria: z.literal("heresias-cismas"),
+  tipo: z.enum(["heresia", "cisma"]),
+  seculo: z.string().nullable().default(null),
+  condenacao: z.string().nullable().default(null),
+});
+
+const anjoDemonioSchema = baseEntrySchema.extend({
+  categoria: z.literal("anjos-demonios"),
+  tipo: z.enum(["arcanjo", "coro_angelico", "anjo_da_guarda", "demonio", "conceito"]),
+});
+
+const principioDoutrinaSocialSchema = baseEntrySchema.extend({
+  categoria: z.literal("doutrina-social"),
+  ordem: z.number().int().nullable().default(null),
+});
+
+const horaLiturgicaSchema = baseEntrySchema.extend({
+  categoria: z.literal("liturgia-das-horas"),
+  ordem: z.number().int().nullable().default(null),
+});
+
+const ritoOrientalSchema = baseEntrySchema.extend({
+  categoria: z.literal("ritos-orientais"),
+  familia_liturgica: z.string().nullable().default(null),
+  regiao: z.string().nullable().default(null),
+});
+
+const simboloSacroSchema = baseEntrySchema.extend({
+  categoria: z.literal("arte-sacra-simbolos"),
+  ordem: z.number().int().nullable().default(null),
+});
+
+const topicoCanonicoSchema = baseEntrySchema.extend({
+  categoria: z.literal("direito-canonico"),
+  ordem: z.number().int().nullable().default(null),
+});
+
+const estadoDeVidaSchema = baseEntrySchema.extend({
+  categoria: z.literal("vocacoes-estados-de-vida"),
+  ordem: z.number().int().nullable().default(null),
+});
+
+const primeiraComunhaoSchema = baseEntrySchema.extend({
+  categoria: z.literal("primeira-comunhao"),
+  ordem: z.number().int().nullable().default(null),
+  paragrafos_ccc: z.array(z.string()).default([]),
+});
+
+const obraMusicaSacraSchema = baseEntrySchema.extend({
+  categoria: z.literal("musica-sacra"),
+  idioma: z.string().nullable().default(null),
+  ordem: z.number().int().nullable().default(null),
+});
+
 export const entrySchema = z.discriminatedUnion("categoria", [
   santoSchema,
   papaSchema,
@@ -287,6 +399,22 @@ export const entrySchema = z.discriminatedUnion("categoria", [
   igrejaBrasilSchema,
   sacramentalSchema,
   questaoApologeticaSchema,
+  jesusSchema,
+  personagemBiblicoSchema,
+  parabolaSchema,
+  milagreDeJesusSchema,
+  localSagradoSchema,
+  padreDaIgrejaSchema,
+  heresiaCismaSchema,
+  anjoDemonioSchema,
+  principioDoutrinaSocialSchema,
+  horaLiturgicaSchema,
+  ritoOrientalSchema,
+  simboloSacroSchema,
+  topicoCanonicoSchema,
+  estadoDeVidaSchema,
+  primeiraComunhaoSchema,
+  obraMusicaSacraSchema,
 ]);
 
 export const categoryInfoSchema = z.object({
