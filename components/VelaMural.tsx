@@ -7,7 +7,7 @@ import type { Vela } from "@/lib/velasSchemas";
  * O mural público: as velas acesas por quem passou por aqui antes.
  *
  * Grade de cartões, não lista — cada vela é um gesto individual (nome,
- * intenção, cor escolhida), e a grade deixa isso ler como um mosaico de
+ * intenção, devoção escolhida), e a grade deixa isso ler como um mosaico de
  * pessoas, não como uma tabela de registros.
  */
 export function VelaMural({ velas }: { velas: Vela[] }) {
@@ -30,10 +30,10 @@ export function VelaMural({ velas }: { velas: Vela[] }) {
           >
             <Image
               src={info.imagem}
-              alt={`Vela ${info.label.toLowerCase()}`}
-              width={56}
-              height={56}
-              className="h-14 w-14 shrink-0 rounded-edge object-cover"
+              alt={`Vela de ${info.label}`}
+              width={88}
+              height={88}
+              className="h-20 w-20 shrink-0 rounded-edge object-cover sm:h-24 sm:w-24"
             />
             <div className="min-w-0">
               <p className="font-display text-body text-ink">{vela.nome}</p>

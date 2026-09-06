@@ -8,7 +8,14 @@
 
 import { z } from "zod";
 
-export const VELA_TIPO_SLUGS = ["branca", "vermelha", "dourada", "azul", "roxa"] as const;
+export const VELA_TIPO_SLUGS = [
+  "jesus",
+  "nossa_senhora",
+  "aparecida",
+  "sao_jose",
+  "espirito_santo",
+  "sao_judas_tadeu",
+] as const;
 
 export type VelaTipo = (typeof VELA_TIPO_SLUGS)[number];
 

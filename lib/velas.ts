@@ -20,39 +20,45 @@ export type VelaTipoInfo = {
 
 export const VELA_TIPOS: readonly VelaTipoInfo[] = [
   {
-    tipo: "branca",
-    label: "Branca",
-    imagem: "https://upload.wikimedia.org/wikipedia/commons/9/92/Candle_02.jpg",
+    tipo: "jesus",
+    label: "Jesus Cristo",
+    imagem: "https://upload.wikimedia.org/wikipedia/commons/4/4a/Spas_vsederzhitel_sinay.jpg",
     imagemCredito: null,
   },
   {
-    tipo: "vermelha",
-    label: "Vermelha",
-    imagem: "https://upload.wikimedia.org/wikipedia/commons/a/ae/Red_candle_flame.jpg",
+    tipo: "nossa_senhora",
+    label: "Nossa Senhora",
+    imagem: "https://upload.wikimedia.org/wikipedia/commons/0/04/Kazan_moscow.jpg",
     imagemCredito: null,
   },
   {
-    tipo: "dourada",
-    label: "Dourada",
-    imagem: "https://upload.wikimedia.org/wikipedia/commons/6/69/Kerzen_--_2021_--_5553.jpg",
-    imagemCredito: "Dietmar Rabich — Wikimedia Commons, CC BY-SA 4.0",
-  },
-  {
-    tipo: "azul",
-    label: "Azul",
-    imagem: "https://upload.wikimedia.org/wikipedia/commons/7/78/Candle_blue.JPG",
+    tipo: "aparecida",
+    label: "N. Sra. Aparecida",
+    imagem: "https://upload.wikimedia.org/wikipedia/commons/8/8a/NS_Aparecida.png",
     imagemCredito: null,
   },
   {
-    tipo: "roxa",
-    label: "Roxa",
-    imagem: "https://upload.wikimedia.org/wikipedia/commons/d/df/Candle_shadow.jpg",
+    tipo: "sao_jose",
+    label: "São José",
+    imagem: "https://upload.wikimedia.org/wikipedia/commons/7/74/Agust%C3%ADn_Rodr%C3%ADguez_-_San_Jos%C3%A9_y_el_Ni%C3%B1o.jpg",
+    imagemCredito: null,
+  },
+  {
+    tipo: "espirito_santo",
+    label: "Espírito Santo",
+    imagem: "https://upload.wikimedia.org/wikipedia/commons/e/e8/Rom%2C_Vatikan%2C_Basilika_St._Peter%2C_Die_Taube_des_Heiligen_Geistes_%28Cathedra_Petri%2C_Bernini%29.jpg",
+    imagemCredito: "Dnalor 01 — Wikimedia Commons, CC BY-SA 3.0 at",
+  },
+  {
+    tipo: "sao_judas_tadeu",
+    label: "São Judas Tadeu",
+    imagem: "https://upload.wikimedia.org/wikipedia/commons/0/0d/Anthonis_van_Dyck%2C_Kunsthistorisches_Museum_Wien%2C_Gem%C3%A4ldegalerie_-_Apostel_Judas_Thadd%C3%A4us_-_GG_6809_-_Kunsthistorisches_Museum.jpg",
     imagemCredito: null,
   },
 ] as const;
 
 /** Vela pré-selecionada ao abrir o formulário — a primeira da lista acima. */
-export const DEFAULT_VELA_TIPO: VelaTipo = "branca";
+export const DEFAULT_VELA_TIPO: VelaTipo = "jesus";
 
 export function velaTipoInfo(tipo: VelaTipo): VelaTipoInfo {
   const found = VELA_TIPOS.find((item) => item.tipo === tipo);

@@ -37,7 +37,7 @@ function VelaPicker({
   return (
     <fieldset>
       <legend className="kicker">Escolha a vela</legend>
-      <div className="mt-3 grid grid-cols-3 gap-3 sm:grid-cols-5">
+      <div className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
         {VELA_TIPOS.map((item) => {
           const checked = item.tipo === selected;
           return (
@@ -59,17 +59,30 @@ function VelaPicker({
               />
               <Image
                 src={item.imagem}
-                alt={`Vela ${item.label.toLowerCase()}`}
-                width={64}
-                height={64}
-                className="h-16 w-16 rounded-edge object-cover"
+                alt={`Vela de ${item.label}`}
+                width={128}
+                height={128}
+                className="h-28 w-28 rounded-edge object-cover sm:h-32 sm:w-32"
               />
               <span className="text-meta text-ink">{item.label}</span>
             </label>
           );
         })}
       </div>
+      <VelaCreditos />
     </fieldset>
+  );
+}
+
+/** Crédito das fotos que a licença exige — só as que precisam, numa linha só. */
+function VelaCreditos() {
+  const creditos = VELA_TIPOS.filter((item) => item.imagemCredito);
+  if (creditos.length === 0) return null;
+
+  return (
+    <p className="mt-3 text-meta text-ink-muted/70">
+      Fotos: {creditos.map((item) => `${item.label} — ${item.imagemCredito}`).join(" · ")}
+    </p>
   );
 }
 
