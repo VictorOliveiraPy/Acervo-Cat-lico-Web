@@ -15,6 +15,12 @@ export const VELA_TIPO_SLUGS = [
   "sao_jose",
   "espirito_santo",
   "sao_judas_tadeu",
+  "carlo_acutis",
+  "santo_agostinho",
+  "sao_bento",
+  "santa_terezinha",
+  "santo_antonio",
+  "sao_joao_batista",
 ] as const;
 
 export type VelaTipo = (typeof VELA_TIPO_SLUGS)[number];

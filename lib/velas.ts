@@ -55,6 +55,43 @@ export const VELA_TIPOS: readonly VelaTipoInfo[] = [
     imagem: "https://upload.wikimedia.org/wikipedia/commons/0/0d/Anthonis_van_Dyck%2C_Kunsthistorisches_Museum_Wien%2C_Gem%C3%A4ldegalerie_-_Apostel_Judas_Thadd%C3%A4us_-_GG_6809_-_Kunsthistorisches_Museum.jpg",
     imagemCredito: null,
   },
+  {
+    tipo: "carlo_acutis",
+    label: "São Carlo Acutis",
+    // Mesma foto do mini ícone no cabeçalho (Campinas, CC BY-SA 4.0).
+    imagem: "https://upload.wikimedia.org/wikipedia/commons/7/76/Campinas_-_13_de_setembro-96_%28cropped%29.jpg",
+    imagemCredito: "Wikimedia Commons, CC BY-SA 4.0",
+  },
+  {
+    tipo: "santo_agostinho",
+    label: "Santo Agostinho",
+    imagem: "https://upload.wikimedia.org/wikipedia/commons/e/ea/Saint_Augustine_by_Philippe_de_Champaigne.jpg",
+    imagemCredito: null,
+  },
+  {
+    tipo: "sao_bento",
+    label: "São Bento",
+    imagem: "https://upload.wikimedia.org/wikipedia/commons/7/73/Fra_Angelico_031.jpg",
+    imagemCredito: null,
+  },
+  {
+    tipo: "santa_terezinha",
+    label: "Santa Terezinha",
+    imagem: "https://upload.wikimedia.org/wikipedia/commons/6/69/Teresa-de-Lisieux.jpg",
+    imagemCredito: null,
+  },
+  {
+    tipo: "santo_antonio",
+    label: "Santo Antônio",
+    imagem: "https://upload.wikimedia.org/wikipedia/commons/2/24/Kessler_Antonius_von_Padua.jpg",
+    imagemCredito: null,
+  },
+  {
+    tipo: "sao_joao_batista",
+    label: "São João Batista",
+    imagem: "https://upload.wikimedia.org/wikipedia/commons/4/45/Anton_Raphael_Mengs_-_St._John_the_Baptist_Preaching_in_the_Wilderness_-_Google_Art_Project.jpg",
+    imagemCredito: null,
+  },
 ] as const;
 
 /** Vela pré-selecionada ao abrir o formulário — a primeira da lista acima. */
