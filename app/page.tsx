@@ -6,6 +6,7 @@ import { SearchField } from "@/components/SearchField";
 import { StatusMessage } from "@/components/Editorial";
 import { ApiError, getApiBaseUrl, getErrorMessage } from "@/lib/api";
 import { CATEGORY_SLUGS, type CategoryInfo, type Entry } from "@/lib/schemas";
+import { safeJsonLd } from "@/lib/jsonLd";
 import { fetchCategories, fetchEntryPage } from "@/lib/services/acervoService";
 import { SANTO_GUARDIAO_URL, SITE_NAME, SITE_URL } from "@/lib/site";
 
@@ -91,7 +92,7 @@ export default async function HomePage() {
     <div className="mx-auto max-w-shell px-4 sm:px-6">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBSITE_JSON_LD) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(WEBSITE_JSON_LD) }}
       />
       <section className="border-b border-rule-faint py-12 md:py-16">
         <p className="kicker">Consulta em {categories.length} categorias</p>

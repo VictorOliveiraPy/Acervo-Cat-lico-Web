@@ -14,6 +14,7 @@ import {
 import { ApiError, getErrorMessage } from "@/lib/api";
 import { CATEGORY_LABELS, categoryPath, entryPath } from "@/lib/categories";
 import { entryMetaFields, entryOrdinal, paragraphs } from "@/lib/entryDisplay";
+import { safeJsonLd } from "@/lib/jsonLd";
 import { isCategorySlug, type CategorySlug, type Entry } from "@/lib/schemas";
 import { fetchEntry } from "@/lib/services/acervoService";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
@@ -135,11 +136,11 @@ export default async function EntryPage({ params }: { params: Params }) {
     <article className="mx-auto max-w-shell px-4 py-10 sm:px-6">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(entryJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(entryJsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
       <Breadcrumbs
         trail={[
