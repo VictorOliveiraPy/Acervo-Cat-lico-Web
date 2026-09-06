@@ -22,8 +22,17 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <div className="w-full md:max-w-sm">
-          <SearchField label="Buscar em todo o acervo" />
+        <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center md:w-auto">
+          <div className="w-full md:max-w-sm">
+            <SearchField label="Buscar em todo o acervo" />
+          </div>
+          <Link
+            href="/velas"
+            className="flex shrink-0 items-center justify-center gap-2 rounded-edge border border-gold bg-gold-wash/40 px-4 py-2.5 text-meta text-ink transition-colors hover:border-bordeaux hover:text-bordeaux"
+          >
+            <span aria-hidden="true">🕯️</span>
+            Acender uma vela
+          </Link>
         </div>
       </div>
 

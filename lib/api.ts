@@ -177,3 +177,56 @@ export async function apiGet<S extends ZodType>(
   }
   return parsed.data;
 }
+
+/**
+ * Executa um POST na API com corpo JSON e devolve a resposta validada.
+ *
+ * Existe à parte de `apiGet` porque é a única escrita do site (mural de
+ * velas): sem cache (`cache: "no-store"`, explícito — uma mutação nunca deve
+ * herdar o `revalidate` padrão do `fetch` do Next por descuido) e sem
+ * parâmetro de query, só corpo.
+ */
+export async function apiPost<S extends ZodType>(
+  path: string,
+  body: unknown,
+  schema: S,
+): Promise<z.output<S>> {
+  const url = `${getApiBaseUrl()}${path}`;
+
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify(body),
+      cache: "no-store",
+    });
+  } catch (error: unknown) {
+    throw new ApiError(
+      `Não foi possível falar com o acervo (${getErrorMessage(error)}).`,
+      503,
+      ERROR_CODE.network,
+    );
+  }
+
+  if (!response.ok) {
+    const payload = await readErrorPayload(response);
+    throw new ApiError(
+      payload.message,
+      response.status,
+      payload.code,
+      payload.details,
+    );
+  }
+
+  const parsed = schema.safeParse(await response.json());
+  if (!parsed.success) {
+    throw new ApiError(
+      `A resposta de ${path} não corresponde ao formato esperado do acervo.`,
+      502,
+      ERROR_CODE.malformedResponse,
+      { issues: parsed.error.issues },
+    );
+  }
+  return parsed.data;
+}
