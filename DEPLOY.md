@@ -52,6 +52,17 @@ Cloudflare como DNS, e-mail Titan preservado).
 - Página de entrada também injeta dados estruturados (`CreativeWork` +
   `BreadcrumbList`); a home injeta `WebSite` com `SearchAction` (habilita
   a caixa de busca nos resultados do Google, quando indexado).
+- **IndexNow** (`scripts/submit-indexnow.mjs`): a cada build de produção de
+  verdade na Vercel (`postbuild`, guardado por `VERCEL_ENV === "production"`
+  — não dispara em preview nem em build local), o script lê `/sitemap.xml`
+  e avisa o Bing/Yandex direto, sem esperar o rastreador natural passar. A
+  chave (`public/<chave>.txt`) não é segredo, só prova posse do domínio.
+- **Cadastro manual** (fora do código, precisa de login):
+  [Google Search Console](https://search.google.com/search-console)
+  (propriedade de domínio, verificação por TXT no DNS da Cloudflare) e
+  [Bing Webmaster Tools](https://www.bing.com/webmasters) (tem import
+  direto do Google Search Console) — depois de verificado, submeter
+  `https://compendio-catolico.com/sitemap.xml` em cada um.
 
 ## Checklist antes de considerar o deploy "pronto"
 
