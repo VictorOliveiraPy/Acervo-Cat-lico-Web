@@ -7,7 +7,7 @@ import { StatusMessage } from "@/components/Editorial";
 import { ApiError, getApiBaseUrl, getErrorMessage } from "@/lib/api";
 import { CATEGORY_SLUGS, type CategoryInfo, type Entry } from "@/lib/schemas";
 import { fetchCategories, fetchEntryPage } from "@/lib/services/acervoService";
-import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { SANTO_GUARDIAO_URL, SITE_NAME, SITE_URL } from "@/lib/site";
 
 // WebSite + SearchAction: dado estruturado que habilita a caixa de busca do
 // Google embaixo do resultado do site (sitelinks search box). Só faz sentido
@@ -134,6 +134,30 @@ export default async function HomePage() {
           {categories.map((info) => (
             <CategoryCard key={info.categoria} info={info} />
           ))}
+        </div>
+      </section>
+
+      <section className="border-t border-rule-faint py-12">
+        <div className="flex flex-col items-start gap-6 rounded-edge border border-gold bg-parchment-raised p-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="max-w-measure">
+            <p className="kicker text-bordeaux">Plataforma irmã</p>
+            <h2 className="mt-2 font-display text-title-sm text-ink">
+              Quer viver a fé na prática, não só consultar?
+            </h2>
+            <p className="mt-2 text-meta text-ink-muted">
+              No Santo Guardião você escolhe um santo de devoção e cumpre
+              desafios e missões — orações, estudo e caridade — para crescer
+              na fé em forma de jogo.
+            </p>
+          </div>
+          <a
+            href={SANTO_GUARDIAO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 rounded-edge border border-bordeaux bg-bordeaux px-5 py-2.5 text-label uppercase tracking-[0.09em] text-parchment-raised transition-colors hover:bg-bordeaux-soft"
+          >
+            Conhecer o Santo Guardião →
+          </a>
         </div>
       </section>
 

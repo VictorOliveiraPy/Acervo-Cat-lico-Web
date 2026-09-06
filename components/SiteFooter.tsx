@@ -4,6 +4,7 @@ import { CATEGORY_NAV, categoryPath } from "@/lib/categories";
 import { ApiError } from "@/lib/api";
 import { HIMETRICA_SHARE_URL } from "@/lib/himetricaShareUrl";
 import { fetchHealth } from "@/lib/services/acervoService";
+import { SANTO_GUARDIAO_URL } from "@/lib/site";
 import type { HealthStatus } from "@/lib/schemas";
 
 /**
@@ -67,6 +68,23 @@ export async function SiteFooter() {
               ))}
             </ul>
           </nav>
+
+          <div className="max-w-measure md:w-64">
+            <h2 className="kicker">Plataforma irmã</h2>
+            <p className="mt-3 text-meta text-ink-muted">
+              Quer viver a fé em forma de jogo? No{" "}
+              <a
+                href={SANTO_GUARDIAO_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-bordeaux underline-offset-4 hover:underline"
+              >
+                Santo Guardião
+              </a>{" "}
+              você escolhe um santo de devoção e cumpre desafios e missões
+              para crescer na fé.
+            </p>
+          </div>
         </div>
 
         {HIMETRICA_SHARE_URL ? (
