@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { EB_Garamond, Karla } from "next/font/google";
 import Script from "next/script";
 
 import "@/app/globals.css";
+import { PwaRegister } from "@/components/PwaRegister";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
@@ -50,6 +51,21 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
   },
   robots: { index: true, follow: true },
+  // `manifest.ts` já injeta o <link rel="manifest">; isto aqui é o que faz o
+  // Safari/iOS tratar o site como app (barra de status, sem chrome do
+  // navegador) quando adicionado à Tela de Início — o Android usa o
+  // manifest para a mesma coisa (`display: "standalone"`).
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Compêndio",
+  },
+};
+
+// Precisa ser export separado de `metadata` desde o Next 14 (o campo
+// `themeColor` dentro de `metadata` foi descontinuado em favor deste).
+export const viewport: Viewport = {
+  themeColor: "#6B1F2A",
 };
 
 export default function RootLayout({
@@ -71,6 +87,7 @@ export default function RootLayout({
           {children}
         </main>
         <SiteFooter />
+        <PwaRegister />
         {/* Himetrica é um tracker client-side (a chave é feita pra rodar no
             navegador — não é segredo, é padrão deles mesmos, igual site ID
             do Plausible/PostHog). Mesmo setup do melhorperfil-web:
