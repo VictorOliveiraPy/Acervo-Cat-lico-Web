@@ -21,11 +21,18 @@ export type VelaTipo = (typeof VELA_TIPO_SLUGS)[number];
 
 export const velaTipoSchema = z.enum(VELA_TIPO_SLUGS);
 
+/**
+ * Sem `email` de propósito — é contato privado do dono do site (ver
+ * `VelaCreate` no backend), a API nunca devolve esse campo, então o
+ * contrato de leitura não o inclui.
+ */
 export const velaSchema = z.object({
   id: z.number().int(),
   nome: z.string(),
   intencao: z.string().nullable(),
   tipo: velaTipoSchema,
+  cidade: z.string().nullable(),
+  estado: z.string().nullable(),
   criado_em: z.string(),
 });
 
@@ -42,3 +49,6 @@ export type VelaPage = z.infer<typeof velaPageSchema>;
 /** Limites espelhando `VelaCreate` no backend — a validação real é lá. */
 export const VELA_NOME_MAX = 60;
 export const VELA_INTENCAO_MAX = 280;
+export const VELA_CIDADE_MAX = 80;
+export const VELA_ESTADO_MAX = 80;
+export const VELA_EMAIL_MAX = 254;

@@ -6,7 +6,14 @@ import { useFormState, useFormStatus } from "react-dom";
 
 import { acenderVelaAction, type AcenderVelaState } from "@/app/velas/actions";
 import { DEFAULT_VELA_TIPO, VELA_TIPOS } from "@/lib/velas";
-import { VELA_INTENCAO_MAX, VELA_NOME_MAX, type VelaTipo } from "@/lib/velasSchemas";
+import {
+  VELA_CIDADE_MAX,
+  VELA_EMAIL_MAX,
+  VELA_ESTADO_MAX,
+  VELA_INTENCAO_MAX,
+  VELA_NOME_MAX,
+  type VelaTipo,
+} from "@/lib/velasSchemas";
 
 const INITIAL_STATE: AcenderVelaState = { status: "idle" };
 
@@ -133,6 +140,52 @@ export function VelaForm() {
           placeholder="Ex.: Pela saúde da minha família"
           className="mt-2 w-full resize-none rounded-edge border border-rule-faint bg-parchment px-4 py-2.5 text-body text-ink placeholder:text-ink-muted/70 focus:border-bordeaux focus:outline-none"
         />
+      </div>
+
+      <div className="grid gap-6 sm:grid-cols-2">
+        <div>
+          <label htmlFor="cidade" className="kicker">
+            Cidade (opcional)
+          </label>
+          <input
+            id="cidade"
+            name="cidade"
+            type="text"
+            maxLength={VELA_CIDADE_MAX}
+            placeholder="Ex.: Aparecida"
+            className="mt-2 w-full rounded-edge border border-rule-faint bg-parchment px-4 py-2.5 text-body text-ink placeholder:text-ink-muted/70 focus:border-bordeaux focus:outline-none"
+          />
+        </div>
+        <div>
+          <label htmlFor="estado" className="kicker">
+            Estado (opcional)
+          </label>
+          <input
+            id="estado"
+            name="estado"
+            type="text"
+            maxLength={VELA_ESTADO_MAX}
+            placeholder="Ex.: SP"
+            className="mt-2 w-full rounded-edge border border-rule-faint bg-parchment px-4 py-2.5 text-body text-ink placeholder:text-ink-muted/70 focus:border-bordeaux focus:outline-none"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label htmlFor="email" className="kicker">
+          E-mail de contato (opcional)
+        </label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          maxLength={VELA_EMAIL_MAX}
+          placeholder="seuemail@exemplo.com"
+          className="mt-2 w-full rounded-edge border border-rule-faint bg-parchment px-4 py-2.5 text-body text-ink placeholder:text-ink-muted/70 focus:border-bordeaux focus:outline-none"
+        />
+        <p className="mt-1.5 text-meta text-ink-muted/70">
+          Fica só entre você e o site — nunca aparece no mural.
+        </p>
       </div>
 
       {state.status !== "idle" && state.message ? (

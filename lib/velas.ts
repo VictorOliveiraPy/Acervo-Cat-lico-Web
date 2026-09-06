@@ -76,3 +76,11 @@ export function formatVelaDate(isoDate: string): string {
     year: "numeric",
   }).format(new Date(isoDate));
 }
+
+/** "Cidade, Estado", só "Cidade" ou só "Estado" — o que a pessoa preencheu. */
+export function formatVelaLocation(
+  cidade: string | null,
+  estado: string | null,
+): string | null {
+  return [cidade, estado].filter(Boolean).join(", ") || null;
+}

@@ -13,12 +13,23 @@ import { revalidatePath } from "next/cache";
 
 import { ApiError, getErrorMessage } from "@/lib/api";
 import { acenderVela } from "@/lib/services/velasService";
-import { VELA_TIPO_SLUGS, VELA_NOME_MAX, type VelaTipo } from "@/lib/velasSchemas";
+import {
+  VELA_CIDADE_MAX,
+  VELA_ESTADO_MAX,
+  VELA_NOME_MAX,
+  VELA_TIPO_SLUGS,
+  type VelaTipo,
+} from "@/lib/velasSchemas";
 
 export type AcenderVelaState = {
   status: "idle" | "success" | "error";
   message?: string;
 };
+
+// Checagem propositalmente simples, espelhando `_EMAIL_RE` no backend — só
+// para dar uma mensagem melhor que "erro 422" antes de ir à rede; a
+// validação que vale é a do backend.
+const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
 function isVelaTipo(value: FormDataEntryValue | null): value is VelaTipo {
   return typeof value === "string" && (VELA_TIPO_SLUGS as readonly string[]).includes(value);
@@ -30,6 +41,9 @@ export async function acenderVelaAction(
 ): Promise<AcenderVelaState> {
   const nome = String(formData.get("nome") ?? "").trim();
   const intencao = String(formData.get("intencao") ?? "").trim();
+  const cidade = String(formData.get("cidade") ?? "").trim();
+  const estado = String(formData.get("estado") ?? "").trim();
+  const email = String(formData.get("email") ?? "").trim();
   const tipo = formData.get("tipo");
 
   if (!nome) {
@@ -38,12 +52,18 @@ export async function acenderVelaAction(
   if (nome.length > VELA_NOME_MAX) {
     return { status: "error", message: `O nome pode ter no máximo ${VELA_NOME_MAX} caracteres.` };
   }
+  if (cidade.length > VELA_CIDADE_MAX || estado.length > VELA_ESTADO_MAX) {
+    return { status: "error", message: "Cidade ou estado muito longos." };
+  }
+  if (email && !EMAIL_RE.test(email)) {
+    return { status: "error", message: "Informe um e-mail válido (ou deixe em branco)." };
+  }
   if (!isVelaTipo(tipo)) {
     return { status: "error", message: "Escolha uma vela." };
   }
 
   try {
-    await acenderVela({ nome, intencao, tipo });
+    await acenderVela({ nome, intencao, tipo, cidade, estado, email });
   } catch (error: unknown) {
     if (error instanceof ApiError && error.status === 429) {
       return { status: "error", message: error.message };

@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { formatVelaDate, velaTipoInfo } from "@/lib/velas";
+import { formatVelaDate, formatVelaLocation, velaTipoInfo } from "@/lib/velas";
 import type { Vela } from "@/lib/velasSchemas";
 
 /**
@@ -23,6 +23,7 @@ export function VelaMural({ velas }: { velas: Vela[] }) {
     <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {velas.map((vela) => {
         const info = velaTipoInfo(vela.tipo);
+        const local = formatVelaLocation(vela.cidade, vela.estado);
         return (
           <li
             key={vela.id}
@@ -37,6 +38,7 @@ export function VelaMural({ velas }: { velas: Vela[] }) {
             />
             <div className="min-w-0">
               <p className="font-display text-body text-ink">{vela.nome}</p>
+              {local ? <p className="text-meta text-ink-muted/80">{local}</p> : null}
               {vela.intencao ? (
                 <p className="mt-1 text-meta italic text-ink-muted">
                   “{vela.intencao}”
