@@ -5,3 +5,7 @@ coverage/
 .env
 .env.local
 *.tsbuildinfo
+
+# Rascunhos de posts do Instagram (imagem + legenda) — gerados sob demanda
+# pela rota /instagram/[categoria]/[slug], não fazem sentido versionados.
+/instagram/
