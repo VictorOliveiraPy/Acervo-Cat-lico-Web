@@ -33,6 +33,23 @@ const INNER_PADDING = 52;
 const PHOTO_HEIGHT = 560;
 
 /**
+ * Reescreve a URL da imagem original pra uma miniatura do próprio Wikimedia
+ * (`Special:FilePath?width=`, que redireciona pro tamanho pedido).
+ *
+ * Existe porque algumas imagens do acervo são o arquivo original do
+ * Wikimedia em altíssima resolução (o caso real que travou esta rota: o
+ * "Filho Pródigo" de Rembrandt, do Google Art Project, tem 262 MB) — buscar
+ * isso no servidor pra desenhar um cartão de 1080px é lento ou nem termina.
+ * Pedir sempre uma miniatura evita esse problema pra qualquer verbete, não
+ * só os já conhecidos.
+ */
+function wikimediaThumbUrl(originalUrl: string, width = 1200): string {
+  const filename = originalUrl.split("/").pop();
+  if (!filename) return originalUrl;
+  return `https://commons.wikimedia.org/wiki/Special:FilePath/${filename}?width=${width}`;
+}
+
+/**
  * Gera o cartão de post do Instagram (1080×1350, proporção 4:5) de um
  * verbete — moldura dourada sobre fundo bordô, foto emoldurada em cima,
  * título e resumo centralizados embaixo.
@@ -89,17 +106,34 @@ export async function GET(_request: Request, { params }: { params: Params }) {
             }}
           >
             {entry.imagem && (
-              // Satori (o renderizador do ImageResponse) não roda no
-              // navegador e não entende `next/image`; é o mesmo motivo de
-              // `opengraph-image.tsx` não usar `<Image />`.
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={entry.imagem}
-                alt=""
-                width={contentWidth}
-                height={PHOTO_HEIGHT}
-                style={{ objectFit: "cover", border: `2px solid ${GOLD}` }}
-              />
+              // `contain` (não `cover`) de propósito: a obra tem que
+              // aparecer inteira, sem cortar topo/base pra caber na caixa —
+              // a "moldura" (cor de fundo atrás da foto) preenche a sobra
+              // dos dois lados quando a proporção da foto não bate 1:1 com
+              // a caixa, em vez de recortar a imagem.
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: contentWidth,
+                  height: PHOTO_HEIGHT,
+                  backgroundColor: BORDEAUX_DEEP,
+                  border: `2px solid ${GOLD}`,
+                }}
+              >
+                {/* Satori (o renderizador do ImageResponse) não roda no
+                    navegador e não entende `next/image`; é o mesmo motivo de
+                    `opengraph-image.tsx` não usar `<Image />`. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={wikimediaThumbUrl(entry.imagem)}
+                  alt=""
+                  width={contentWidth}
+                  height={PHOTO_HEIGHT}
+                  style={{ objectFit: "contain" }}
+                />
+              </div>
             )}
 
             <div
