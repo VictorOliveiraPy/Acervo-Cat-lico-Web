@@ -12,24 +12,30 @@ type Params = { categoria: string; slug: string };
 
 const WIDTH = 1080;
 const HEIGHT = 1350;
-const PHOTO_HEIGHT = Math.round(HEIGHT * 0.62);
 
 // Mesmos hex de `tailwind.config.ts` — o `ImageResponse` (Satori) não lê
 // classes Tailwind, então as cores da marca são repetidas aqui em literal,
 // igual já acontece em `app/icon.tsx` e `app/opengraph-image.tsx`.
 const BORDEAUX = "#6B1F2A";
-const BORDEAUX_SOFT = "#8A3441";
-const PURPLE = "#4A2545";
-const PARCHMENT_RAISED = "#FBF8F1";
+const BORDEAUX_DEEP = "#4E1620";
 const GOLD = "#B8912F";
+const GOLD_BRIGHT = "#D9B673";
 const GOLD_WASH = "#E8DCBA";
-const INK = "#241B22";
-const INK_MUTED = "#6E6058";
-const RULE = "#DCD2BE";
+const PARCHMENT_MUTED = "#D6C6A8";
+
+// Moldura de dupla linha dourada sobre fundo bordô — mesma linguagem visual
+// do cartão de compartilhamento de "Acender uma vela" (ver `post-velas.png`),
+// em vez do painel claro que esta rota usava antes: a foto do verbete vira
+// uma obra emoldurada, não uma miniatura de catálogo.
+const OUTER_MARGIN = 40;
+const FRAME_GAP = 10;
+const INNER_PADDING = 52;
+const PHOTO_HEIGHT = 560;
 
 /**
  * Gera o cartão de post do Instagram (1080×1350, proporção 4:5) de um
- * verbete — foto em cima, título e resumo embaixo, na paleta do site.
+ * verbete — moldura dourada sobre fundo bordô, foto emoldurada em cima,
+ * título e resumo centralizados embaixo.
  *
  * Rota interna, não pensada pra navegação humana: existe pra alimentar o
  * robô de publicação (ver o plano do mural de Instagram) com uma URL de
@@ -54,6 +60,7 @@ export async function GET(_request: Request, { params }: { params: Params }) {
   const label = CATEGORY_LABELS[categoria as CategorySlug];
   const festa = "festa" in entry ? entry.festa : null;
   const kicker = [label.nav, festa].filter(Boolean).join("  ·  ").toUpperCase();
+  const contentWidth = WIDTH - 2 * (OUTER_MARGIN + FRAME_GAP + INNER_PADDING);
 
   return new ImageResponse(
     (
@@ -62,98 +69,102 @@ export async function GET(_request: Request, { params }: { params: Params }) {
           width: "100%",
           height: "100%",
           display: "flex",
-          flexDirection: "column",
-          backgroundColor: PARCHMENT_RAISED,
+          padding: OUTER_MARGIN,
+          backgroundColor: BORDEAUX,
+          backgroundImage: `linear-gradient(160deg, ${BORDEAUX} 0%, ${BORDEAUX_DEEP} 100%)`,
         }}
       >
-        {entry.imagem ? (
-          // Satori (o renderizador do ImageResponse) não roda no navegador e
-          // não entende `next/image`; é o mesmo motivo de
-          // `opengraph-image.tsx` não usar `<Image />`.
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={entry.imagem}
-            alt=""
-            width={WIDTH}
-            height={PHOTO_HEIGHT}
-            style={{ objectFit: "cover" }}
-          />
-        ) : (
+        {/* Linha externa da moldura dupla */}
+        <div style={{ flex: 1, display: "flex", border: `1.5px solid ${GOLD}`, padding: FRAME_GAP }}>
+          {/* Linha interna da moldura dupla */}
           <div
             style={{
-              width: WIDTH,
-              height: PHOTO_HEIGHT,
+              flex: 1,
               display: "flex",
+              flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              backgroundImage: `linear-gradient(155deg, ${BORDEAUX_SOFT}, ${PURPLE})`,
+              border: `1.5px solid ${GOLD}`,
+              padding: INNER_PADDING,
             }}
           >
-            <span
-              style={{
-                fontFamily: "Georgia, serif",
-                fontStyle: "italic",
-                fontSize: 220,
-                color: GOLD_WASH,
-              }}
-            >
-              {entry.titulo.charAt(0)}
-            </span>
-          </div>
-        )}
+            {entry.imagem && (
+              // Satori (o renderizador do ImageResponse) não roda no
+              // navegador e não entende `next/image`; é o mesmo motivo de
+              // `opengraph-image.tsx` não usar `<Image />`.
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={entry.imagem}
+                alt=""
+                width={contentWidth}
+                height={PHOTO_HEIGHT}
+                style={{ objectFit: "cover", border: `2px solid ${GOLD}` }}
+              />
+            )}
 
-        <div
-          style={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            padding: "56px 64px",
-          }}
-        >
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <span style={{ fontSize: 26, letterSpacing: 4, color: BORDEAUX, fontWeight: 700 }}>
-              {kicker}
-            </span>
-            <span
-              style={{
-                marginTop: 18,
-                fontFamily: "Georgia, serif",
-                fontSize: entry.titulo.length > 40 ? 52 : 66,
-                lineHeight: 1.15,
-                color: INK,
-              }}
-            >
-              {entry.titulo}
-            </span>
-            <span
+            <div
               style={{
                 display: "flex",
-                marginTop: 22,
-                fontSize: 30,
-                lineHeight: 1.4,
-                color: INK_MUTED,
-                maxHeight: 168,
-                overflow: "hidden",
+                flexDirection: "column",
+                alignItems: "center",
+                marginTop: entry.imagem ? 48 : 0,
               }}
             >
-              {entry.resumo}
-            </span>
-          </div>
+              <span
+                style={{ fontSize: 24, letterSpacing: 5, color: GOLD, fontWeight: 700 }}
+              >
+                {kicker}
+              </span>
+              <span
+                style={{
+                  display: "flex",
+                  marginTop: 20,
+                  maxWidth: contentWidth,
+                  fontFamily: "Georgia, serif",
+                  fontWeight: 700,
+                  fontSize: entry.titulo.length > 40 ? 50 : 62,
+                  lineHeight: 1.15,
+                  color: GOLD_WASH,
+                  textAlign: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {entry.titulo}
+              </span>
 
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              borderTop: `2px solid ${RULE}`,
-              paddingTop: 24,
-            }}
-          >
-            <span style={{ fontSize: 24, letterSpacing: 3, color: GOLD, fontWeight: 700 }}>
-              COMPÊNDIO CATÓLICO
-            </span>
-            <span style={{ fontSize: 24, color: INK_MUTED }}>compendio-catolico.com</span>
+              <div style={{ display: "flex", width: 90, height: 2, backgroundColor: GOLD, marginTop: 28 }} />
+
+              <span
+                style={{
+                  display: "flex",
+                  marginTop: 26,
+                  maxWidth: contentWidth - 60,
+                  fontSize: 28,
+                  lineHeight: 1.5,
+                  color: PARCHMENT_MUTED,
+                  textAlign: "center",
+                  justifyContent: "center",
+                  maxHeight: 130,
+                  overflow: "hidden",
+                }}
+              >
+                {entry.resumo}
+              </span>
+
+              <div style={{ display: "flex", width: 90, height: 2, backgroundColor: GOLD, marginTop: 32 }} />
+
+              <span
+                style={{
+                  marginTop: 26,
+                  fontSize: 26,
+                  fontWeight: 700,
+                  letterSpacing: 1,
+                  color: GOLD_BRIGHT,
+                }}
+              >
+                compendio-catolico.com
+              </span>
+            </div>
           </div>
         </div>
       </div>
