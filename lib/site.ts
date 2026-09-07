@@ -21,3 +21,6 @@ export const SITE_DESCRIPTION =
  * consulta. Linkada no rodapé e na página inicial.
  */
 export const SANTO_GUARDIAO_URL = "https://www.santo-guardiao.com.br/";
+
+/** Perfil oficial no Instagram, linkado no rodapé. */
+export const INSTAGRAM_URL = "https://www.instagram.com/compendiocatolico/";

@@ -5,7 +5,7 @@ import { CATEGORY_GROUPS } from "@/lib/categoryGroups";
 import { ApiError } from "@/lib/api";
 import { HIMETRICA_SHARE_URL } from "@/lib/himetricaShareUrl";
 import { fetchHealth } from "@/lib/services/acervoService";
-import { SANTO_GUARDIAO_URL } from "@/lib/site";
+import { INSTAGRAM_URL, SANTO_GUARDIAO_URL } from "@/lib/site";
 import type { HealthStatus } from "@/lib/schemas";
 
 /**
@@ -99,8 +99,16 @@ export async function SiteFooter() {
           </div>
         </nav>
 
-        {HIMETRICA_SHARE_URL ? (
-          <p className="mt-8 border-t border-rule-faint pt-4 text-meta text-ink-muted">
+        <div className="mt-8 flex flex-wrap items-center gap-4 border-t border-rule-faint pt-4 text-meta text-ink-muted">
+          <a
+            href={INSTAGRAM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline-offset-4 hover:text-bordeaux hover:underline"
+          >
+            Instagram →
+          </a>
+          {HIMETRICA_SHARE_URL ? (
             <a
               href={HIMETRICA_SHARE_URL}
               target="_blank"
@@ -109,8 +117,8 @@ export async function SiteFooter() {
             >
               Estatísticas do site →
             </a>
-          </p>
-        ) : null}
+          ) : null}
+        </div>
       </div>
     </footer>
   );
