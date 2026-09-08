@@ -112,82 +112,54 @@ export default async function HomePage() {
   const liturgia = await liturgiaPromise;
 
   return (
-    <>
+    <div className="relative overflow-hidden">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(WEBSITE_JSON_LD) }}
       />
 
-      {/* Herói fora do `max-w-shell`: as fotos encostam nas bordas da tela
-          (só em telas largas — em mobile viram só a moldura bordô de
-          sempre) pra dar "cara de catálogo religioso", não de app genérico.
-          Cada coluna lateral empilha duas imagens (foto no topo, a ilustração
-          dos santos embaixo, contínuas — sem vão entre elas) e cobre a
-          altura toda do bloco (herói + liturgia do dia + acender uma vela),
-          não só o herói, pra moldura acompanhar a página descendo. Cada
-          imagem esmaece em direção ao centro com um gradiente pro
-          pergaminho, então a leitura continua isolada numa coluna clara no
-          meio — a foto emoldura, não compete com o texto. */}
-      <section className="relative overflow-hidden">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 left-0 hidden w-[20%] flex-col xl:flex"
-        >
-          <div className="relative flex-[3]">
-            <Image
-              src="/img-acervo/basilica-de-sao-pedro.jpg"
-              alt=""
-              fill
-              sizes="20vw"
-              className="object-cover"
-              priority
-            />
-            <div className="absolute inset-0 bg-[#4E1620]/35" />
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-parchment" />
-          </div>
-          <div className="relative flex-[2] flex items-center justify-center bg-[#4E1620]">
-            {/* `contain`, não `cover`: os 5 santos da ilustração têm que
-                aparecer inteiros, não só o primeiro cortado no topo — o
-                mesmo princípio já usado nos cartões de Instagram. */}
-            <Image
-              src="/img-acervo/santos-margem-decorativa.jpg"
-              alt=""
-              fill
-              sizes="20vw"
-              className="scale-x-[-1] object-contain"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#4E1620]/45 via-transparent to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-parchment" />
-          </div>
-        </div>
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 right-0 hidden w-[20%] flex-col xl:flex"
-        >
-          <div className="relative flex-[3]">
-            <Image
-              src="/img-acervo/ig-monstrancia-sunburst.jpg"
-              alt=""
-              fill
-              sizes="20vw"
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-[#4E1620]/35" />
-            <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-parchment" />
-          </div>
-          <div className="relative flex-[2] flex items-center justify-center bg-[#4E1620]">
-            <Image
-              src="/img-acervo/santos-margem-decorativa.jpg"
-              alt=""
-              fill
-              sizes="20vw"
-              className="object-contain"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#4E1620]/45 via-transparent to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-parchment" />
-          </div>
-        </div>
+      {/* As duas colunas cobrem a altura da página inteira (herói até o
+          fim de "Do acervo", logo antes do rodapé), não só o herói — por
+          isso vivem aqui fora, num wrapper que envolve tudo, com
+          `inset-y-0` de propósito: a altura desse wrapper é "auto" (dada
+          pelo conteúdo normal em fluxo), e a foto absoluta acompanha esse
+          tanto, seja qual for. Mesma foto nos dois lados (espelhada à
+          esquerda) porque é arquitetura repetitiva (nave de igreja, banco
+          após banco) — corta bem em qualquer altura de recorte, ao
+          contrário de um objeto único (um ostensório, um rosto) que fica
+          estranho cortado no meio. Esmaece em gradiente pro pergaminho
+          antes de chegar na coluna de leitura central. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-0 left-0 hidden w-[20%] xl:block"
+      >
+        <Image
+          src="/img-acervo/ig-nave-basilica.jpg"
+          alt=""
+          fill
+          sizes="20vw"
+          className="scale-x-[-1] object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-[#4E1620]/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-parchment" />
+      </div>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-0 right-0 hidden w-[20%] xl:block"
+      >
+        <Image
+          src="/img-acervo/ig-nave-basilica.jpg"
+          alt=""
+          fill
+          sizes="20vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-[#4E1620]/40" />
+        <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-parchment" />
+      </div>
 
+      <section>
         <div className="relative mx-auto max-w-shell px-4 py-12 sm:px-6 md:py-16">
           <p className="kicker">Consulta em {categories.length} categorias</p>
           <h1 className="mt-3 max-w-measure font-display text-title-lg text-ink md:text-title-xl">
@@ -326,6 +298,6 @@ export default async function HomePage() {
           <EntryList entries={data.sample} showCategory />
         </section>
       </div>
-    </>
+    </div>
   );
 }
