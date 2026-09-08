@@ -21,15 +21,48 @@ export const metadata: Metadata = {
 };
 
 /**
- * Uma seção de leitura: referência (livro/capítulo) e o texto, no mesmo
- * estilo de citação usado pelas orações do acervo (`PrayerText`).
+ * Número de versículo colado na palavra seguinte, do jeito que a fonte
+ * manda ("2Abraão gerou Isaac"): em textos curtos (uma oração, um salmo)
+ * isso nem se nota, mas numa leitura longa — a genealogia de Mateus 1 tem
+ * 16 versículos seguidos — vira parede de texto ilegível. O corte do split
+ * é logo antes de cada número (lookahead, não consome a letra seguinte),
+ * então o array alterna [texto, número, texto, número, ...].
+ */
+const VERSE_NUMBER_RE = /(\d+)(?=[A-ZÀÁÂÃÇÉÊÍÓÔÕÚ"'«])/g;
+
+/** Texto de uma leitura bíblica, com os números de versículo destacados
+ * como índice sobrescrito — mesma convenção de qualquer Bíblia impressa. */
+function VerseText({ texto }: { texto: string }) {
+  const partes = texto.split(VERSE_NUMBER_RE);
+  return (
+    <p className="max-w-measure text-body leading-loose text-ink">
+      {partes.map((parte, index) =>
+        index % 2 === 1 ? (
+          <sup key={index} className="mr-0.5 font-display text-meta font-semibold text-bordeaux">
+            {parte}
+          </sup>
+        ) : (
+          <span key={index}>{parte}</span>
+        ),
+      )}
+    </p>
+  );
+}
+
+/**
+ * Uma seção de leitura: referência (livro/capítulo) e o texto. O salmo usa
+ * `PrayerText` (já quebra linha por verso, curto o bastante pra itálico não
+ * atrapalhar); as leituras em prosa — mais longas, às vezes uma genealogia
+ * inteira — usam `VerseText`, sem itálico e com os versículos numerados.
  */
 function Leitura({
   rotulo,
   leitura,
+  variant = "prosa",
 }: {
   rotulo: string;
   leitura: LeituraLiturgica;
+  variant?: "prosa" | "salmo";
 }) {
   return (
     <section aria-labelledby={`leitura-${rotulo}`} className="border-t border-rule-faint pt-8">
@@ -38,7 +71,7 @@ function Leitura({
       </p>
       <p className="mt-1 text-meta text-ink-muted">{leitura.referencia}</p>
       <div className="mt-4">
-        <PrayerText texto={leitura.texto} />
+        {variant === "salmo" ? <PrayerText texto={leitura.texto} /> : <VerseText texto={leitura.texto} />}
       </div>
     </section>
   );
@@ -80,7 +113,7 @@ export default async function LiturgiaDiariaPage() {
 
           <div className="mt-10 flex flex-col gap-8">
             <Leitura rotulo="Primeira leitura" leitura={liturgia.primeira_leitura} />
-            <Leitura rotulo="Salmo responsorial" leitura={liturgia.salmo} />
+            <Leitura rotulo="Salmo responsorial" leitura={liturgia.salmo} variant="salmo" />
             {liturgia.segunda_leitura ? (
               <Leitura rotulo="Segunda leitura" leitura={liturgia.segunda_leitura} />
             ) : null}
