@@ -16,7 +16,13 @@ export type CategoryLabel = {
   heading: string;
   /** Uma linha dizendo o que a pessoa encontra ali, na voz do leitor. */
   tagline: string;
-  /** Emoji que simboliza a categoria, usado no card de "Percorrer por categoria". */
+  /**
+   * Emoji que simboliza a categoria. Não usado em lugar nenhum do site desde
+   * que "Percorrer por categoria" virou índice tipográfico (ver
+   * `app/page.tsx`) — emoji colorido de app destoava da identidade litúrgica
+   * (bordô/dourado/serifa/latim). Mantido no tipo por se um uso futuro
+   * (cabeçalho de página de categoria, por exemplo) precisar dele de novo.
+   */
   icon: string;
 };
 
