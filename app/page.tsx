@@ -117,41 +117,72 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: safeJsonLd(WEBSITE_JSON_LD) }}
       />
 
-      {/* Herói fora do `max-w-shell`: as duas fotos encostam nas bordas da
-          tela (só em telas largas — em mobile viram só a moldura bordô de
+      {/* Herói fora do `max-w-shell`: as fotos encostam nas bordas da tela
+          (só em telas largas — em mobile viram só a moldura bordô de
           sempre) pra dar "cara de catálogo religioso", não de app genérico.
-          Cada foto esmaece em direção ao centro com um gradiente pro
+          Cada coluna lateral empilha duas imagens (foto no topo, a ilustração
+          dos santos embaixo, contínuas — sem vão entre elas) e cobre a
+          altura toda do bloco (herói + liturgia do dia + acender uma vela),
+          não só o herói, pra moldura acompanhar a página descendo. Cada
+          imagem esmaece em direção ao centro com um gradiente pro
           pergaminho, então a leitura continua isolada numa coluna clara no
           meio — a foto emoldura, não compete com o texto. */}
-      <section className="relative overflow-hidden border-b border-rule-faint">
+      <section className="relative overflow-hidden">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 left-0 hidden w-[20%] xl:block"
+          className="pointer-events-none absolute inset-y-0 left-0 hidden w-[20%] flex-col xl:flex"
         >
-          <Image
-            src="/img-acervo/basilica-de-sao-pedro.jpg"
-            alt=""
-            fill
-            sizes="20vw"
-            className="object-cover"
-            priority
-          />
-          <div className="absolute inset-0 bg-[#4E1620]/35" />
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-parchment" />
+          <div className="relative flex-[3]">
+            <Image
+              src="/img-acervo/basilica-de-sao-pedro.jpg"
+              alt=""
+              fill
+              sizes="20vw"
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-[#4E1620]/35" />
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-parchment" />
+          </div>
+          <div className="relative flex-[2]">
+            <Image
+              src="/img-acervo/santos-margem-decorativa.jpg"
+              alt=""
+              fill
+              sizes="20vw"
+              className="scale-x-[-1] object-cover object-top"
+            />
+            {/* funde a costura com a foto de cima (que já leva o mesmo tom) */}
+            <div className="absolute inset-0 bg-gradient-to-b from-[#4E1620]/45 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-parchment" />
+          </div>
         </div>
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 right-0 hidden w-[20%] xl:block"
+          className="pointer-events-none absolute inset-y-0 right-0 hidden w-[20%] flex-col xl:flex"
         >
-          <Image
-            src="/img-acervo/ig-monstrancia-sunburst.jpg"
-            alt=""
-            fill
-            sizes="20vw"
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-[#4E1620]/35" />
-          <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-parchment" />
+          <div className="relative flex-[3]">
+            <Image
+              src="/img-acervo/ig-monstrancia-sunburst.jpg"
+              alt=""
+              fill
+              sizes="20vw"
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-[#4E1620]/35" />
+            <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-parchment" />
+          </div>
+          <div className="relative flex-[2]">
+            <Image
+              src="/img-acervo/santos-margem-decorativa.jpg"
+              alt=""
+              fill
+              sizes="20vw"
+              className="object-cover object-top"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#4E1620]/45 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-parchment" />
+          </div>
         </div>
 
         <div className="relative mx-auto max-w-shell px-4 py-12 sm:px-6 md:py-16">
@@ -181,13 +212,9 @@ export default async function HomePage() {
               </Link>
             ))}
           </div>
-        </div>
-      </section>
 
-      <div className="mx-auto max-w-shell px-4 sm:px-6">
-        {liturgia ? (
-          <section className="border-b border-rule-faint py-12">
-            <div className="flex flex-col items-start gap-6 rounded-edge border border-gold bg-parchment-raised p-6 sm:flex-row sm:items-center sm:justify-between">
+          {liturgia ? (
+            <div className="mt-10 flex flex-col items-start gap-6 rounded-edge border border-gold bg-parchment-raised p-6 sm:flex-row sm:items-center sm:justify-between">
               <div className="max-w-measure">
                 <p className="kicker text-bordeaux">{formatLiturgiaDate(liturgia.data)}</p>
                 <h2 className="mt-2 font-display text-title-sm text-ink">
@@ -204,11 +231,9 @@ export default async function HomePage() {
                 📖 Ler a liturgia de hoje →
               </Link>
             </div>
-          </section>
-        ) : null}
+          ) : null}
 
-        <section className="border-b border-rule-faint py-12">
-          <div className="flex flex-col items-start gap-6 rounded-edge border border-bordeaux bg-parchment-raised p-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-6 flex flex-col items-start gap-6 rounded-edge border border-bordeaux bg-parchment-raised p-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-4">
               <div className="flex shrink-0 -space-x-3">
                 {VELA_TIPOS.slice(0, 3).map((item) => (
@@ -242,9 +267,11 @@ export default async function HomePage() {
               🕯️ Acender uma vela →
             </Link>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section aria-labelledby="categorias" className="py-12">
+      <div className="mx-auto max-w-shell px-4 sm:px-6">
+        <section aria-labelledby="categorias" className="border-t border-rule-faint py-12">
           <div className="flex items-baseline justify-between gap-4">
             <h2 id="categorias" className="font-display text-title-md text-ink">
               Percorrer por categoria
