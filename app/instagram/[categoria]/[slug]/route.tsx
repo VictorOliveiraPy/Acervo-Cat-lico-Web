@@ -5,6 +5,7 @@ import { CATEGORY_LABELS } from "@/lib/categories";
 import { ApiError } from "@/lib/api";
 import { isCategorySlug, type CategorySlug } from "@/lib/schemas";
 import { fetchEntry } from "@/lib/services/acervoService";
+import { wikimediaThumbUrl } from "@/lib/wikimedia";
 
 export const runtime = "edge";
 
@@ -31,23 +32,6 @@ const OUTER_MARGIN = 40;
 const FRAME_GAP = 10;
 const INNER_PADDING = 52;
 const PHOTO_HEIGHT = 560;
-
-/**
- * Reescreve a URL da imagem original pra uma miniatura do próprio Wikimedia
- * (`Special:FilePath?width=`, que redireciona pro tamanho pedido).
- *
- * Existe porque algumas imagens do acervo são o arquivo original do
- * Wikimedia em altíssima resolução (o caso real que travou esta rota: o
- * "Filho Pródigo" de Rembrandt, do Google Art Project, tem 262 MB) — buscar
- * isso no servidor pra desenhar um cartão de 1080px é lento ou nem termina.
- * Pedir sempre uma miniatura evita esse problema pra qualquer verbete, não
- * só os já conhecidos.
- */
-function wikimediaThumbUrl(originalUrl: string, width = 1200): string {
-  const filename = originalUrl.split("/").pop();
-  if (!filename) return originalUrl;
-  return `https://commons.wikimedia.org/wiki/Special:FilePath/${filename}?width=${width}`;
-}
 
 /**
  * Gera o cartão de post do Instagram (1080×1350, proporção 4:5) de um
