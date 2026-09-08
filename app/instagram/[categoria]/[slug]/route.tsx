@@ -149,7 +149,9 @@ export async function GET(request: Request, { params }: { params: Params }) {
                   fontFamily: EB_GARAMOND_FONT_FAMILY,
                   fontSize: 24,
                   letterSpacing: 5,
-                  color: GOLD,
+                  // `GOLD` puro sobre bordô fica ~3,85:1 — abaixo do mínimo
+                  // de 4,5:1 pra texto corrido. `GOLD_BRIGHT` passa em ~5,9:1.
+                  color: GOLD_BRIGHT,
                   fontWeight: 700,
                 }}
               >

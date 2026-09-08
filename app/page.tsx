@@ -144,15 +144,17 @@ export default async function HomePage() {
             <div className="absolute inset-0 bg-[#4E1620]/35" />
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-parchment" />
           </div>
-          <div className="relative flex-[2]">
+          <div className="relative flex-[2] flex items-center justify-center bg-[#4E1620]">
+            {/* `contain`, não `cover`: os 5 santos da ilustração têm que
+                aparecer inteiros, não só o primeiro cortado no topo — o
+                mesmo princípio já usado nos cartões de Instagram. */}
             <Image
               src="/img-acervo/santos-margem-decorativa.jpg"
               alt=""
               fill
               sizes="20vw"
-              className="scale-x-[-1] object-cover object-top"
+              className="scale-x-[-1] object-contain"
             />
-            {/* funde a costura com a foto de cima (que já leva o mesmo tom) */}
             <div className="absolute inset-0 bg-gradient-to-b from-[#4E1620]/45 via-transparent to-transparent" />
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-parchment" />
           </div>
@@ -172,13 +174,13 @@ export default async function HomePage() {
             <div className="absolute inset-0 bg-[#4E1620]/35" />
             <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-parchment" />
           </div>
-          <div className="relative flex-[2]">
+          <div className="relative flex-[2] flex items-center justify-center bg-[#4E1620]">
             <Image
               src="/img-acervo/santos-margem-decorativa.jpg"
               alt=""
               fill
               sizes="20vw"
-              className="object-cover object-top"
+              className="object-contain"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-[#4E1620]/45 via-transparent to-transparent" />
             <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-parchment" />

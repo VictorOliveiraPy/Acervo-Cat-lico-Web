@@ -14,6 +14,7 @@ const HEIGHT = 1350;
 const BORDEAUX = "#6B1F2A";
 const BORDEAUX_DEEP = "#4E1620";
 const GOLD = "#B8912F";
+const GOLD_BRIGHT = "#D9B673";
 const GOLD_WASH = "#E8DCBA";
 const PARCHMENT_MUTED = "#D6C6A8";
 
@@ -110,7 +111,10 @@ export async function GET(request: Request) {
                 style={{
                   fontSize: 22,
                   letterSpacing: 4,
-                  color: GOLD,
+                  // `GOLD` puro sobre bordô fica ~3,85:1 de contraste — abaixo
+                  // do mínimo de 4,5:1 pra texto corrido. `GOLD_BRIGHT` (já
+                  // usado no rodapé das outras rotas) passa em ~5,9:1.
+                  color: GOLD_BRIGHT,
                   fontWeight: 700,
                   fontFamily: EB_GARAMOND_FONT_FAMILY,
                 }}

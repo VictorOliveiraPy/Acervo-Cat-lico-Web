@@ -134,7 +134,9 @@ export async function GET(request: Request) {
                   fontFamily: EB_GARAMOND_FONT_FAMILY,
                   fontSize: 22,
                   letterSpacing: 4,
-                  color: GOLD,
+                  // `GOLD` puro sobre bordô fica ~3,85:1 — abaixo do mínimo
+                  // de 4,5:1 pra texto corrido. `GOLD_BRIGHT` passa em ~5,9:1.
+                  color: GOLD_BRIGHT,
                   fontWeight: 700,
                   textAlign: "center",
                 }}
@@ -178,7 +180,7 @@ export async function GET(request: Request) {
                   fontFamily: EB_GARAMOND_FONT_FAMILY,
                   marginTop: 14,
                   fontSize: 23,
-                  color: GOLD,
+                  color: GOLD_BRIGHT,
                   fontWeight: 700,
                   textAlign: "center",
                 }}
