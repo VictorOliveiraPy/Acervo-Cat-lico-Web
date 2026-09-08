@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { ImageResponse } from "next/og";
 
 import { ApiError } from "@/lib/api";
+import { EB_GARAMOND_FONT_FAMILY, loadCardFonts } from "@/lib/instagramFonts";
 import { formatLiturgiaDate } from "@/lib/liturgia";
 import { fetchLiturgiaDiaria } from "@/lib/services/liturgiaService";
 import { wikimediaThumbUrl } from "@/lib/wikimedia";
@@ -114,7 +115,12 @@ export async function GET(request: Request) {
                 />
               ) : (
                 <span
-                  style={{ fontFamily: "Georgia, serif", fontStyle: "italic", fontSize: 160, color: GOLD_WASH }}
+                  style={{
+                    fontFamily: EB_GARAMOND_FONT_FAMILY,
+                    fontStyle: "italic",
+                    fontSize: 160,
+                    color: GOLD_WASH,
+                  }}
                 >
                   C
                 </span>
@@ -122,14 +128,23 @@ export async function GET(request: Request) {
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: 40 }}>
-              <span style={{ fontSize: 22, letterSpacing: 4, color: GOLD, fontWeight: 700, textAlign: "center" }}>
+              <span
+                style={{
+                  fontFamily: EB_GARAMOND_FONT_FAMILY,
+                  fontSize: 22,
+                  letterSpacing: 4,
+                  color: GOLD,
+                  fontWeight: 700,
+                  textAlign: "center",
+                }}
+              >
                 {kicker}
               </span>
               <span
                 style={{
                   display: "flex",
                   marginTop: 18,
-                  fontFamily: "Georgia, serif",
+                  fontFamily: EB_GARAMOND_FONT_FAMILY,
                   fontWeight: 700,
                   fontSize: 56,
                   lineHeight: 1.15,
@@ -146,7 +161,7 @@ export async function GET(request: Request) {
                   display: "flex",
                   marginTop: 22,
                   maxWidth: contentWidth - 40,
-                  fontFamily: "Georgia, serif",
+                  fontFamily: EB_GARAMOND_FONT_FAMILY,
                   fontStyle: "italic",
                   fontSize: 29,
                   lineHeight: 1.5,
@@ -157,13 +172,31 @@ export async function GET(request: Request) {
               >
                 {`"${excerpt(liturgia.evangelho.texto, 220)}"`}
               </span>
-              <span style={{ marginTop: 14, fontSize: 23, color: GOLD, fontWeight: 700, textAlign: "center" }}>
+              <span
+                style={{
+                  fontFamily: EB_GARAMOND_FONT_FAMILY,
+                  marginTop: 14,
+                  fontSize: 23,
+                  color: GOLD,
+                  fontWeight: 700,
+                  textAlign: "center",
+                }}
+              >
                 {liturgia.evangelho.referencia}
               </span>
 
               <div style={{ display: "flex", width: 90, height: 2, backgroundColor: GOLD, marginTop: 26 }} />
 
-              <span style={{ marginTop: 22, fontSize: 26, fontWeight: 700, letterSpacing: 1, color: GOLD_BRIGHT }}>
+              <span
+                style={{
+                  fontFamily: EB_GARAMOND_FONT_FAMILY,
+                  marginTop: 22,
+                  fontSize: 26,
+                  fontWeight: 700,
+                  letterSpacing: 1,
+                  color: GOLD_BRIGHT,
+                }}
+              >
                 @compendiocatolico
               </span>
             </div>
@@ -171,6 +204,6 @@ export async function GET(request: Request) {
         </div>
       </div>
     ),
-    { width: WIDTH, height: HEIGHT },
+    { width: WIDTH, height: HEIGHT, fonts: await loadCardFonts() },
   );
 }

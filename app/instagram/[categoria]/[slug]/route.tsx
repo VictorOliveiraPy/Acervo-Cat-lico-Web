@@ -5,6 +5,7 @@ import { CATEGORY_LABELS } from "@/lib/categories";
 import { ApiError } from "@/lib/api";
 import { isCategorySlug, type CategorySlug } from "@/lib/schemas";
 import { fetchEntry } from "@/lib/services/acervoService";
+import { EB_GARAMOND_FONT_FAMILY, loadCardFonts } from "@/lib/instagramFonts";
 import { wikimediaThumbUrl } from "@/lib/wikimedia";
 
 export const runtime = "edge";
@@ -129,7 +130,13 @@ export async function GET(_request: Request, { params }: { params: Params }) {
               }}
             >
               <span
-                style={{ fontSize: 24, letterSpacing: 5, color: GOLD, fontWeight: 700 }}
+                style={{
+                  fontFamily: EB_GARAMOND_FONT_FAMILY,
+                  fontSize: 24,
+                  letterSpacing: 5,
+                  color: GOLD,
+                  fontWeight: 700,
+                }}
               >
                 {kicker}
               </span>
@@ -138,7 +145,7 @@ export async function GET(_request: Request, { params }: { params: Params }) {
                   display: "flex",
                   marginTop: 20,
                   maxWidth: contentWidth,
-                  fontFamily: "Georgia, serif",
+                  fontFamily: EB_GARAMOND_FONT_FAMILY,
                   fontWeight: 700,
                   fontSize: entry.titulo.length > 40 ? 50 : 62,
                   lineHeight: 1.15,
@@ -157,7 +164,8 @@ export async function GET(_request: Request, { params }: { params: Params }) {
                   display: "flex",
                   marginTop: 26,
                   maxWidth: contentWidth - 60,
-                  fontSize: 28,
+                  fontFamily: EB_GARAMOND_FONT_FAMILY,
+                  fontSize: 30,
                   lineHeight: 1.5,
                   color: PARCHMENT_MUTED,
                   textAlign: "center",
@@ -173,6 +181,7 @@ export async function GET(_request: Request, { params }: { params: Params }) {
 
               <span
                 style={{
+                  fontFamily: EB_GARAMOND_FONT_FAMILY,
                   marginTop: 26,
                   fontSize: 26,
                   fontWeight: 700,
@@ -187,6 +196,6 @@ export async function GET(_request: Request, { params }: { params: Params }) {
         </div>
       </div>
     ),
-    { width: WIDTH, height: HEIGHT },
+    { width: WIDTH, height: HEIGHT, fonts: await loadCardFonts() },
   );
 }
