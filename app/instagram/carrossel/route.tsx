@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { ImageResponse } from "next/og";
 
 import { EB_GARAMOND_FONT_FAMILY, loadCardFonts } from "@/lib/instagramFonts";
-import { wikimediaThumbUrl } from "@/lib/wikimedia";
+import { resolveCardImageSrc } from "@/lib/wikimedia";
 
 export const runtime = "edge";
 
@@ -35,6 +35,7 @@ const PHOTO_HEIGHT = 560;
  * Rota interna, fora do sitemap/indexação — ver `robots.ts`.
  */
 export async function GET(request: Request) {
+  const origin = new URL(request.url).origin;
   const params = new URL(request.url).searchParams;
   const titulo = params.get("titulo");
   const subtitulo = params.get("subtitulo");
@@ -84,7 +85,7 @@ export async function GET(request: Request) {
               {imagemParam ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={wikimediaThumbUrl(imagemParam)}
+                  src={resolveCardImageSrc(imagemParam, origin)}
                   alt=""
                   width={contentWidth}
                   height={PHOTO_HEIGHT}
@@ -162,7 +163,7 @@ export async function GET(request: Request) {
     {
       width: WIDTH,
       height: HEIGHT,
-      fonts: await loadCardFonts(new URL(request.url).origin),
+      fonts: await loadCardFonts(origin),
     },
   );
 }

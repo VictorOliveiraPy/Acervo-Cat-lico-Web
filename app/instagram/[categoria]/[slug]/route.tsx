@@ -6,7 +6,7 @@ import { ApiError } from "@/lib/api";
 import { isCategorySlug, type CategorySlug } from "@/lib/schemas";
 import { fetchEntry } from "@/lib/services/acervoService";
 import { EB_GARAMOND_FONT_FAMILY, loadCardFonts } from "@/lib/instagramFonts";
-import { wikimediaThumbUrl } from "@/lib/wikimedia";
+import { resolveCardImageSrc } from "@/lib/wikimedia";
 
 export const runtime = "edge";
 
@@ -77,6 +77,7 @@ export async function GET(request: Request, { params }: { params: Params }) {
   const festa = "festa" in entry ? entry.festa : null;
   const kicker = [label.nav, festa].filter(Boolean).join("  ·  ").toUpperCase();
   const contentWidth = WIDTH - 2 * (OUTER_MARGIN + FRAME_GAP + INNER_PADDING);
+  const origin = new URL(request.url).origin;
 
   return new ImageResponse(
     (
@@ -126,7 +127,7 @@ export async function GET(request: Request, { params }: { params: Params }) {
                     `opengraph-image.tsx` não usar `<Image />`. */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={wikimediaThumbUrl(entry.imagem)}
+                  src={resolveCardImageSrc(entry.imagem, origin)}
                   alt=""
                   width={contentWidth}
                   height={PHOTO_HEIGHT}
@@ -211,7 +212,7 @@ export async function GET(request: Request, { params }: { params: Params }) {
     {
       width: WIDTH,
       height: HEIGHT,
-      fonts: await loadCardFonts(new URL(request.url).origin),
+      fonts: await loadCardFonts(origin),
     },
   );
 }

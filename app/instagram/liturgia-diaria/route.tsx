@@ -5,7 +5,7 @@ import { ApiError } from "@/lib/api";
 import { EB_GARAMOND_FONT_FAMILY, loadCardFonts } from "@/lib/instagramFonts";
 import { formatLiturgiaDate } from "@/lib/liturgia";
 import { fetchLiturgiaDiaria } from "@/lib/services/liturgiaService";
-import { wikimediaThumbUrl } from "@/lib/wikimedia";
+import { resolveCardImageSrc } from "@/lib/wikimedia";
 
 export const runtime = "edge";
 
@@ -59,6 +59,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Liturgia do dia indisponível" }, { status });
   }
 
+  const origin = new URL(request.url).origin;
   const imagemParam = new URL(request.url).searchParams.get("imagem");
   const contentWidth = WIDTH - 2 * (OUTER_MARGIN + FRAME_GAP + INNER_PADDING);
   const kicker = [formatLiturgiaDate(liturgia.data), liturgia.celebracao]
@@ -107,7 +108,7 @@ export async function GET(request: Request) {
                 // a sobra quando a proporção não bate 1:1 com a caixa.
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={wikimediaThumbUrl(imagemParam)}
+                  src={resolveCardImageSrc(imagemParam, origin)}
                   alt=""
                   width={contentWidth}
                   height={PHOTO_HEIGHT}
@@ -207,7 +208,7 @@ export async function GET(request: Request) {
     {
       width: WIDTH,
       height: HEIGHT,
-      fonts: await loadCardFonts(new URL(request.url).origin),
+      fonts: await loadCardFonts(origin),
     },
   );
 }
