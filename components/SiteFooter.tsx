@@ -125,6 +125,23 @@ export async function SiteFooter() {
             </a>
           ) : null}
         </div>
+
+        {/* Lema em latim clássico (V no lugar de U, grafia de inscrição
+            romana) — assinatura do site, não citação de documento, por isso
+            sem número de página a verificar. Atribuição embaixo evita deixar
+            a frase flutuando sem fonte, o que o próprio catálogo cobra de
+            qualquer citação. */}
+        <div className="mt-8 border-t border-rule-faint pt-6 text-center">
+          {/* `text-gold` sobre `parchment-deep` (fundo deste rodapé) mede
+              ~2,3:1 — bem abaixo do mínimo de 4,5:1. `text-bordeaux` (mesma
+              cor já usada nos títulos deste rodapé) passa em ~8,9:1. */}
+          <p className="font-display text-label uppercase tracking-[0.2em] text-bordeaux">
+            Fides Quaerens Intellectvm
+          </p>
+          <p className="mt-1 text-meta text-ink-muted">
+            Santo Anselmo de Cantuária, Proslogion, séc. XI
+          </p>
+        </div>
       </div>
     </footer>
   );

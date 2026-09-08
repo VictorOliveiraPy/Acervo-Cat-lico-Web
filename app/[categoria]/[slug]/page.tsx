@@ -11,6 +11,7 @@ import {
   StatusMessage,
   TagList,
 } from "@/components/Editorial";
+import { OrnamentalDivider } from "@/components/OrnamentalDivider";
 import { ApiError, getErrorMessage } from "@/lib/api";
 import { CATEGORY_LABELS, categoryPath, entryPath } from "@/lib/categories";
 import { entryMetaFields, entryOrdinal, paragraphs } from "@/lib/entryDisplay";
@@ -200,11 +201,25 @@ export default async function EntryPage({ params }: { params: Params }) {
           <h2 className="kicker mb-4">Sobre esta oração</h2>
         ) : null}
         {blocks.map((block, index) => (
-          <p key={index}>{block}</p>
+          // Capitular no primeiro parágrafo do corpo, só ele — efeito de
+          // breviário antigo (`first-letter` é suporte nativo do CSS, sem
+          // precisar quebrar o texto em spans).
+          <p
+            key={index}
+            className={
+              index === 0
+                ? "first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:font-display first-letter:text-[3.4em] first-letter:font-bold first-letter:leading-[0.78] first-letter:text-bordeaux"
+                : undefined
+            }
+          >
+            {block}
+          </p>
         ))}
       </div>
 
-      <footer className="mt-section grid gap-10 border-t-2 border-gold pt-8 md:grid-cols-2">
+      <OrnamentalDivider />
+
+      <footer className="mt-section grid gap-10 pt-2 md:grid-cols-2">
         <section aria-labelledby="temas">
           <h2 id="temas" className="kicker">
             Temas relacionados

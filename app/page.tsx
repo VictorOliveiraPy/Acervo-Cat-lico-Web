@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { CategoryCard } from "@/components/CategoryCard";
 import { EntryList } from "@/components/EntryList";
+import { OrnamentalDivider } from "@/components/OrnamentalDivider";
 import { SearchField } from "@/components/SearchField";
 import { StatusMessage } from "@/components/Editorial";
 import { ApiError, getApiBaseUrl, getErrorMessage } from "@/lib/api";
@@ -272,8 +273,10 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <OrnamentalDivider />
+
       <div className="mx-auto max-w-shell px-4 sm:px-6">
-        <section aria-labelledby="categorias" className="border-t border-rule-faint py-12">
+        <section aria-labelledby="categorias" className="py-12">
           <div className="flex items-baseline justify-between gap-4">
             <h2 id="categorias" className="font-display text-title-md text-ink">
               Percorrer por categoria
@@ -288,7 +291,9 @@ export default async function HomePage() {
           </div>
         </section>
 
-        <section className="border-t border-rule-faint py-12">
+        <OrnamentalDivider />
+
+        <section className="py-12">
           <div className="flex flex-col items-start gap-6 rounded-edge border border-gold bg-parchment-raised p-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="max-w-measure">
               <p className="kicker text-bordeaux">Plataforma irmã</p>
