@@ -33,6 +33,20 @@ const OUTER_MARGIN = 40;
 const FRAME_GAP = 10;
 const INNER_PADDING = 52;
 const PHOTO_HEIGHT = 560;
+const RESUMO_MAX_CHARS = 160;
+
+/**
+ * Corta o resumo num tamanho que sempre cabe no cartão, sem cortar palavra
+ * ao meio nem terminar a frase de repente no meio (o que aconteceu com os
+ * primeiros verbetes cujo resumo passava de duas linhas — o `overflow:
+ * hidden` cru cortava o texto sem aviso, tipo "distribuir a").
+ */
+function excerpt(texto: string, max: number): string {
+  if (texto.length <= max) return texto;
+  const cortado = texto.slice(0, max);
+  const ultimoEspaco = cortado.lastIndexOf(" ");
+  return `${cortado.slice(0, ultimoEspaco)}…`;
+}
 
 /**
  * Gera o cartão de post do Instagram (1080×1350, proporção 4:5) de um
@@ -170,11 +184,9 @@ export async function GET(request: Request, { params }: { params: Params }) {
                   color: PARCHMENT_MUTED,
                   textAlign: "center",
                   justifyContent: "center",
-                  maxHeight: 130,
-                  overflow: "hidden",
                 }}
               >
-                {entry.resumo}
+                {excerpt(entry.resumo, RESUMO_MAX_CHARS)}
               </span>
 
               <div style={{ display: "flex", width: 90, height: 2, backgroundColor: GOLD, marginTop: 32 }} />
