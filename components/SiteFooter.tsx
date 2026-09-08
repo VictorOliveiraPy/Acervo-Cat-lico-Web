@@ -100,6 +100,12 @@ export async function SiteFooter() {
         </nav>
 
         <div className="mt-8 flex flex-wrap items-center gap-4 border-t border-rule-faint pt-4 text-meta text-ink-muted">
+          <Link
+            href="/liturgia-diaria"
+            className="underline-offset-4 hover:text-bordeaux hover:underline"
+          >
+            Liturgia diária →
+          </Link>
           <a
             href={INSTAGRAM_URL}
             target="_blank"

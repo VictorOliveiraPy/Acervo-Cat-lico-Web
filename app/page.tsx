@@ -7,8 +7,11 @@ import { SearchField } from "@/components/SearchField";
 import { StatusMessage } from "@/components/Editorial";
 import { ApiError, getApiBaseUrl, getErrorMessage } from "@/lib/api";
 import { safeJsonLd } from "@/lib/jsonLd";
+import { formatLiturgiaDate } from "@/lib/liturgia";
+import type { LiturgiaDiaria } from "@/lib/liturgiaSchemas";
 import { CATEGORY_SLUGS, type CategoryInfo, type Entry } from "@/lib/schemas";
 import { fetchCategories, fetchEntryPage } from "@/lib/services/acervoService";
+import { fetchLiturgiaDiaria } from "@/lib/services/liturgiaService";
 import { SANTO_GUARDIAO_URL, SITE_NAME, SITE_URL } from "@/lib/site";
 import { VELA_TIPOS } from "@/lib/velas";
 
@@ -60,6 +63,21 @@ async function loadHome(): Promise<HomeData> {
   return { categories, sample: pages.flatMap((page) => page.itens) };
 }
 
+/**
+ * A liturgia de hoje é conteúdo complementar da home, não o essencial dela
+ * (isso são as categorias) — por isso busca à parte de `loadHome`, com sua
+ * própria falha engolida: o banner some, mas a home inteira não quebra se
+ * só a liturgia estiver indisponível (ver `LITURGIA_INDISPONIVEL` na API).
+ */
+async function loadLiturgia(): Promise<LiturgiaDiaria | null> {
+  try {
+    return await fetchLiturgiaDiaria();
+  } catch (error: unknown) {
+    if (error instanceof ApiError) return null;
+    throw error;
+  }
+}
+
 function sortByNavOrder(categories: CategoryInfo[]): CategoryInfo[] {
   const order = new Map(CATEGORY_SLUGS.map((slug, index) => [slug, index]));
   return [...categories].sort(
@@ -69,6 +87,7 @@ function sortByNavOrder(categories: CategoryInfo[]): CategoryInfo[] {
 
 export default async function HomePage() {
   let data: HomeData;
+  const liturgiaPromise = loadLiturgia();
   try {
     data = await loadHome();
   } catch (error: unknown) {
@@ -89,6 +108,7 @@ export default async function HomePage() {
 
   const categories = sortByNavOrder(data.categories);
   const totalEntries = categories.reduce((sum, info) => sum + info.total, 0);
+  const liturgia = await liturgiaPromise;
 
   return (
     <div className="mx-auto max-w-shell px-4 sm:px-6">
@@ -124,6 +144,28 @@ export default async function HomePage() {
           ))}
         </div>
       </section>
+
+      {liturgia ? (
+        <section className="border-b border-rule-faint py-12">
+          <div className="flex flex-col items-start gap-6 rounded-edge border border-gold bg-parchment-raised p-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="max-w-measure">
+              <p className="kicker text-bordeaux">{formatLiturgiaDate(liturgia.data)}</p>
+              <h2 className="mt-2 font-display text-title-sm text-ink">
+                {liturgia.celebracao || "Liturgia do dia"}
+              </h2>
+              <p className="mt-2 text-meta text-ink-muted">
+                Evangelho: {liturgia.evangelho.referencia}
+              </p>
+            </div>
+            <Link
+              href="/liturgia-diaria"
+              className="shrink-0 rounded-edge border border-bordeaux bg-bordeaux px-5 py-2.5 text-label uppercase tracking-[0.09em] text-parchment-raised transition-colors hover:bg-bordeaux-soft"
+            >
+              📖 Ler a liturgia de hoje →
+            </Link>
+          </div>
+        </section>
+      ) : null}
 
       <section className="border-b border-rule-faint py-12">
         <div className="flex flex-col items-start gap-6 rounded-edge border border-bordeaux bg-parchment-raised p-6 sm:flex-row sm:items-center sm:justify-between">
