@@ -2,25 +2,12 @@ import { NextResponse } from "next/server";
 import { ImageResponse } from "next/og";
 
 import { ApiError } from "@/lib/api";
-import { EB_GARAMOND_FONT_FAMILY } from "@/lib/instagramFonts";
+import { EB_GARAMOND_FONT_FAMILY, loadCardFonts } from "@/lib/instagramFonts";
 import { formatLiturgiaDate } from "@/lib/liturgia";
 import { fetchLiturgiaDiaria } from "@/lib/services/liturgiaService";
 import { wikimediaThumbUrl } from "@/lib/wikimedia";
 
 export const runtime = "edge";
-
-// Precisa estar escrito aqui, direto no arquivo da rota — não num módulo
-// importado — pra o rastreador de build da Vercel encontrar e empacotar o
-// arquivo de fonte no build de produção (ver `lib/instagramFonts.ts`).
-const boldFont = fetch(new URL("../../../lib/_fonts/EBGaramond-Bold.ttf", import.meta.url)).then(
-  (res) => res.arrayBuffer(),
-);
-const regularFont = fetch(
-  new URL("../../../lib/_fonts/EBGaramond-Regular.ttf", import.meta.url),
-).then((res) => res.arrayBuffer());
-const italicFont = fetch(
-  new URL("../../../lib/_fonts/EBGaramond-Italic.ttf", import.meta.url),
-).then((res) => res.arrayBuffer());
 
 const WIDTH = 1080;
 const HEIGHT = 1350;
@@ -220,11 +207,7 @@ export async function GET(request: Request) {
     {
       width: WIDTH,
       height: HEIGHT,
-      fonts: [
-        { name: EB_GARAMOND_FONT_FAMILY, data: await regularFont, weight: 400, style: "normal" },
-        { name: EB_GARAMOND_FONT_FAMILY, data: await boldFont, weight: 700, style: "normal" },
-        { name: EB_GARAMOND_FONT_FAMILY, data: await italicFont, weight: 400, style: "italic" },
-      ],
+      fonts: await loadCardFonts(new URL(request.url).origin),
     },
   );
 }
