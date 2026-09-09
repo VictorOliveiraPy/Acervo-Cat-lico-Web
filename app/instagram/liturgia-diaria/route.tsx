@@ -28,6 +28,13 @@ const FRAME_GAP = 10;
 const INNER_PADDING = 52;
 const PHOTO_HEIGHT = 560;
 
+// Template padrão do cartão diário: o missal aberto no altar serve pra
+// qualquer dia, não só um evangelho específico — sem isso, o cartão caía
+// no monograma "C" liso a cada geração até alguém lembrar de passar
+// `?imagem=`. `?imagem=` continua aceito pra sobrescrever num dia especial
+// (uma festa com obra de arte mais condizente, por exemplo).
+const DEFAULT_IMAGE = "/img-acervo/ig-missal-velas.jpg";
+
 /** Corta o texto do evangelho num tamanho que cabe no cartão, sem cortar palavra ao meio. */
 function excerpt(texto: string, max: number): string {
   if (texto.length <= max) return texto;
@@ -42,11 +49,11 @@ function excerpt(texto: string, max: number): string {
  * dourada sobre bordô do cartão de verbetes
  * (`app/instagram/[categoria]/[slug]/route.tsx`).
  *
- * A liturgia não vem com imagem própria (é só texto), então quem gera o
- * post escolhe uma obra de arte condizente com o evangelho do dia e passa
- * a URL em `?imagem=` (ex.: uma pintura do Wikimedia Commons); sem o
- * parâmetro, cai no monograma da marca como reserva — nunca fica sem
- * gerar o cartão por falta de foto.
+ * A liturgia não vem com imagem própria (é só texto): sem `?imagem=`, o
+ * cartão usa `DEFAULT_IMAGE` (o missal aberto no altar) — serve pra
+ * qualquer dia, não precisa escolher foto toda vez. Passar `?imagem=`
+ * sobrescreve com uma obra mais condizente num dia especial (ex.: uma
+ * pintura do Wikimedia Commons pra uma festa).
  *
  * Rota interna, fora do sitemap/indexação — ver `robots.ts`.
  */
@@ -60,7 +67,7 @@ export async function GET(request: Request) {
   }
 
   const origin = new URL(request.url).origin;
-  const imagemParam = new URL(request.url).searchParams.get("imagem");
+  const imagemParam = new URL(request.url).searchParams.get("imagem") ?? DEFAULT_IMAGE;
   const contentWidth = WIDTH - 2 * (OUTER_MARGIN + FRAME_GAP + INNER_PADDING);
   const kicker = [formatLiturgiaDate(liturgia.data), liturgia.celebracao]
     .filter(Boolean)
