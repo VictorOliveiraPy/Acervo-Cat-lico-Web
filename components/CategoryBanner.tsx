@@ -25,7 +25,15 @@ export function CategoryBanner({ background, title, description, meta }: Categor
   return (
     <div className="relative mx-[calc(50%-50vw)] overflow-hidden border-y-2 border-gold">
       <div className="absolute inset-0">
-        <Image src={background.src} alt="" fill sizes="100vw" className="object-cover" priority />
+        <Image
+          src={background.src}
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover"
+          style={background.objectPosition ? { objectPosition: background.objectPosition } : undefined}
+          priority
+        />
         <div className="absolute inset-0 bg-[#4E1620]/70" />
       </div>
       <div className="relative mx-auto max-w-shell px-4 py-16 sm:px-6 md:py-20">
