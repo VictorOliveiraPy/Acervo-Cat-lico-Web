@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { CategoryBanner } from "@/components/CategoryBanner";
 import { EntryList } from "@/components/EntryList";
 import { Pagination } from "@/components/Pagination";
 import {
@@ -11,6 +12,7 @@ import {
 } from "@/components/Editorial";
 import { ApiError, getErrorMessage } from "@/lib/api";
 import { CATEGORY_LABELS, categoryPath } from "@/lib/categories";
+import { CATEGORY_BACKGROUNDS } from "@/lib/categoryBackgrounds";
 import { formatEntryCount } from "@/lib/entryDisplay";
 import { computePagination, parseOffset } from "@/lib/pagination";
 import {
@@ -90,42 +92,64 @@ export default async function CategoryPage({
     offset: page.offset,
   });
 
+  const title = info?.nome ?? label.heading;
+  const description = info?.descricao ?? label.tagline;
+  const meta = `${formatEntryCount(page.total)} · ${pagination.rangeLabel || "nada publicado ainda"}`;
+  const background = CATEGORY_BACKGROUNDS[categoria];
+
   return (
-    <div className="mx-auto max-w-shell px-4 py-10 sm:px-6">
-      <Breadcrumbs
-        trail={[{ label: "Acervo", href: "/" }, { label: label.nav }]}
-      />
-
-      <PageHeader
-        kicker="Categoria"
-        title={info?.nome ?? label.heading}
-        description={info?.descricao ?? label.tagline}
-        meta={`${formatEntryCount(page.total)} · ${pagination.rangeLabel || "nada publicado ainda"}`}
-      />
-
-      {info ? (
-        <div className="mt-8">
-          <EditorialNotice>{info.aviso}</EditorialNotice>
-        </div>
-      ) : null}
-
-      <div className="mt-10">
-        {page.itens.length > 0 ? (
-          <>
-            <EntryList entries={page.itens} />
-            <div className="mt-10">
-              <Pagination basePath={categoryPath(categoria)} state={pagination} />
-            </div>
-          </>
-        ) : (
-          <StatusMessage title="Nenhuma entrada nesta página">
-            <p>
-              A categoria tem {formatEntryCount(page.total)}. Volte para a{" "}
-              primeira página da listagem para vê-las.
-            </p>
-          </StatusMessage>
-        )}
+    <>
+      <div className="mx-auto max-w-shell px-4 pt-10 sm:px-6">
+        <Breadcrumbs
+          trail={[{ label: "Acervo", href: "/" }, { label: label.nav }]}
+        />
       </div>
-    </div>
+
+      {/* Banner com foto de fundo só pra categorias curadas em
+          `CATEGORY_BACKGROUNDS` (hoje só "Papas") — as demais continuam no
+          `PageHeader` de sempre, sem foto, até ganharem uma. */}
+      {background ? (
+        <div className="mt-6">
+          <CategoryBanner
+            background={background}
+            title={title}
+            description={description}
+            meta={meta}
+          />
+        </div>
+      ) : (
+        <div className="mx-auto max-w-shell px-4 sm:px-6">
+          <div className="mt-6">
+            <PageHeader kicker="Categoria" title={title} description={description} meta={meta} />
+          </div>
+        </div>
+      )}
+
+      <div className="mx-auto max-w-shell px-4 pb-10 sm:px-6">
+        {info ? (
+          <div className="mt-8">
+            <EditorialNotice>{info.aviso}</EditorialNotice>
+          </div>
+        ) : null}
+
+        <div className="mt-10">
+          {page.itens.length > 0 ? (
+            <>
+              <EntryList entries={page.itens} />
+              <div className="mt-10">
+                <Pagination basePath={categoryPath(categoria)} state={pagination} />
+              </div>
+            </>
+          ) : (
+            <StatusMessage title="Nenhuma entrada nesta página">
+              <p>
+                A categoria tem {formatEntryCount(page.total)}. Volte para a{" "}
+                primeira página da listagem para vê-las.
+              </p>
+            </StatusMessage>
+          )}
+        </div>
+      </div>
+    </>
   );
 }
