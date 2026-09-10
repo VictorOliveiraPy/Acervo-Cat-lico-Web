@@ -48,6 +48,14 @@ const nextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "upload.wikimedia.org", pathname: "/**" },
     ],
+    // O acervo já passa de mil imagens únicas (uma por verbete, cada uma
+    // conta como "source image" separada pra cota de Otimização de Imagem
+    // da Vercel) — estourou o limite do plano Hobby e todo <Image> do site
+    // parou de carregar (erro 402 "OPTIMIZED_IMAGE_REQUEST_PAYMENT_REQUIRED").
+    // `unoptimized: true` serve o arquivo original direto, sem passar pela
+    // pipeline de otimização/cota da Vercel — perde o resize/WebP automático,
+    // mas volta a funcionar sem custo. Reverter se/quando o plano mudar.
+    unoptimized: true,
   },
   async headers() {
     const baseHeaders = [
