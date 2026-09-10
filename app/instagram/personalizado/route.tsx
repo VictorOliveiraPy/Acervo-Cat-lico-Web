@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { ImageResponse } from "next/og";
 
-import { EB_GARAMOND_FONT_FAMILY, loadCardFonts } from "@/lib/instagramFonts";
 import { resolveCardImageSrc } from "@/lib/wikimedia";
 
 export const runtime = "edge";
@@ -9,196 +8,123 @@ export const runtime = "edge";
 const WIDTH = 1080;
 const HEIGHT = 1350;
 
-// Mesmos hex de `app/instagram/[categoria]/[slug]/route.tsx` e
-// `app/instagram/liturgia-diaria/route.tsx` — as três rotas têm que ficar
-// 100% no mesmo padrão visual, Satori não lê classes Tailwind.
-const BORDEAUX = "#6B1F2A";
-const BORDEAUX_DEEP = "#4E1620";
-const GOLD = "#B8912F";
-const GOLD_BRIGHT = "#D9B673";
-const GOLD_WASH = "#E8DCBA";
-const PARCHMENT_MUTED = "#D6C6A8";
+const MONTSERRAT_BLACK = "Montserrat Black";
+const MONTSERRAT_EXTRABOLD = "Montserrat ExtraBold";
 
-const OUTER_MARGIN = 40;
-const FRAME_GAP = 10;
-const INNER_PADDING = 52;
-const PHOTO_HEIGHT = 620;
-
-function excerpt(texto: string, max: number): string {
-  if (texto.length <= max) return texto;
-  const cortado = texto.slice(0, max);
-  const ultimoEspaco = cortado.lastIndexOf(" ");
-  return `${cortado.slice(0, ultimoEspaco)}…`;
+async function loadHeadlineFonts(origin: string) {
+  const [black, extrabold] = await Promise.all([
+    fetch(`${origin}/fonts/Montserrat-Black.ttf`).then((res) => res.arrayBuffer()),
+    fetch(`${origin}/fonts/Montserrat-ExtraBold.ttf`).then((res) => res.arrayBuffer()),
+  ]);
+  return [
+    { name: MONTSERRAT_BLACK, data: black, weight: 900 as const, style: "normal" as const },
+    { name: MONTSERRAT_EXTRABOLD, data: extrabold, weight: 800 as const, style: "normal" as const },
+  ];
 }
 
 /**
- * Cartão de Instagram genérico (1080×1350), mesma moldura dourada sobre
- * bordô das outras duas rotas — mas sem depender de um verbete do acervo
- * ou da liturgia do dia: título, texto e imagem vêm todos por query string.
+ * Cartão de Instagram "gancho" (1080×1350): foto de fundo ocupando o
+ * quadro inteiro, sem moldura, com uma frase grande em caixa alta por
+ * cima — formato de card que para o scroll, não de placa de museu.
  *
- * Existe pra cobrir o post "de curiosidade" — foto forte (foto de arquivo,
- * pintura, retrato) + gancho curto — que não é um verbete enciclopédico
- * nem o evangelho do dia, mas ainda precisa sair no padrão visual da marca
- * em vez de foto crua sem nada.
+ * Substitui a primeira versão desta rota (moldura bordô/dourada com bloco
+ * de texto embaixo, igual às outras duas rotas de Instagram): aquele
+ * formato é o certo pro cartão de verbete/liturgia, que quer parecer
+ * "arquivo do site", mas é fraco pra gerar engajamento — ninguém para de
+ * rolar por causa de uma citação pequena com moldura. Referência real: os
+ * cartões de citação que o usuário já vinha usando (foto/ilustração cheia,
+ * frase curta e enorme, sem parágrafo explicativo — a explicação vai na
+ * legenda do post, não dentro da imagem).
  *
- * Parâmetros: `imagem` (obrigatório, `/img-acervo/...` ou URL do Wikimedia),
- * `titulo` (obrigatório), `kicker` (opcional, categoria/selo no topo),
- * `texto` (opcional, corta em ~200 chars), `fonte` (opcional, linha final
- * antes da assinatura — nome de quem é a foto, referência bíblica etc.).
+ * Parâmetros: `imagem` (obrigatório), `frase` (obrigatório, a frase de
+ * impacto — cabe em 2-3 linhas curtas), `selo` (opcional, uma palavra ou
+ * duas no topo, tipo "CURIOSIDADE" ou "VOCÊ SABIA?"), `posicao` (opcional,
+ * "topo" ou "baixo" — onde o texto fica; padrão "baixo").
  *
  * Rota interna, fora do sitemap/indexação — ver `robots.ts`.
  */
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const imagemParam = url.searchParams.get("imagem");
-  const titulo = url.searchParams.get("titulo");
-  const kicker = (url.searchParams.get("kicker") ?? "").toUpperCase();
-  const texto = url.searchParams.get("texto");
-  const fonte = url.searchParams.get("fonte");
+  const frase = url.searchParams.get("frase");
+  const selo = (url.searchParams.get("selo") ?? "").toUpperCase();
+  const posicao = url.searchParams.get("posicao") === "topo" ? "topo" : "baixo";
 
-  if (!imagemParam || !titulo) {
+  if (!imagemParam || !frase) {
     return NextResponse.json(
-      { error: "Parâmetros obrigatórios: imagem, titulo" },
+      { error: "Parâmetros obrigatórios: imagem, frase" },
       { status: 400 },
     );
   }
 
   const origin = url.origin;
-  const contentWidth = WIDTH - 2 * (OUTER_MARGIN + FRAME_GAP + INNER_PADDING);
+  const gradiente =
+    posicao === "topo"
+      ? "linear-gradient(to bottom, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0) 60%)"
+      : "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.35) 45%, rgba(0,0,0,0) 65%)";
 
   return new ImageResponse(
     (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          padding: OUTER_MARGIN,
-          backgroundColor: BORDEAUX,
-          backgroundImage: `linear-gradient(160deg, ${BORDEAUX} 0%, ${BORDEAUX_DEEP} 100%)`,
-        }}
-      >
-        <div style={{ flex: 1, display: "flex", border: `1.5px solid ${GOLD}`, padding: FRAME_GAP }}>
-          <div
-            style={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              border: `1.5px solid ${GOLD}`,
-              padding: INNER_PADDING,
-            }}
-          >
+      <div style={{ width: "100%", height: "100%", display: "flex", position: "relative" }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={resolveCardImageSrc(imagemParam, origin)}
+          alt=""
+          width={WIDTH}
+          height={HEIGHT}
+          style={{ position: "absolute", top: 0, left: 0, width: WIDTH, height: HEIGHT, objectFit: "cover" }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: WIDTH,
+            height: HEIGHT,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: posicao === "topo" ? "flex-start" : "flex-end",
+            backgroundImage: gradiente,
+            padding: "72px 64px",
+          }}
+        >
+          {selo ? (
             <div
               style={{
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: contentWidth,
-                height: PHOTO_HEIGHT,
-                backgroundColor: BORDEAUX_DEEP,
-                border: `2px solid ${GOLD}`,
-                overflow: "hidden",
+                fontFamily: MONTSERRAT_EXTRABOLD,
+                fontSize: 26,
+                letterSpacing: 3,
+                color: "#D9B673",
+                marginBottom: 20,
               }}
             >
-              {/* Mesmo tratamento `contain` das outras duas rotas: a foto
-                  aparece inteira, sem risco de cortar a parte que importa
-                  (aconteceu aqui: `cover` cortou os óculos do "papa
-                  estiloso", que é o ponto inteiro da foto). */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={resolveCardImageSrc(imagemParam, origin)}
-                alt=""
-                width={contentWidth}
-                height={PHOTO_HEIGHT}
-                style={{ objectFit: "contain" }}
-              />
+              {selo}
             </div>
-
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: 36 }}>
-              {kicker ? (
-                <span
-                  style={{
-                    fontFamily: EB_GARAMOND_FONT_FAMILY,
-                    fontSize: 22,
-                    letterSpacing: 4,
-                    color: GOLD_BRIGHT,
-                    fontWeight: 700,
-                    textAlign: "center",
-                  }}
-                >
-                  {kicker}
-                </span>
-              ) : null}
-              <span
-                style={{
-                  display: "flex",
-                  marginTop: kicker ? 16 : 0,
-                  maxWidth: contentWidth - 20,
-                  fontFamily: EB_GARAMOND_FONT_FAMILY,
-                  fontWeight: 700,
-                  fontSize: 50,
-                  lineHeight: 1.15,
-                  color: GOLD_WASH,
-                  textAlign: "center",
-                  justifyContent: "center",
-                }}
-              >
-                {titulo}
-              </span>
-
-              {texto ? (
-                <>
-                  <div style={{ display: "flex", width: 90, height: 2, backgroundColor: GOLD, marginTop: 24 }} />
-                  <span
-                    style={{
-                      display: "flex",
-                      marginTop: 22,
-                      maxWidth: contentWidth - 40,
-                      fontFamily: EB_GARAMOND_FONT_FAMILY,
-                      fontSize: 27,
-                      lineHeight: 1.5,
-                      color: PARCHMENT_MUTED,
-                      textAlign: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {excerpt(texto, 210)}
-                  </span>
-                </>
-              ) : null}
-
-              {fonte ? (
-                <span
-                  style={{
-                    fontFamily: EB_GARAMOND_FONT_FAMILY,
-                    marginTop: 14,
-                    fontSize: 21,
-                    fontStyle: "italic",
-                    color: GOLD_BRIGHT,
-                    textAlign: "center",
-                  }}
-                >
-                  {fonte}
-                </span>
-              ) : null}
-
-              <div style={{ display: "flex", width: 90, height: 2, backgroundColor: GOLD, marginTop: 26 }} />
-
-              <span
-                style={{
-                  fontFamily: EB_GARAMOND_FONT_FAMILY,
-                  marginTop: 22,
-                  fontSize: 26,
-                  fontWeight: 700,
-                  letterSpacing: 1,
-                  color: GOLD_BRIGHT,
-                }}
-              >
-                @compendiocatolico
-              </span>
-            </div>
+          ) : null}
+          <div
+            style={{
+              display: "flex",
+              fontFamily: MONTSERRAT_BLACK,
+              fontSize: 66,
+              lineHeight: 1.12,
+              color: "#FFFFFF",
+              textShadow: "0 2px 18px rgba(0,0,0,0.5)",
+              textTransform: "uppercase",
+            }}
+          >
+            {frase}
+          </div>
+          <div
+            style={{
+              display: "flex",
+              fontFamily: MONTSERRAT_EXTRABOLD,
+              fontSize: 24,
+              color: "#D9B673",
+              marginTop: 28,
+            }}
+          >
+            @compendiocatolico
           </div>
         </div>
       </div>
@@ -206,7 +132,7 @@ export async function GET(request: Request) {
     {
       width: WIDTH,
       height: HEIGHT,
-      fonts: await loadCardFonts(origin),
+      fonts: await loadHeadlineFonts(origin),
     },
   );
 }
