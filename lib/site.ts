@@ -12,8 +12,11 @@ export const SITE_URL = "https://compendio-catolico.com";
 
 export const SITE_NAME = "Compêndio Católico";
 
+// Cortada pra caber no snippet do Google sem truncar no meio da frase (o
+// limite prático fica perto de 155-160 caracteres) — versão anterior tinha
+// 180 e listava só 10 das 43 categorias, uma escolha meio arbitrária.
 export const SITE_DESCRIPTION =
-  "Catálogo de consulta sobre o mundo católico: santos, papas, Catecismo, Crisma, sacramentos, orações, pecados, milagres eucarísticos, história da Igreja, Doutores, concílios e mais.";
+  "Consulta rápida sobre o mundo católico: santos, papas, Catecismo, sacramentos, milagres, história da Igreja, orações e mais de 40 temas.";
 
 /**
  * Plataforma irmã: gamificação para viver a fé na prática (escolher um santo
