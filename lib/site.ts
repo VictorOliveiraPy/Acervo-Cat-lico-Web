@@ -24,3 +24,11 @@ export const SANTO_GUARDIAO_URL = "https://www.santo-guardiao.com.br/";
 
 /** Perfil oficial no Instagram, linkado no rodapé. */
 export const INSTAGRAM_URL = "https://www.instagram.com/compendiocatolico/";
+
+/**
+ * Outro projeto do mesmo autor: ranking público de perfis do Instagram.
+ * Sem relação temática com o acervo — link de divulgação simples no
+ * rodapé, não uma "plataforma irmã" (esse rótulo fica só pro Santo
+ * Guardião, que de fato complementa o conteúdo católico).
+ */
+export const MELHORPERFIL_URL = "https://www.melhorperfil.com.br/";

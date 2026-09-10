@@ -5,7 +5,7 @@ import { CATEGORY_GROUPS } from "@/lib/categoryGroups";
 import { ApiError } from "@/lib/api";
 import { HIMETRICA_SHARE_URL } from "@/lib/himetricaShareUrl";
 import { fetchHealth } from "@/lib/services/acervoService";
-import { INSTAGRAM_URL, SANTO_GUARDIAO_URL } from "@/lib/site";
+import { INSTAGRAM_URL, MELHORPERFIL_URL, SANTO_GUARDIAO_URL } from "@/lib/site";
 import type { HealthStatus } from "@/lib/schemas";
 
 /**
@@ -119,6 +119,14 @@ export async function SiteFooter() {
             className="underline-offset-4 hover:text-bordeaux hover:underline"
           >
             Instagram →
+          </a>
+          <a
+            href={MELHORPERFIL_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline-offset-4 hover:text-bordeaux hover:underline"
+          >
+            melhorperfil →
           </a>
           {HIMETRICA_SHARE_URL ? (
             <a
