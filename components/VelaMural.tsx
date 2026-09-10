@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { formatVelaDate, formatVelaLocation, velaTipoInfo } from "@/lib/velas";
+import { VELA_IMAGEM, formatVelaDate, formatVelaLocation, velaTipoInfo } from "@/lib/velas";
 import type { Vela } from "@/lib/velasSchemas";
 
 /**
@@ -30,13 +30,14 @@ export function VelaMural({ velas }: { velas: Vela[] }) {
             className="flex gap-4 rounded-edge border border-rule-faint bg-parchment-raised p-4"
           >
             <Image
-              src={info.imagem}
-              alt={`Vela de ${info.label}`}
+              src={VELA_IMAGEM}
+              alt="Vela acesa"
               width={88}
               height={88}
               className="h-20 w-20 shrink-0 rounded-edge object-cover sm:h-24 sm:w-24"
             />
             <div className="min-w-0">
+              <p className="kicker text-bordeaux">{info.label}</p>
               <p className="font-display text-body text-ink">{vela.nome}</p>
               {local ? <p className="text-meta text-ink-muted/80">{local}</p> : null}
               {vela.intencao ? (

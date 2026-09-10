@@ -1,12 +1,16 @@
 /**
- * Os tipos de vela que a pessoa pode escolher ao acender, com a imagem de
- * cada um.
+ * Os tipos de vela que a pessoa pode escolher ao acender.
  *
- * Mesmo padrão de `CATEGORY_LABELS`: o rótulo e a imagem moram no frontend,
- * não vêm da API — o backend só guarda o slug (`TipoVela`) e valida contra
- * ele. Adicionar um tipo aqui sem adicionar no `TipoVela` do backend (ou
+ * Mesmo padrão de `CATEGORY_LABELS`: o rótulo mora no frontend, não vem da
+ * API — o backend só guarda o slug (`TipoVela`) e valida contra ele.
+ * Adicionar um tipo aqui sem adicionar no `TipoVela` do backend (ou
  * vice-versa) quebra a escolha na tela ou a gravação; os dois lados têm
  * que mudar juntos.
+ *
+ * Antes cada tipo tinha sua própria foto do santo/devoção — mas o card de
+ * uma vela acesa é sobre a vela, não sobre um retrato; agora todos usam a
+ * mesma foto de vela votiva (`VELA_IMAGEM`), e o rótulo (`label`) é quem
+ * diz por quem é a intenção.
  */
 
 import type { VelaTipo } from "@/lib/velasSchemas";
@@ -14,85 +18,26 @@ import type { VelaTipo } from "@/lib/velasSchemas";
 export type VelaTipoInfo = {
   tipo: VelaTipo;
   label: string;
-  imagem: string;
-  imagemCredito: string | null;
 };
 
 export const VELA_TIPOS: readonly VelaTipoInfo[] = [
-  {
-    tipo: "jesus",
-    label: "Jesus Cristo",
-    imagem: "https://upload.wikimedia.org/wikipedia/commons/4/4a/Spas_vsederzhitel_sinay.jpg",
-    imagemCredito: null,
-  },
-  {
-    tipo: "nossa_senhora",
-    label: "Nossa Senhora",
-    imagem: "https://upload.wikimedia.org/wikipedia/commons/0/04/Kazan_moscow.jpg",
-    imagemCredito: null,
-  },
-  {
-    tipo: "aparecida",
-    label: "N. Sra. Aparecida",
-    imagem: "https://upload.wikimedia.org/wikipedia/commons/8/8a/NS_Aparecida.png",
-    imagemCredito: null,
-  },
-  {
-    tipo: "sao_jose",
-    label: "São José",
-    imagem: "https://upload.wikimedia.org/wikipedia/commons/7/74/Agust%C3%ADn_Rodr%C3%ADguez_-_San_Jos%C3%A9_y_el_Ni%C3%B1o.jpg",
-    imagemCredito: null,
-  },
-  {
-    tipo: "espirito_santo",
-    label: "Espírito Santo",
-    imagem: "https://upload.wikimedia.org/wikipedia/commons/e/e8/Rom%2C_Vatikan%2C_Basilika_St._Peter%2C_Die_Taube_des_Heiligen_Geistes_%28Cathedra_Petri%2C_Bernini%29.jpg",
-    imagemCredito: "Dnalor 01 — Wikimedia Commons, CC BY-SA 3.0 at",
-  },
-  {
-    tipo: "sao_judas_tadeu",
-    label: "São Judas Tadeu",
-    imagem: "https://upload.wikimedia.org/wikipedia/commons/0/0d/Anthonis_van_Dyck%2C_Kunsthistorisches_Museum_Wien%2C_Gem%C3%A4ldegalerie_-_Apostel_Judas_Thadd%C3%A4us_-_GG_6809_-_Kunsthistorisches_Museum.jpg",
-    imagemCredito: null,
-  },
-  {
-    tipo: "carlo_acutis",
-    label: "São Carlo Acutis",
-    // Mesma foto do mini ícone no cabeçalho (Campinas, CC BY-SA 4.0).
-    imagem: "https://upload.wikimedia.org/wikipedia/commons/7/76/Campinas_-_13_de_setembro-96_%28cropped%29.jpg",
-    imagemCredito: "Wikimedia Commons, CC BY-SA 4.0",
-  },
-  {
-    tipo: "santo_agostinho",
-    label: "Santo Agostinho",
-    imagem: "https://upload.wikimedia.org/wikipedia/commons/e/ea/Saint_Augustine_by_Philippe_de_Champaigne.jpg",
-    imagemCredito: null,
-  },
-  {
-    tipo: "sao_bento",
-    label: "São Bento",
-    imagem: "https://upload.wikimedia.org/wikipedia/commons/7/73/Fra_Angelico_031.jpg",
-    imagemCredito: null,
-  },
-  {
-    tipo: "santa_terezinha",
-    label: "Santa Terezinha",
-    imagem: "https://upload.wikimedia.org/wikipedia/commons/6/69/Teresa-de-Lisieux.jpg",
-    imagemCredito: null,
-  },
-  {
-    tipo: "santo_antonio",
-    label: "Santo Antônio",
-    imagem: "https://upload.wikimedia.org/wikipedia/commons/2/24/Kessler_Antonius_von_Padua.jpg",
-    imagemCredito: null,
-  },
-  {
-    tipo: "sao_joao_batista",
-    label: "São João Batista",
-    imagem: "https://upload.wikimedia.org/wikipedia/commons/4/45/Anton_Raphael_Mengs_-_St._John_the_Baptist_Preaching_in_the_Wilderness_-_Google_Art_Project.jpg",
-    imagemCredito: null,
-  },
+  { tipo: "jesus", label: "Jesus Cristo" },
+  { tipo: "nossa_senhora", label: "Nossa Senhora" },
+  { tipo: "aparecida", label: "N. Sra. Aparecida" },
+  { tipo: "sao_jose", label: "São José" },
+  { tipo: "espirito_santo", label: "Espírito Santo" },
+  { tipo: "sao_judas_tadeu", label: "São Judas Tadeu" },
+  { tipo: "carlo_acutis", label: "São Carlo Acutis" },
+  { tipo: "santo_agostinho", label: "Santo Agostinho" },
+  { tipo: "sao_bento", label: "São Bento" },
+  { tipo: "santa_terezinha", label: "Santa Terezinha" },
+  { tipo: "santo_antonio", label: "Santo Antônio" },
+  { tipo: "sao_joao_batista", label: "São João Batista" },
 ] as const;
+
+/** Foto compartilhada por toda vela — rack de velas votivas acesas. */
+export const VELA_IMAGEM = "/img-acervo/vela-votiva.jpg";
+export const VELA_IMAGEM_CREDITO = "Zarn02 — Wikimedia Commons, CC BY-SA 3.0";
 
 /** Vela pré-selecionada ao abrir o formulário — a primeira da lista acima. */
 export const DEFAULT_VELA_TIPO: VelaTipo = "jesus";

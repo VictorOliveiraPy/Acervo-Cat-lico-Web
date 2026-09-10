@@ -17,7 +17,7 @@ import { CATEGORY_SLUGS, type CategoryInfo, type Entry } from "@/lib/schemas";
 import { fetchCategories, fetchEntryPage } from "@/lib/services/acervoService";
 import { fetchLiturgiaDiaria } from "@/lib/services/liturgiaService";
 import { SANTO_GUARDIAO_URL, SITE_NAME, SITE_URL } from "@/lib/site";
-import { VELA_TIPOS } from "@/lib/velas";
+import { VELA_IMAGEM } from "@/lib/velas";
 
 // WebSite + SearchAction: dado estruturado que habilita a caixa de busca do
 // Google embaixo do resultado do site (sitelinks search box). Só faz sentido
@@ -214,19 +214,14 @@ export default async function HomePage() {
 
           <div className="mt-6 flex flex-col items-start gap-6 rounded-edge border border-bordeaux bg-parchment-raised p-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-4">
-              <div className="flex shrink-0 -space-x-3">
-                {VELA_TIPOS.slice(0, 3).map((item) => (
-                  <Image
-                    key={item.tipo}
-                    src={item.imagem}
-                    alt=""
-                    aria-hidden="true"
-                    width={56}
-                    height={56}
-                    className="h-12 w-12 rounded-edge border-2 border-parchment-raised object-cover"
-                  />
-                ))}
-              </div>
+              <Image
+                src={VELA_IMAGEM}
+                alt=""
+                aria-hidden="true"
+                width={56}
+                height={56}
+                className="h-14 w-14 shrink-0 rounded-edge border-2 border-parchment-raised object-cover"
+              />
               <div className="max-w-measure">
                 <p className="kicker text-bordeaux">Oração</p>
                 <h2 className="mt-2 font-display text-title-sm text-ink">

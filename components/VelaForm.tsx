@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 
 import { acenderVelaAction, type AcenderVelaState } from "@/app/velas/actions";
-import { DEFAULT_VELA_TIPO, VELA_TIPOS } from "@/lib/velas";
+import { DEFAULT_VELA_TIPO, VELA_IMAGEM, VELA_IMAGEM_CREDITO, VELA_TIPOS } from "@/lib/velas";
 import {
   VELA_CIDADE_MAX,
   VELA_EMAIL_MAX,
@@ -65,8 +65,8 @@ function VelaPicker({
                 className="sr-only"
               />
               <Image
-                src={item.imagem}
-                alt={`Vela de ${item.label}`}
+                src={VELA_IMAGEM}
+                alt="Vela acesa"
                 width={128}
                 height={128}
                 className="h-28 w-28 rounded-edge object-cover sm:h-32 sm:w-32"
@@ -76,20 +76,8 @@ function VelaPicker({
           );
         })}
       </div>
-      <VelaCreditos />
+      <p className="mt-3 text-meta text-ink-muted/70">Foto: {VELA_IMAGEM_CREDITO}</p>
     </fieldset>
-  );
-}
-
-/** Crédito das fotos que a licença exige — só as que precisam, numa linha só. */
-function VelaCreditos() {
-  const creditos = VELA_TIPOS.filter((item) => item.imagemCredito);
-  if (creditos.length === 0) return null;
-
-  return (
-    <p className="mt-3 text-meta text-ink-muted/70">
-      Fotos: {creditos.map((item) => `${item.label} — ${item.imagemCredito}`).join(" · ")}
-    </p>
   );
 }
 
