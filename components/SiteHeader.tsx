@@ -19,7 +19,19 @@ export function SiteHeader() {
       <div className="mx-auto flex max-w-shell flex-col gap-2.5 px-4 py-3 sm:px-6 md:flex-row md:items-center md:justify-between">
         <Link href="/" className="group flex flex-col">
           <span className="flex items-center gap-2 font-display text-title-md leading-none text-bordeaux">
-            <span aria-hidden="true">🇻🇦</span>
+            {/* Emoji de bandeira (🇻🇦) em vez de imagem: Windows não tem a
+                fonte de emoji de bandeiras, então a maioria dos navegadores
+                ali (Chrome, Firefox) mostra as duas letras do código do país
+                ("VA") soltas em vez da bandeira — troca pro SVG da própria
+                bandeira, que renderiza igual em qualquer SO. */}
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Flag_of_Vatican_City_%282023%E2%80%93present%29.svg"
+              alt=""
+              aria-hidden="true"
+              width={20}
+              height={20}
+              className="h-5 w-5 shrink-0"
+            />
             Compêndio Católico
             <Image
               src="https://upload.wikimedia.org/wikipedia/commons/7/76/Campinas_-_13_de_setembro-96_%28cropped%29.jpg"
