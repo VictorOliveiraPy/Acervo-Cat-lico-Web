@@ -19,8 +19,10 @@ type Props = {
  * Listagem de entradas.
  *
  * As linhas são um objeto só, repetido: mesmo filete acima, mesmo recuo, mesma
- * coluna de rótulo. Não são cards — a listagem é uma sequência para escanear, e
- * emoldurar cada item em caixa própria competiria com o título da página.
+ * miniatura. Não são cards — a listagem é uma sequência para escanear, no
+ * padrão "episódio": miniatura maior à esquerda, título em destaque e um
+ * rótulo discreto embaixo dele (a categoria, ou a posição/destaque da
+ * entrada), como uma lista de episódios de programa.
  */
 export function EntryList({ entries, showCategory = false }: Props) {
   return (
@@ -28,38 +30,38 @@ export function EntryList({ entries, showCategory = false }: Props) {
       {entries.map((entry) => {
         const ordinal = entryOrdinal(entry);
         const highlight = entryHighlight(entry);
-        const leftLabel = showCategory
+        const label = showCategory
           ? CATEGORY_LABELS[entry.categoria].nav
           : (ordinal ?? highlight);
-        const showHighlightUnderTitle = highlight !== null && highlight !== leftLabel;
 
         return (
           <li key={entry.id} className="border-t border-rule-faint">
             <Link
               href={entryPath(entry.categoria, entry.slug)}
-              className="group flex flex-col gap-2 py-6 transition-colors hover:bg-parchment-raised sm:flex-row sm:gap-8"
+              className="group flex flex-col gap-4 py-6 transition-colors hover:bg-parchment-raised sm:flex-row sm:gap-6"
             >
-              <p className="kicker shrink-0 sm:w-44 sm:pt-1.5">
-                {leftLabel ?? "Entrada"}
-              </p>
-
               {entry.imagem ? (
                 <Image
                   src={entry.imagem}
                   alt=""
-                  width={96}
-                  height={96}
-                  className="h-24 w-24 shrink-0 rounded-edge border border-rule-faint object-cover"
+                  width={160}
+                  height={112}
+                  className="h-28 w-full shrink-0 rounded-edge border border-rule-faint object-cover sm:h-24 sm:w-32"
                 />
-              ) : null}
+              ) : (
+                <div
+                  aria-hidden="true"
+                  className="flex h-28 w-full shrink-0 items-center justify-center rounded-edge border border-rule-faint bg-parchment-raised text-title-md sm:h-24 sm:w-32"
+                >
+                  {CATEGORY_LABELS[entry.categoria].icon}
+                </div>
+              )}
 
               <div className="min-w-0">
                 <h3 className="font-display text-title-sm text-ink group-hover:text-bordeaux">
                   {entry.titulo}
                 </h3>
-                {showHighlightUnderTitle ? (
-                  <p className="mt-1 text-meta text-bordeaux">{highlight}</p>
-                ) : null}
+                {label ? <p className="mt-1 kicker text-bordeaux">{label}</p> : null}
                 <p className="mt-2 max-w-measure text-body text-ink-muted">
                   {entry.resumo}
                 </p>
