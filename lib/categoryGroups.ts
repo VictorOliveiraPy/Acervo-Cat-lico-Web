@@ -36,6 +36,7 @@ export const CATEGORY_GROUPS: readonly CategoryGroup[] = [
     slugs: [
       "santos",
       "papas",
+      "cardeais",
       "doutores-igreja",
       "padres-da-igreja",
       "beatos-canonizacao",
@@ -72,7 +73,15 @@ export const CATEGORY_GROUPS: readonly CategoryGroup[] = [
   },
   {
     title: "História da Igreja",
-    slugs: ["historia", "concilios", "documentos-magisterio", "igreja-brasil", "heresias-cismas"],
+    slugs: [
+      "historia",
+      "concilios",
+      "documentos-magisterio",
+      "igreja-brasil",
+      "heresias-cismas",
+      "missoes-evangelizacao",
+      "catedrais-basilicas-mundo",
+    ],
   },
   {
     title: "Vocação e Vida Cristã",
@@ -87,7 +96,7 @@ export const CATEGORY_GROUPS: readonly CategoryGroup[] = [
   },
   {
     title: "Referência",
-    slugs: ["glossario", "livros"],
+    slugs: ["glossario", "livros", "ciencia-fe"],
   },
 ] as const;
 

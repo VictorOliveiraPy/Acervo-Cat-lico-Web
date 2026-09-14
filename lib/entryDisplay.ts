@@ -118,6 +118,68 @@ export function entryOrdinal(entry: Entry): string | null {
   }
 }
 
+/** Rótulo em português de cada ordem cardinalícia. */
+function ordemCardinaliciaLabel(
+  ordem: EntryOf<"cardeais">["ordem_cardinalicia"],
+): string | null {
+  switch (ordem) {
+    case "bispo":
+      return "Cardeal-bispo";
+    case "presbitero":
+      return "Cardeal-presbítero";
+    case "diacono":
+      return "Cardeal-diácono";
+    case null:
+      return null;
+  }
+}
+
+/** Rótulo em português de cada tipo de entrada de ciência e fé. */
+function cienciaFeTypeLabel(tipo: EntryOf<"ciencia-fe">["tipo"]): string {
+  switch (tipo) {
+    case "cientista":
+      return "Cientista";
+    case "instituicao":
+      return "Instituição";
+    case "documento":
+      return "Documento";
+    case "conceito":
+      return "Conceito";
+  }
+}
+
+/** Rótulo em português de cada tipo de entrada de missões. */
+function missaoTypeLabel(tipo: EntryOf<"missoes-evangelizacao">["tipo"]): string {
+  switch (tipo) {
+    case "missionario":
+      return "Missionário";
+    case "ordem_missionaria":
+      return "Ordem missionária";
+    case "territorio":
+      return "Território de missão";
+    case "martirio":
+      return "Martírio";
+    case "conceito":
+      return "Conceito";
+  }
+}
+
+/** Rótulo em português de cada tipo de templo notável. */
+function temploNotavelTypeLabel(
+  tipo: EntryOf<"catedrais-basilicas-mundo">["tipo"],
+): string {
+  switch (tipo) {
+    case "catedral":
+      return "Catedral";
+    case "basilica_maior":
+      return "Basílica maior";
+    case "basilica_menor":
+      return "Basílica menor";
+    case "igreja_historica":
+      return "Igreja histórica";
+  }
+}
+
 /**
  * Linha única de contexto para a listagem: o dado que mais distingue a
  * entrada das irmãs dela (data da festa, local do milagre, período histórico).
@@ -223,6 +285,16 @@ export function entryHighlight(entry: Entry): string | null {
       return formatCatechismParagraphs(entry.paragrafos_ccc);
     case "musica-sacra":
       return entry.idioma;
+    case "cardeais":
+      return [ordemCardinaliciaLabel(entry.ordem_cardinalicia), entry.pais]
+        .filter(Boolean)
+        .join(" · ") || null;
+    case "ciencia-fe":
+      return [cienciaFeTypeLabel(entry.tipo), entry.area].filter(Boolean).join(" · ") || null;
+    case "missoes-evangelizacao":
+      return [missaoTypeLabel(entry.tipo), entry.regiao].filter(Boolean).join(" · ") || null;
+    case "catedrais-basilicas-mundo":
+      return [entry.cidade, entry.pais].filter(Boolean).join(" · ") || null;
   }
 }
 
@@ -548,6 +620,33 @@ export function entryMetaFields(entry: Entry): MetaField[] {
       return [...field("Parágrafos", formatCatechismParagraphs(entry.paragrafos_ccc))];
     case "musica-sacra":
       return [...field("Idioma", entry.idioma)];
+    case "cardeais":
+      return [
+        ...field("Ordem cardinalícia", ordemCardinaliciaLabel(entry.ordem_cardinalicia)),
+        ...field("País", entry.pais),
+        ...field("Criação", entry.ano_criacao === null ? null : String(entry.ano_criacao)),
+        ...field("Papa criador", entry.papa_criador),
+      ];
+    case "ciencia-fe":
+      return [
+        ...field("Tipo", cienciaFeTypeLabel(entry.tipo)),
+        ...field("Área", entry.area),
+        ...field("Século", entry.seculo),
+      ];
+    case "missoes-evangelizacao":
+      return [
+        ...field("Tipo", missaoTypeLabel(entry.tipo)),
+        ...field("Região", entry.regiao),
+        ...field("Século", entry.seculo),
+      ];
+    case "catedrais-basilicas-mundo":
+      return [
+        ...field("Tipo", temploNotavelTypeLabel(entry.tipo)),
+        ...field("Cidade", entry.cidade),
+        ...field("País", entry.pais),
+        ...field("Conclusão", entry.ano_conclusao),
+        ...field("Estilo", entry.estilo_arquitetonico),
+      ];
   }
 }
 

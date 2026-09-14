@@ -297,6 +297,30 @@ export const CATEGORY_LABELS: Record<CategorySlug, CategoryLabel> = {
     tagline: "Canto gregoriano e os grandes hinos latinos da tradição católica.",
     icon: "🎵",
   },
+  cardeais: {
+    nav: "Cardeais",
+    heading: "Cardeais",
+    tagline: "Cardeais da Igreja e o Colégio Cardinalício, de Roma ao conclave.",
+    icon: "🎩",
+  },
+  "ciencia-fe": {
+    nav: "Ciência e Fé",
+    heading: "Ciência e Fé",
+    tagline: "Cientistas católicos, instituições e o diálogo entre fé e razão.",
+    icon: "🔭",
+  },
+  "missoes-evangelizacao": {
+    nav: "Missões",
+    heading: "Missões e Evangelização",
+    tagline: "Missionários, ordens missionárias e a evangelização pelo mundo.",
+    icon: "🌍",
+  },
+  "catedrais-basilicas-mundo": {
+    nav: "Catedrais e Basílicas",
+    heading: "Catedrais e Basílicas do Mundo",
+    tagline: "Templos católicos historicamente e arquitetonicamente notáveis.",
+    icon: "🏰",
+  },
 };
 
 /** Categorias na ordem editorial da navegação. */

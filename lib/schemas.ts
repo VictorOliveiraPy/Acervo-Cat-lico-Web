@@ -55,6 +55,10 @@ export const CATEGORY_SLUGS = [
   "vocacoes-estados-de-vida",
   "primeira-comunhao",
   "musica-sacra",
+  "cardeais",
+  "ciencia-fe",
+  "missoes-evangelizacao",
+  "catedrais-basilicas-mundo",
 ] as const;
 
 export type CategorySlug = (typeof CATEGORY_SLUGS)[number];
@@ -369,6 +373,37 @@ const obraMusicaSacraSchema = baseEntrySchema.extend({
   ordem: z.number().int().nullable().default(null),
 });
 
+const cardealSchema = baseEntrySchema.extend({
+  categoria: z.literal("cardeais"),
+  ordem_cardinalicia: z.enum(["bispo", "presbitero", "diacono"]).nullable().default(null),
+  pais: z.string().nullable().default(null),
+  ano_criacao: z.number().int().nullable().default(null),
+  papa_criador: z.string().nullable().default(null),
+});
+
+const temaCienciaFeSchema = baseEntrySchema.extend({
+  categoria: z.literal("ciencia-fe"),
+  tipo: z.enum(["cientista", "instituicao", "documento", "conceito"]),
+  area: z.string().nullable().default(null),
+  seculo: z.string().nullable().default(null),
+});
+
+const temaMissionarioSchema = baseEntrySchema.extend({
+  categoria: z.literal("missoes-evangelizacao"),
+  tipo: z.enum(["missionario", "ordem_missionaria", "territorio", "martirio", "conceito"]),
+  regiao: z.string().nullable().default(null),
+  seculo: z.string().nullable().default(null),
+});
+
+const temploNotavelSchema = baseEntrySchema.extend({
+  categoria: z.literal("catedrais-basilicas-mundo"),
+  tipo: z.enum(["catedral", "basilica_maior", "basilica_menor", "igreja_historica"]),
+  cidade: z.string().nullable().default(null),
+  pais: z.string().nullable().default(null),
+  ano_conclusao: z.string().nullable().default(null),
+  estilo_arquitetonico: z.string().nullable().default(null),
+});
+
 export const entrySchema = z.discriminatedUnion("categoria", [
   santoSchema,
   papaSchema,
@@ -415,6 +450,10 @@ export const entrySchema = z.discriminatedUnion("categoria", [
   estadoDeVidaSchema,
   primeiraComunhaoSchema,
   obraMusicaSacraSchema,
+  cardealSchema,
+  temaCienciaFeSchema,
+  temaMissionarioSchema,
+  temploNotavelSchema,
 ]);
 
 export const categoryInfoSchema = z.object({
