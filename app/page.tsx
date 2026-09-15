@@ -259,7 +259,11 @@ export default async function HomePage() {
           dele também é `relative`); esse aqui não era, e a foto cobria o
           início do índice de categorias. */}
       <div className="relative mx-auto max-w-shell px-4 sm:px-6">
-        <section aria-labelledby="categorias" className="py-12">
+        {/* `pb-6`, não `pb-12` como as demais seções: o conteúdo aqui é só
+            uma vitrine curta (7 chips + 1 link) desde que o índice completo
+            foi pro rodapé — com o mesmo respiro pesado de uma seção cheia,
+            sobrava um vão vazio grande antes do próximo divisor. */}
+        <section aria-labelledby="categorias" className="pt-12 pb-6">
           <div className="flex items-baseline justify-between gap-4">
             <h2 id="categorias" className="font-display text-title-md text-ink">
               Comece por aqui
@@ -273,7 +277,7 @@ export default async function HomePage() {
               Aqui ficam só as mais buscadas (mesmo recorte do menu do
               cabeçalho), como ponto de partida, com um link só para quem
               quer a lista inteira. */}
-          <ul className="mt-8 flex flex-wrap gap-3">
+          <ul className="mt-6 flex flex-wrap gap-3">
             {PRIMARY_CATEGORY_SLUGS.map((slug) => {
               const info = categoryBySlug.get(slug);
               return (
