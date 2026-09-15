@@ -7,12 +7,11 @@ import { SearchField } from "@/components/SearchField";
 import { StatusMessage } from "@/components/Editorial";
 import { ApiError, getApiBaseUrl, getErrorMessage } from "@/lib/api";
 import { CATEGORY_LABELS, categoryPath } from "@/lib/categories";
-import { CATEGORY_GROUPS } from "@/lib/categoryGroups";
+import { PRIMARY_CATEGORY_SLUGS } from "@/lib/categoryGroups";
 import { formatEntryCount } from "@/lib/entryDisplay";
 import { safeJsonLd } from "@/lib/jsonLd";
 import { formatLiturgiaDate } from "@/lib/liturgia";
 import type { LiturgiaDiaria } from "@/lib/liturgiaSchemas";
-import { toRoman } from "@/lib/roman";
 import { CATEGORY_SLUGS, type CategoryInfo, type Entry } from "@/lib/schemas";
 import { fetchCategories, fetchEntryPage } from "@/lib/services/acervoService";
 import { fetchLiturgiaDiaria } from "@/lib/services/liturgiaService";
@@ -263,49 +262,48 @@ export default async function HomePage() {
         <section aria-labelledby="categorias" className="py-12">
           <div className="flex items-baseline justify-between gap-4">
             <h2 id="categorias" className="font-display text-title-md text-ink">
-              Percorrer por categoria
+              Comece por aqui
             </h2>
             <p className="kicker">{totalEntries} entradas</p>
           </div>
 
-          {/* Índice, não grade de cards de app: cada card com emoji colorido
-              destoava de tudo em volta (bordô/dourado/serifa/latim) — a
-              mesma reclamação de sempre com essa mistura de linguagem
-              visual. Os 7 grupos temáticos (já usados no rodapé) viram
-              seções numeradas em romano, como o sumário de um catecismo
-              impresso; cada categoria é uma linha de índice, não um botão. */}
-          <div className="mt-10 grid gap-x-12 gap-y-10 md:grid-cols-2">
-            {CATEGORY_GROUPS.map((group, groupIndex) => (
-              <div key={group.title}>
-                <h3 className="flex items-baseline gap-3 border-b border-gold pb-2">
-                  <span className="font-display text-lead text-bordeaux">
-                    {toRoman(groupIndex + 1)}.
-                  </span>
-                  <span className="kicker text-bordeaux">{group.title}</span>
-                </h3>
-                <ul className="mt-1 flex flex-col divide-y divide-rule-faint">
-                  {group.slugs.map((slug) => {
-                    const info = categoryBySlug.get(slug);
-                    return (
-                      <li key={slug}>
-                        <Link
-                          href={categoryPath(slug)}
-                          className="group flex items-baseline justify-between gap-4 py-2.5"
-                        >
-                          <span className="font-display text-body text-ink group-hover:text-bordeaux group-hover:underline group-hover:underline-offset-4">
-                            {CATEGORY_LABELS[slug].nav}
-                          </span>
-                          <span className="shrink-0 text-meta text-ink-muted">
-                            {info ? formatEntryCount(info.total) : null}
-                          </span>
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            ))}
-          </div>
+          {/* Vitrine, não índice: as 49 categorias já moram inteiras e
+              agrupadas por assunto no rodapé de toda página — repeti-las
+              aqui era o mesmo conteúdo duas vezes na mesma tela de rolagem.
+              Aqui ficam só as mais buscadas (mesmo recorte do menu do
+              cabeçalho), como ponto de partida, com um link só para quem
+              quer a lista inteira. */}
+          <ul className="mt-8 flex flex-wrap gap-3">
+            {PRIMARY_CATEGORY_SLUGS.map((slug) => {
+              const info = categoryBySlug.get(slug);
+              return (
+                <li key={slug}>
+                  <Link
+                    href={categoryPath(slug)}
+                    className="group flex items-center gap-2 rounded-edge border border-rule-faint bg-parchment-raised px-4 py-2.5 transition-colors hover:border-bordeaux"
+                  >
+                    <span className="font-display text-body text-ink group-hover:text-bordeaux">
+                      {CATEGORY_LABELS[slug].nav}
+                    </span>
+                    {info ? (
+                      <span className="text-meta text-ink-muted">
+                        {formatEntryCount(info.total)}
+                      </span>
+                    ) : null}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+
+          <p className="mt-6">
+            <a
+              href="#todas-categorias"
+              className="text-meta text-bordeaux underline-offset-4 hover:underline"
+            >
+              Ver todas as {categories.length} categorias ↓
+            </a>
+          </p>
         </section>
 
         <OrnamentalDivider />

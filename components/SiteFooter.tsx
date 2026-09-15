@@ -77,7 +77,14 @@ export async function SiteFooter() {
             "Todas as categorias" do header serve aqui de índice completo,
             sem precisar de clique nenhum (o rodapé já é a área "quero ver
             tudo"). */}
-        <nav aria-label="Categorias, por assunto" className="mt-10 border-t border-rule-faint pt-8">
+        {/* `id` é o alvo do link "Ver todas as categorias" da home
+            (`app/page.tsx`) — o rodapé já tem o índice completo em toda
+            página, então a home aponta pra ele em vez de repeti-lo. */}
+        <nav
+          id="todas-categorias"
+          aria-label="Categorias, por assunto"
+          className="mt-10 scroll-mt-20 border-t border-rule-faint pt-8"
+        >
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {CATEGORY_GROUPS.map((group) => (
               <div key={group.title}>
