@@ -18,6 +18,12 @@ import { fetchLiturgiaDiaria } from "@/lib/services/liturgiaService";
 import { SANTO_GUARDIAO_URL, SITE_NAME, SITE_URL } from "@/lib/site";
 import { VELA_IMAGEM } from "@/lib/velas";
 
+// Regenera a home (com um sorteio novo pra "Do acervo") a cada 5 minutos —
+// o mesmo intervalo padrão de cache das leituras da API (`DEFAULT_REVALIDATE_
+// SECONDS` em `lib/api.ts`), pra não ficar pedindo dado novo mais rápido do
+// que o resto do site já considera "atual".
+export const revalidate = 300;
+
 // WebSite + SearchAction: dado estruturado que habilita a caixa de busca do
 // Google embaixo do resultado do site (sitelinks search box). Só faz sentido
 // na home, que é a página que o Google trata como identidade do site.
@@ -54,20 +60,58 @@ type HomeData = {
   sample: Entry[];
 };
 
+/** Janela de troca da amostra — 5 minutos, o mesmo intervalo padrão de cache
+ * das leituras da API (`DEFAULT_REVALIDATE_SECONDS` em `lib/api.ts`). */
+const SAMPLE_ROTATION_MS = 5 * 60 * 1000;
+
+/**
+ * Escolhe, dentro do total de uma categoria, um deslocamento (`offset`) que
+ * ainda deixa `SAMPLE_PER_CATEGORY` itens inteiros a partir dele — e o mesmo
+ * deslocamento para todo mundo durante a mesma janela de 5 minutos.
+ *
+ * De propósito NÃO é `Math.random()`: o offset vira parte da URL buscada
+ * (`fetchEntryPage(slug, { offset })`), e um valor diferente a cada
+ * requisição furaria o cache de 5 minutos da API — cada visita bateria na
+ * origem de novo, e o objetivo era exatamente o oposto (variar devagar, sem
+ * pesar a API). Em vez disso, deriva de `Date.now()` truncado na janela: o
+ * mesmo instante sempre bate no mesmo offset (cache normal), e ele só muda
+ * quando a janela vira — dando o efeito de "troca a cada 5 minutos" pra
+ * todo mundo ao mesmo tempo, não um sorteio por visita.
+ */
+function windowOffset(total: number, slug: string): number {
+  const maxOffset = Math.max(0, total - SAMPLE_PER_CATEGORY);
+  if (maxOffset === 0) return 0;
+
+  const window = Math.floor(Date.now() / SAMPLE_ROTATION_MS);
+  let hash = window;
+  for (let i = 0; i < slug.length; i++) {
+    hash = (hash * 31 + slug.charCodeAt(i)) >>> 0;
+  }
+  return hash % (maxOffset + 1);
+}
+
 /**
  * Carrega o que a página inicial mostra: todas as categorias com seus totais
  * e uma amostra real de entradas.
  *
- * A amostra existe para a primeira tela provar o que o acervo contém, em vez de
- * ser uma casca com vários links e nenhum conteúdo.
+ * A amostra existe para a primeira tela provar o que o acervo contém, em vez
+ * de ser uma casca com vários links e nenhum conteúdo — e troca de recorte a
+ * cada 5 minutos (`windowOffset`), para não travar sempre nos mesmos 12
+ * verbetes. Precisa do total de cada categoria pra calcular o deslocamento,
+ * por isso busca `categories` antes de `sample`, em vez de paralelo.
  */
 async function loadHome(): Promise<HomeData> {
-  const [categories, ...pages] = await Promise.all([
-    fetchCategories(),
-    ...SAMPLE_CATEGORIES.map((slug) =>
-      fetchEntryPage(slug, { limit: SAMPLE_PER_CATEGORY }),
+  const categories = await fetchCategories();
+  const totalBySlug = new Map(categories.map((info) => [info.categoria, info.total]));
+
+  const pages = await Promise.all(
+    SAMPLE_CATEGORIES.map((slug) =>
+      fetchEntryPage(slug, {
+        limit: SAMPLE_PER_CATEGORY,
+        offset: windowOffset(totalBySlug.get(slug) ?? 0, slug),
+      }),
     ),
-  ]);
+  );
 
   return { categories, sample: pages.flatMap((page) => page.itens) };
 }
