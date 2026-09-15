@@ -29,9 +29,14 @@ function linkStyle(isActive: boolean): string {
  * um clique, sobre a faixa de navegação — parou de justificar o peso.
  * Faixa também mais baixa (`h-9`, era `h-11`): fazia parte do mesmo pedido
  * de "diminuir o cabeçalho".
+ *
+ * Não aparece na home: "Comece por aqui" (`app/page.tsx`) já mostra esse
+ * mesmo recorte de categorias, logo abaixo do herói — repetir a faixa ali
+ * em cima seria a mesma lista duas vezes na primeira tela.
  */
 export function CategoryNav() {
   const pathname = usePathname();
+  if (pathname === "/") return null;
 
   function isActive(slug: CategorySlug): boolean {
     const href = categoryPath(slug);
