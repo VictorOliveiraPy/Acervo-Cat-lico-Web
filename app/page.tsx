@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { EntryList } from "@/components/EntryList";
+import { EntryGrid } from "@/components/EntryGrid";
 import { OrnamentalDivider } from "@/components/OrnamentalDivider";
 import { SearchField } from "@/components/SearchField";
 import { StatusMessage } from "@/components/Editorial";
@@ -46,6 +46,10 @@ const SUGGESTED_TERMS = [
 /** Categorias de onde vêm as entradas da amostra da página inicial. */
 const SAMPLE_CATEGORIES = ["santos", "milagres-eucaristicos", "concilios"] as const;
 
+/** Itens por categoria na amostra — 3 categorias × 4 preenchem a grade de 4
+ * colunas em 3 linhas cheias, no estilo mosaico da referência. */
+const SAMPLE_PER_CATEGORY = 4;
+
 type HomeData = {
   categories: CategoryInfo[];
   sample: Entry[];
@@ -61,7 +65,9 @@ type HomeData = {
 async function loadHome(): Promise<HomeData> {
   const [categories, ...pages] = await Promise.all([
     fetchCategories(),
-    ...SAMPLE_CATEGORIES.map((slug) => fetchEntryPage(slug, { limit: 2 })),
+    ...SAMPLE_CATEGORIES.map((slug) =>
+      fetchEntryPage(slug, { limit: SAMPLE_PER_CATEGORY }),
+    ),
   ]);
 
   return { categories, sample: pages.flatMap((page) => page.itens) };
@@ -334,7 +340,7 @@ export default async function HomePage() {
               Do acervo
             </h2>
           </div>
-          <EntryList entries={data.sample} showCategory />
+          <EntryGrid entries={data.sample} />
         </section>
       </div>
     </div>
