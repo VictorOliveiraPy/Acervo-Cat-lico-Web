@@ -38,12 +38,12 @@ export function EntryList({ entries, showCategory = false }: Props) {
           <li key={entry.id} className="border-t border-rule-faint">
             <Link
               href={entryPath(entry.categoria, entry.slug)}
-              className="group flex flex-col gap-4 py-6 transition-colors hover:bg-parchment-raised sm:flex-row sm:gap-6"
+              className="group flex flex-col gap-4 py-6 transition-all hover:-translate-y-0.5 hover:bg-parchment-raised hover:shadow-md sm:flex-row sm:gap-6"
             >
               {entry.imagem ? (
                 <Image
                   src={entry.imagem}
-                  alt=""
+                  alt={entry.titulo}
                   width={160}
                   height={112}
                   className="h-28 w-full shrink-0 rounded-edge border border-rule-faint object-cover sm:h-24 sm:w-32"

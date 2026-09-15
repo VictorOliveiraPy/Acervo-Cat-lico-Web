@@ -11,7 +11,7 @@ import { SearchField } from "@/components/SearchField";
  */
 export function SiteHeader() {
   return (
-    <header className="bg-parchment">
+    <header className="sticky top-0 z-30 border-b border-rule-faint bg-parchment shadow-sm">
       {/* `py-3`/`gap-2.5`, não `py-band`/`gap-band`: pedido explícito de
           diminuir o cabeçalho, depois que "Todas as categorias" saiu da
           faixa de baixo (`CategoryNav`) — o resto do cabeçalho também

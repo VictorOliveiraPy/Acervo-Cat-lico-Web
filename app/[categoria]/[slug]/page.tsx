@@ -11,14 +11,38 @@ import {
   StatusMessage,
   TagList,
 } from "@/components/Editorial";
+import { EntryList } from "@/components/EntryList";
 import { OrnamentalDivider } from "@/components/OrnamentalDivider";
 import { ApiError, getErrorMessage } from "@/lib/api";
 import { CATEGORY_LABELS, categoryPath, entryPath } from "@/lib/categories";
 import { entryMetaFields, entryOrdinal, paragraphs } from "@/lib/entryDisplay";
 import { safeJsonLd } from "@/lib/jsonLd";
 import { isCategorySlug, type CategorySlug, type Entry } from "@/lib/schemas";
-import { fetchEntry } from "@/lib/services/acervoService";
+import { fetchEntry, fetchEntryPage } from "@/lib/services/acervoService";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
+
+/** Quantas outras entradas da mesma categoria aparecem em "Mais de …". */
+const RELATED_COUNT = 4;
+
+/**
+ * Outras entradas da mesma categoria, para continuar a leitura.
+ *
+ * Busca a primeira página da categoria e tira a própria entrada de lá — não
+ * é "relacionado" por assunto (a API não tem esse relacionamento), é o
+ * mesmo princípio do "mais episódios do programa" de um site de conteúdo:
+ * a categoria inteira já é o "programa" de que a entrada faz parte. Falha
+ * da API aqui não pode derrubar a página inteira — sem sugestões, a leitura
+ * do que já carregou continua de pé.
+ */
+async function loadRelated(categoria: CategorySlug, currentSlug: string): Promise<Entry[]> {
+  try {
+    const page = await fetchEntryPage(categoria, { limit: RELATED_COUNT + 1 });
+    return page.itens.filter((entry) => entry.slug !== currentSlug).slice(0, RELATED_COUNT);
+  } catch (error: unknown) {
+    if (error instanceof ApiError) return [];
+    throw error;
+  }
+}
 
 type Params = { categoria: string; slug: string };
 
@@ -102,6 +126,7 @@ export default async function EntryPage({ params }: { params: Params }) {
   const fields = entryMetaFields(entry);
   const blocks = paragraphs(entry.corpo);
   const path = entryPath(categoria, params.slug);
+  const related = await loadRelated(categoria, params.slug);
 
   // Dados estruturados: CreativeWork identifica a entrada em si (título,
   // resumo, imagem), BreadcrumbList espelha a navegação visível logo abaixo
@@ -234,6 +259,17 @@ export default async function EntryPage({ params }: { params: Params }) {
 
         <SourceList sources={entry.fontes} />
       </footer>
+
+      {related.length > 0 ? (
+        <section aria-labelledby="mais-da-categoria" className="mt-section">
+          <div className="border-b-2 border-gold pb-2">
+            <h2 id="mais-da-categoria" className="font-display text-title-md text-ink">
+              Mais de {label.nav}
+            </h2>
+          </div>
+          <EntryList entries={related} />
+        </section>
+      ) : null}
 
       <p className="mt-10">
         <Link

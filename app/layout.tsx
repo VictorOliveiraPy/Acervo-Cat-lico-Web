@@ -78,7 +78,7 @@ export default function RootLayout({
       <body className="flex min-h-screen flex-col">
         <a
           href="#conteudo"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-10 focus:rounded-edge focus:bg-bordeaux focus:px-4 focus:py-2 focus:text-meta focus:text-parchment-raised"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-edge focus:bg-bordeaux focus:px-4 focus:py-2 focus:text-meta focus:text-parchment-raised"
         >
           Ir para o conteúdo
         </a>
