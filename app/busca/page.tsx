@@ -57,56 +57,80 @@ function SearchFilters({
   const chipStyle =
     "inline-flex items-center gap-1.5 rounded-edge border px-3 py-1.5 text-meta transition-colors";
 
-  return (
-    <nav aria-label="Filtrar por categoria" className="flex flex-wrap gap-2">
+  // Categoria sem ocorrência continua contabilizada (prova que a busca
+  // "olhou" ali) mas some pra dentro do <details> — 49 categorias, a maioria
+  // sem resultado, viravam ~1500px de chips cinzas antes de qualquer
+  // resultado de verdade. As com ocorrência (ou a selecionada) continuam
+  // sempre à vista, sem clique nenhum.
+  type NavItem = (typeof CATEGORY_NAV)[number];
+  const withResults: NavItem[] = [];
+  const withoutResults: NavItem[] = [];
+  for (const item of CATEGORY_NAV) {
+    const count = countBySlug.get(item.slug) ?? 0;
+    (count > 0 || selected === item.slug ? withResults : withoutResults).push(item);
+  }
+
+  function chip(slug: CategorySlug, label: string, count: number, isSelected: boolean, inert = false) {
+    if (inert) {
+      return (
+        <span
+          key={slug}
+          aria-disabled="true"
+          className={`${chipStyle} border-rule-faint/70 text-ink-muted/60`}
+        >
+          {label}
+          <span className="tabular-nums">0</span>
+        </span>
+      );
+    }
+    return (
       <Link
-        href={`/busca${buildQueryString({ q: term })}`}
-        aria-current={selected === null ? "true" : undefined}
+        key={slug}
+        href={`/busca${buildQueryString({ q: term, categoria: slug })}`}
+        aria-current={isSelected ? "true" : undefined}
         className={`${chipStyle} ${
-          selected === null
+          isSelected
             ? "border-bordeaux bg-bordeaux text-parchment-raised"
             : "border-rule-faint bg-parchment-raised text-ink-muted hover:border-bordeaux hover:text-bordeaux"
         }`}
       >
-        Todas as categorias
-        <span className="tabular-nums opacity-80">{total}</span>
+        {label}
+        <span className="tabular-nums opacity-80">{count}</span>
       </Link>
+    );
+  }
 
-      {CATEGORY_NAV.map(({ slug, label }) => {
-        const count = countBySlug.get(slug) ?? 0;
-        const isSelected = selected === slug;
+  return (
+    <nav aria-label="Filtrar por categoria">
+      <div className="flex flex-wrap gap-2">
+        <Link
+          href={`/busca${buildQueryString({ q: term })}`}
+          aria-current={selected === null ? "true" : undefined}
+          className={`${chipStyle} ${
+            selected === null
+              ? "border-bordeaux bg-bordeaux text-parchment-raised"
+              : "border-rule-faint bg-parchment-raised text-ink-muted hover:border-bordeaux hover:text-bordeaux"
+          }`}
+        >
+          Todas as categorias
+          <span className="tabular-nums opacity-80">{total}</span>
+        </Link>
 
-        // Categoria sem ocorrência fica visível, porém inerte: some daqui
-        // seria esconder da pessoa que a busca também olhou lá.
-        if (count === 0 && !isSelected) {
-          return (
-            <span
-              key={slug}
-              aria-disabled="true"
-              className={`${chipStyle} border-rule-faint/70 text-ink-muted/60`}
-            >
-              {label.nav}
-              <span className="tabular-nums">0</span>
-            </span>
-          );
-        }
+        {withResults.map(({ slug, label }) =>
+          chip(slug, label.nav, countBySlug.get(slug) ?? 0, selected === slug),
+        )}
+      </div>
 
-        return (
-          <Link
-            key={slug}
-            href={`/busca${buildQueryString({ q: term, categoria: slug })}`}
-            aria-current={isSelected ? "true" : undefined}
-            className={`${chipStyle} ${
-              isSelected
-                ? "border-bordeaux bg-bordeaux text-parchment-raised"
-                : "border-rule-faint bg-parchment-raised text-ink-muted hover:border-bordeaux hover:text-bordeaux"
-            }`}
-          >
-            {label.nav}
-            <span className="tabular-nums opacity-80">{count}</span>
-          </Link>
-        );
-      })}
+      {withoutResults.length > 0 ? (
+        <details className="mt-3">
+          <summary className="cursor-pointer text-meta text-ink-muted underline-offset-4 hover:text-bordeaux hover:underline">
+            +{withoutResults.length} categorias sem ocorrência
+          </summary>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {withoutResults.map(({ slug, label }) => chip(slug, label.nav, 0, false, true))}
+          </div>
+        </details>
+      ) : null}
     </nav>
   );
 }
