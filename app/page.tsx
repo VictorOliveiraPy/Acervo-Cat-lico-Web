@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { EntryGrid } from "@/components/EntryGrid";
 import { OrnamentalDivider } from "@/components/OrnamentalDivider";
+import { PhotoBanner } from "@/components/PhotoBanner";
 import { SearchField } from "@/components/SearchField";
 import { StatusMessage } from "@/components/Editorial";
 import { ApiError, getApiBaseUrl, getErrorMessage } from "@/lib/api";
@@ -194,7 +195,7 @@ export default async function HomePage() {
           className="scale-x-[-1] object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-[#4E1620]/40" />
+        <div className="absolute inset-0 bg-bordeaux-deep/40" />
         <div className="absolute inset-0 bg-gradient-to-r from-transparent from-0% to-parchment to-60%" />
       </div>
       <div
@@ -208,7 +209,7 @@ export default async function HomePage() {
           sizes="20vw"
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-[#4E1620]/40" />
+        <div className="absolute inset-0 bg-bordeaux-deep/40" />
         <div className="absolute inset-0 bg-gradient-to-l from-transparent from-0% to-parchment to-60%" />
       </div>
 
@@ -242,53 +243,37 @@ export default async function HomePage() {
           </div>
 
           {liturgia ? (
-            <div className="mt-10 flex flex-col items-start gap-6 rounded-edge border border-gold bg-parchment-raised p-6 sm:flex-row sm:items-center sm:justify-between">
-              <div className="max-w-measure">
-                <p className="kicker text-bordeaux">{formatLiturgiaDate(liturgia.data)}</p>
-                <h2 className="mt-2 font-display text-title-sm text-ink">
-                  {liturgia.celebracao || "Liturgia do dia"}
-                </h2>
-                <p className="mt-2 text-meta text-ink-muted">
-                  Evangelho: {liturgia.evangelho.referencia}
-                </p>
-              </div>
-              <Link
-                href="/liturgia-diaria"
-                className="shrink-0 rounded-edge border border-bordeaux bg-bordeaux px-5 py-2.5 text-label uppercase tracking-[0.09em] text-parchment-raised transition-colors hover:bg-bordeaux-soft"
+            <div className="mt-10">
+              <PhotoBanner
+                image="/img-acervo/ig-missal-velas.jpg"
+                kicker={formatLiturgiaDate(liturgia.data)}
+                title={liturgia.celebracao || "Liturgia do dia"}
+                description={`Evangelho: ${liturgia.evangelho.referencia}`}
               >
-                📖 Ler a liturgia de hoje →
-              </Link>
+                <Link
+                  href="/liturgia-diaria"
+                  className="shrink-0 rounded-edge border border-gold bg-parchment px-5 py-2.5 text-label uppercase tracking-[0.09em] text-ink transition-colors hover:bg-parchment-raised"
+                >
+                  📖 Ler a liturgia de hoje →
+                </Link>
+              </PhotoBanner>
             </div>
           ) : null}
 
-          <div className="mt-6 flex flex-col items-start gap-6 rounded-edge border border-bordeaux bg-parchment-raised p-6 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-4">
-              <Image
-                src={VELA_IMAGEM}
-                alt=""
-                aria-hidden="true"
-                width={56}
-                height={56}
-                className="h-14 w-14 shrink-0 rounded-edge border-2 border-parchment-raised object-cover"
-              />
-              <div className="max-w-measure">
-                <p className="kicker text-bordeaux">Oração</p>
-                <h2 className="mt-2 font-display text-title-sm text-ink">
-                  Acenda uma vela por quem você ama
-                </h2>
-                <p className="mt-2 text-meta text-ink-muted">
-                  Escolha entre Jesus, Nossa Senhora e outras devoções, escreva
-                  seu nome e uma intenção — ela entra para o mural de quem já
-                  passou por aqui rezando.
-                </p>
-              </div>
-            </div>
-            <Link
-              href="/velas"
-              className="shrink-0 rounded-edge border border-bordeaux bg-bordeaux px-5 py-2.5 text-label uppercase tracking-[0.09em] text-parchment-raised transition-colors hover:bg-bordeaux-soft"
+          <div className="mt-6">
+            <PhotoBanner
+              image={VELA_IMAGEM}
+              kicker="Oração"
+              title="Acenda uma vela por quem você ama"
+              description="Escolha entre Jesus, Nossa Senhora e outras devoções, escreva seu nome e uma intenção — ela entra para o mural de quem já passou por aqui rezando."
             >
-              🕯️ Acender uma vela →
-            </Link>
+              <Link
+                href="/velas"
+                className="shrink-0 rounded-edge border border-gold bg-parchment px-5 py-2.5 text-label uppercase tracking-[0.09em] text-ink transition-colors hover:bg-parchment-raised"
+              >
+                🕯️ Acender uma vela →
+              </Link>
+            </PhotoBanner>
           </div>
         </div>
       </section>
@@ -357,27 +342,22 @@ export default async function HomePage() {
         <OrnamentalDivider />
 
         <section className="py-12">
-          <div className="flex flex-col items-start gap-6 rounded-edge border border-gold bg-parchment-raised p-6 sm:flex-row sm:items-center sm:justify-between">
-            <div className="max-w-measure">
-              <p className="kicker text-bordeaux">Plataforma irmã</p>
-              <h2 className="mt-2 font-display text-title-sm text-ink">
-                Quer viver a fé na prática, não só consultar?
-              </h2>
-              <p className="mt-2 text-meta text-ink-muted">
-                No Santo Guardião você escolhe um santo de devoção e cumpre
-                desafios e missões — orações, estudo e caridade — para crescer
-                na fé em forma de jogo.
-              </p>
-            </div>
+          <PhotoBanner
+            image="/img-acervo/ig-terezinha-estatua.jpg"
+            imagePosition="top"
+            kicker="Plataforma irmã"
+            title="Quer viver a fé na prática, não só consultar?"
+            description="No Santo Guardião você escolhe um santo de devoção e cumpre desafios e missões — orações, estudo e caridade — para crescer na fé em forma de jogo."
+          >
             <a
               href={SANTO_GUARDIAO_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="shrink-0 rounded-edge border border-bordeaux bg-bordeaux px-5 py-2.5 text-label uppercase tracking-[0.09em] text-parchment-raised transition-colors hover:bg-bordeaux-soft"
+              className="shrink-0 rounded-edge border border-gold bg-parchment px-5 py-2.5 text-label uppercase tracking-[0.09em] text-ink transition-colors hover:bg-parchment-raised"
             >
               Conhecer o Santo Guardião →
             </a>
-          </div>
+          </PhotoBanner>
         </section>
 
         <section aria-labelledby="amostra" className="pb-16">

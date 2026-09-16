@@ -25,6 +25,10 @@ const config: Config = {
         bordeaux: {
           DEFAULT: "#6B1F2A",
           soft: "#8A3441", // hover/estado ativo, mesma família
+          // Mesmo hex de BORDEAUX_DEEP em app/instagram/[categoria]/[slug]/
+          // route.tsx — bordô mais escuro para gradiente sobre foto (ver
+          // `PhotoBanner`), não para uso em texto/filete.
+          deep: "#4E1620",
         },
         purple: {
           DEFAULT: "#4A2545",
@@ -32,6 +36,12 @@ const config: Config = {
         gold: {
           DEFAULT: "#B8912F", // reservado a filetes e detalhes
           wash: "#E8DCBA", // dourado rebaixado, para preenchimento sutil
+          // Mesmo hex de GOLD_BRIGHT em app/instagram/[categoria]/[slug]/
+          // route.tsx: o dourado padrão sobre fundo escuro/foto mede
+          // ~3,85:1 (abaixo do mínimo de 4,5:1 pra texto corrido); este
+          // tom passa em ~5,9:1. Usar em texto sobre foto/overlay escuro,
+          // nunca sobre o pergaminho claro (onde o DEFAULT já contrasta bem).
+          bright: "#D9B673",
         },
         ink: {
           DEFAULT: "#241B22",
