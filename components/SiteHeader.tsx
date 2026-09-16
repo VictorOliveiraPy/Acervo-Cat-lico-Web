@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { CategoryNav } from "@/components/CategoryNav";
 import { SearchField } from "@/components/SearchField";
@@ -7,9 +10,17 @@ import { SearchField } from "@/components/SearchField";
 /**
  * Cabeçalho em duas faixas: identidade + busca na primeira, categorias na
  * segunda (recuada). A busca fica no cabeçalho, e não só na página inicial,
- * porque atravessar todas as categorias é o caminho principal do acervo.
+ * porque atravessar todas as categorias é o caminho principal do acervo —
+ * exceto na própria home, que já tem sua busca grande no herói logo abaixo:
+ * repetir o campo aqui empilhado em cima dela (mobile) é a mesma busca duas
+ * vezes na primeira tela. `"use client"` só por causa do `usePathname`
+ * dessa checagem (e do já usado por `CategoryNav`) — o cabeçalho não busca
+ * dado nenhum, então não custa nada virar client.
  */
 export function SiteHeader() {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+
   return (
     <header className="sticky top-0 z-30 border-b border-rule-faint bg-parchment shadow-sm">
       {/* `py-3`/`gap-2.5`, não `py-band`/`gap-band`: pedido explícito de
@@ -47,10 +58,23 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center md:w-auto">
-          <div className="w-full md:max-w-sm">
-            <SearchField label="Buscar em todo o acervo" />
-          </div>
+        <div className="flex w-full flex-col flex-wrap gap-3 sm:flex-row sm:items-center sm:justify-end md:w-auto">
+          {isHome ? null : (
+            <div className="w-full md:max-w-sm">
+              <SearchField label="Buscar em todo o acervo" />
+            </div>
+          )}
+          {/* Chatbot do acervo: até aqui só alcançável pelo rodapé — um
+              diferencial real (poucos sites católicos têm isso) invisível na
+              navegação principal. Link de texto, não botão, pra não crescer
+              a altura do cabeçalho nem competir com "Acender uma vela";
+              cabe na mesma linha em telas médias/grandes. */}
+          <Link
+            href="/perguntar"
+            className="shrink-0 text-meta text-ink-muted underline-offset-4 hover:text-bordeaux hover:underline"
+          >
+            💬 Perguntar ao acervo
+          </Link>
           <Link
             href="/velas"
             className="flex shrink-0 items-center justify-center gap-2 rounded-edge border border-bordeaux bg-bordeaux px-4 py-2.5 text-label uppercase tracking-[0.09em] text-parchment-raised transition-colors hover:bg-bordeaux-soft"
