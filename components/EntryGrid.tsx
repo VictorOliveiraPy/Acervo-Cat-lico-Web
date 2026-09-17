@@ -24,7 +24,7 @@ type Props = {
 export function EntryGrid({ entries }: Props) {
   return (
     <ul className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
-      {entries.map((entry) => (
+      {entries.map((entry, index) => (
         <li key={entry.id}>
           <Link
             href={entryPath(entry.categoria, entry.slug)}
@@ -40,7 +40,7 @@ export function EntryGrid({ entries }: Props) {
                 // topo da rolagem — carregar como lazy (padrão do next/image)
                 // deixava as últimas em preto sólido (o `bg-ink` de fundo)
                 // por um instante enquanto a rede ainda buscava a imagem.
-                priority
+                priority={index < 2}
                 className="object-cover transition-transform duration-300 group-hover:scale-105"
               />
             ) : (

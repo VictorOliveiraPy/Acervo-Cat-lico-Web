@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 
 import { acenderVelaAction, type AcenderVelaState } from "@/app/velas/actions";
+import { trackEvent } from "@/lib/analytics";
 import { DEFAULT_VELA_TIPO, VELA_IMAGEM, VELA_IMAGEM_CREDITO, VELA_TIPOS } from "@/lib/velas";
 import {
   VELA_CIDADE_MAX,
@@ -90,8 +91,11 @@ export function VelaForm() {
   // seleção de vela (`tipo`) é estado controlado à parte e não é afetada
   // por `reset()`, então mantém a última cor escolhida.
   useEffect(() => {
-    if (state.status === "success") formRef.current?.reset();
-  }, [state]);
+    if (state.status === "success") {
+      formRef.current?.reset();
+      trackEvent("candle_lit", { type: tipo });
+    }
+  }, [state, tipo]);
 
   return (
     <form
@@ -178,8 +182,13 @@ export function VelaForm() {
 
       {state.status !== "idle" && state.message ? (
         <p
-          className={`text-meta ${state.status === "error" ? "text-state-error" : "text-bordeaux"}`}
+          className={`border-l-2 px-3 py-2 text-meta ${
+            state.status === "error"
+              ? "border-state-error text-state-error"
+              : "border-bordeaux bg-parchment text-bordeaux"
+          }`}
           role="status"
+          aria-live="polite"
         >
           {state.message}
         </p>

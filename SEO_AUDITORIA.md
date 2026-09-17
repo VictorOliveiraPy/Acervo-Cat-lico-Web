@@ -108,3 +108,25 @@ Data da revisao: 2026-09-16
 - [ ] Relacionamentos semanticos reais entre verbetes ainda nao existem no contrato da API; nao foram inventados.
 - [ ] Imagens continuam com a estrategia atual de `unoptimized`; uma troca exige decisao de CDN/cache e medicao de performance.
 - [ ] A geracao do sitemap continua dependente da consulta paginada a API; monitorar tempo de geracao no deploy.
+
+## Relatorio da Sprint 1 — 2026-09-16
+
+### Entregas
+
+- [x] Liturgia com hierarquia clara: `Liturgia de hoje`, data e celebracao no subtitulo.
+- [x] Busca registra eventos `search_submitted` com tamanho da consulta e filtro de categoria.
+- [x] Vela registra `candle_lit` e apresenta sucesso/erro com aria-live e destaque visual.
+- [x] Home carrega apenas as duas primeiras imagens da vitrine como prioridade; as demais ficam lazy.
+- [x] Campo de busca contextual preserva a categoria durante o envio com e sem JavaScript.
+
+### Validacao
+
+- [x] TypeScript sem erros.
+- [x] 38 testes passando.
+- [x] Lint passou; permanece apenas o aviso conhecido de `img` no cabecalho.
+- [x] Nenhum contrato de API ou URL foi alterado.
+
+### Publicacao
+
+- [ ] Commit e push da Sprint 1.
+- [ ] Confirmar deploy da Vercel e eventos no destino de analytics.

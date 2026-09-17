@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { trackEvent } from "@/lib/analytics";
+
 type Props = {
   /** Termo já buscado, para o campo não esvaziar ao voltar para /busca. */
   initialQuery?: string;
@@ -44,6 +46,10 @@ export function SearchField({
     event.preventDefault();
     const params = new URLSearchParams({ q: query.trim() });
     if (category) params.set("categoria", category);
+    trackEvent("search_submitted", {
+      has_category: Boolean(category),
+      query_length: query.trim().length,
+    });
     router.push(`/busca?${params.toString()}`);
   }
 

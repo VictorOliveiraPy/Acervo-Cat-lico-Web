@@ -94,8 +94,9 @@ export default async function LiturgiaDiariaPage() {
       {liturgia ? (
         <>
           <PageHeader
-            kicker={formatLiturgiaDate(liturgia.data)}
-            title={liturgia.celebracao || "Liturgia do dia"}
+            kicker="Liturgia de hoje"
+            title={TITLE}
+            description={`${formatLiturgiaDate(liturgia.data)}${liturgia.celebracao ? ` · ${liturgia.celebracao}` : ""}`}
           />
 
           {liturgia.cor_liturgica ? (
