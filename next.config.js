@@ -57,6 +57,16 @@ const nextConfig = {
     // mas volta a funcionar sem custo. Reverter se/quando o plano mudar.
     unoptimized: true,
   },
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.compendio-catolico.com" }],
+        destination: "https://compendio-catolico.com/:path*",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     const baseHeaders = [
       { key: "X-Content-Type-Options", value: "nosniff" },

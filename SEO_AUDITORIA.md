@@ -13,6 +13,7 @@ Repositorios auditados: Acervo-Catolico-Web e Acervo-Catolico-API
 - [x] Meta robots das paginas principais confirmou `index, follow` antes da correcao.
 - [x] Canonical das paginas testadas aponta para o dominio canonico HTTPS.
 - [x] Sitemap externo continha 1.800 URLs, sem duplicatas, query strings ou URLs HTTP/www.
+- [x] Foi detectado que as versões `www` e raiz respondiam `200` para o mesmo verbete, dividindo sinais entre dois hosts.
 
 Conclusao: nao havia bloqueio global por `robots.txt`, JavaScript, HTTP ou canonical nas paginas principais.
 
@@ -29,6 +30,7 @@ Conclusao: nao havia bloqueio global por `robots.txt`, JavaScript, HTTP ou canon
 - [x] `app/velas/page.tsx`: adicionada politica `noindex, follow`.
 - [x] `app/[categoria]/page.tsx`: paginas com `offset > 0` agora recebem `noindex, follow`; a primeira pagina de cada categoria continua indexavel.
 - [x] `app/sitemap.ts`: removidas `/busca` e `/velas`; o sitemap agora prioriza home, categorias e verbetes editoriais.
+- [x] `next.config.js`: adicionado redirecionamento permanente de `www.compendio-catolico.com` para `compendio-catolico.com`.
 - [x] Canonicals das paginas editoriais de categoria e verbete foram preservados.
 
 ## Fase 4 — Validacao local
@@ -39,6 +41,7 @@ Conclusao: nao havia bloqueio global por `robots.txt`, JavaScript, HTTP ou canon
 - [ ] Conferir no HTML de producao que `/busca` e `/velas` contenham `noindex`.
 - [ ] Conferir no HTML de producao que `/anjos-demonios` contenha `index, follow`.
 - [ ] Conferir no HTML de producao que `/anjos-demonios?offset=12` contenha `noindex, follow`.
+- [ ] Conferir em producao que qualquer URL `www` responda `308` ou `301` para a URL sem `www`.
 
 ## Fase 5 — Acoes necessarias no deploy/Search Console
 
