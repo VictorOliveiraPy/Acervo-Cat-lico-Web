@@ -20,10 +20,8 @@ export const metadata: Metadata = {
   title: "Busca",
   description:
     "Busca única em todo o acervo católico: santos, papas, Catecismo, Crisma, sacramentos, orações, pecados, milagres eucarísticos, história, Doutores, concílios e mais.",
-  // Sem canonical, cada combinação de `?q=`/`?categoria=` seria indexável
-  // como página própria — a busca em si não é conteúdo, então aponta pra
-  // versão sem parâmetros.
   alternates: { canonical: "/busca" },
+  robots: { index: false, follow: true },
 };
 
 /** Lê um parâmetro de query que pode vir repetido na URL. */

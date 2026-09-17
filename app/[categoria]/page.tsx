@@ -32,15 +32,23 @@ export function generateStaticParams(): Params[] {
   return CATEGORY_SLUGS.map((categoria) => ({ categoria }));
 }
 
-export function generateMetadata({ params }: { params: Params }): Metadata {
+export function generateMetadata({
+  params,
+  searchParams,
+}: {
+  params: Params;
+  searchParams: SearchParams;
+}): Metadata {
   if (!isCategorySlug(params.categoria)) return { title: "Categoria" };
   const label = CATEGORY_LABELS[params.categoria];
   const path = categoryPath(params.categoria);
+  const isPaginated = parseOffset(searchParams.offset) > 0;
   return {
     title: label.heading,
     description: label.tagline,
     alternates: { canonical: path },
     openGraph: { title: label.heading, description: label.tagline, url: path },
+    robots: { index: !isPaginated, follow: true },
   };
 }
 

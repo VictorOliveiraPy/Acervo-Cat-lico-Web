@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   description: DESCRIPTION,
   alternates: { canonical: "/velas" },
   openGraph: { title: TITLE, description: DESCRIPTION, url: "/velas" },
+  robots: { index: false, follow: true },
 };
 
 type SearchParams = { [key: string]: string | string[] | undefined };

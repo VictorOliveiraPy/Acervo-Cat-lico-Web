@@ -36,8 +36,6 @@ async function fetchAllSlugs(categoria: CategorySlug): Promise<string[]> {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
     { url: SITE_URL, changeFrequency: "weekly", priority: 1 },
-    { url: `${SITE_URL}/busca`, changeFrequency: "monthly", priority: 0.5 },
-    { url: `${SITE_URL}/velas`, changeFrequency: "daily", priority: 0.6 },
   ];
 
   const categoryPages: MetadataRoute.Sitemap = CATEGORY_SLUGS.map((categoria) => ({
