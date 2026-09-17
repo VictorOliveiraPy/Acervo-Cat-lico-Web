@@ -12,6 +12,7 @@ import {
   TagList,
 } from "@/components/Editorial";
 import { EntryList } from "@/components/EntryList";
+import { EntryActions } from "@/components/EntryActions";
 import { OrnamentalDivider } from "@/components/OrnamentalDivider";
 import { ApiError, getErrorMessage } from "@/lib/api";
 import { CATEGORY_LABELS, categoryPath, entryPath } from "@/lib/categories";
@@ -214,6 +215,7 @@ export default async function EntryPage({ params }: { params: Params }) {
           {entry.titulo}
         </h1>
         <p className="mt-4 max-w-measure text-lead text-ink-muted">{entry.resumo}</p>
+        <EntryActions categoria={categoria} slug={entry.slug} titulo={entry.titulo} />
       </header>
 
       {entry.categoria === "oracoes" ? (

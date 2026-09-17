@@ -152,3 +152,25 @@ Data da revisao: 2026-09-16
 
 - [ ] Commit e push da Sprint 2.
 - [ ] Confirmar no deploy que a busca por tags nao aumenta o tempo de resposta das paginas.
+
+## Relatorio da Sprint 3 — 2026-09-16
+
+### Entregas
+
+- [x] Verbetes podem ser guardados localmente neste navegador, sem conta e sem enviar dados pessoais.
+- [x] Adicionado compartilhamento nativo quando o dispositivo oferece Web Share API.
+- [x] Fallback de compartilhamento copia o link quando Web Share nao esta disponivel.
+- [x] Eventos `entry_favorited` e `entry_shared` preparados no mesmo barramento de analytics.
+
+### Validacao
+
+- [x] TypeScript sem erros apos corrigir a deteccao da Web Share API.
+- [x] 38 testes passando.
+- [x] Lint passou; permanece apenas o aviso conhecido de `img` no cabecalho.
+- [x] Build compilou e passou a fase de lint/typecheck; o Next ainda sinaliza que paginas com edge runtime nao sao estaticas.
+
+### Publicacao
+
+- [ ] Commit e push da Sprint 3.
+- [ ] Confirmar deploy final na Vercel.
+- [ ] Conectar o barramento de eventos a uma ferramenta de analytics com consentimento adequado.

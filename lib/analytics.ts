@@ -1,7 +1,9 @@
 export type ProductEvent =
   | "search_submitted"
   | "candle_lit"
-  | "liturgy_opened";
+  | "liturgy_opened"
+  | "entry_favorited"
+  | "entry_shared";
 
 type ProductEventPayload = Record<string, string | number | boolean | undefined>;
 
