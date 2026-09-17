@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { CategoryBanner } from "@/components/CategoryBanner";
 import { EntryList } from "@/components/EntryList";
 import { Pagination } from "@/components/Pagination";
+import { SearchField } from "@/components/SearchField";
 import {
   Breadcrumbs,
   EditorialNotice,
@@ -139,6 +140,13 @@ export default async function CategoryPage({
             <EditorialNotice>{info.aviso}</EditorialNotice>
           </div>
         ) : null}
+
+        <div className="mt-8 max-w-2xl">
+          <SearchField
+            category={categoria}
+            label={`Buscar em ${label.nav}`}
+          />
+        </div>
 
         <div className="mt-10">
           {page.itens.length > 0 ? (

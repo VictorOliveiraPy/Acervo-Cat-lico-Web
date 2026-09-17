@@ -8,7 +8,7 @@ import { SearchField } from "@/components/SearchField";
 import { StatusMessage } from "@/components/Editorial";
 import { ApiError, getApiBaseUrl, getErrorMessage } from "@/lib/api";
 import { CATEGORY_LABELS, categoryPath } from "@/lib/categories";
-import { PRIMARY_CATEGORY_SLUGS } from "@/lib/categoryGroups";
+import { CATEGORY_GROUPS } from "@/lib/categoryGroups";
 import { formatEntryCount } from "@/lib/entryDisplay";
 import { safeJsonLd } from "@/lib/jsonLd";
 import { formatLiturgiaDate } from "@/lib/liturgia";
@@ -248,7 +248,7 @@ export default async function HomePage() {
                 image="/img-acervo/ig-missal-velas.jpg"
                 kicker={formatLiturgiaDate(liturgia.data)}
                 title={liturgia.celebracao || "Liturgia do dia"}
-                description={`Evangelho: ${liturgia.evangelho.referencia}`}
+                description={`${liturgia.cor_liturgica ? `${liturgia.cor_liturgica} · ` : ""}Evangelho: ${liturgia.evangelho.referencia} · 1ª leitura: ${liturgia.primeira_leitura.referencia}`}
               >
                 <Link
                   href="/liturgia-diaria"
@@ -295,39 +295,42 @@ export default async function HomePage() {
         <section aria-labelledby="categorias" className="pt-12 pb-6">
           <div className="flex items-baseline justify-between gap-4">
             <h2 id="categorias" className="font-display text-title-md text-ink">
-              Comece por aqui
+              Explore a fé
             </h2>
             <p className="kicker">{totalEntries} entradas</p>
           </div>
 
-          {/* Vitrine, não índice: as 49 categorias já moram inteiras e
-              agrupadas por assunto no rodapé de toda página — repeti-las
-              aqui era o mesmo conteúdo duas vezes na mesma tela de rolagem.
-              Aqui ficam só as mais buscadas (mesmo recorte do menu do
-              cabeçalho), como ponto de partida, com um link só para quem
-              quer a lista inteira. */}
-          <ul className="mt-6 flex flex-wrap gap-3">
-            {PRIMARY_CATEGORY_SLUGS.map((slug) => {
-              const info = categoryBySlug.get(slug);
+          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {CATEGORY_GROUPS.map((group) => {
+              const total = group.slugs.reduce(
+                (sum, slug) => sum + (categoryBySlug.get(slug)?.total ?? 0),
+                0,
+              );
               return (
-                <li key={slug}>
-                  <Link
-                    href={categoryPath(slug)}
-                    className="group flex items-center gap-2 rounded-edge border border-rule-faint bg-parchment-raised px-4 py-2.5 transition-colors hover:border-bordeaux"
-                  >
-                    <span className="font-display text-body text-ink group-hover:text-bordeaux">
-                      {CATEGORY_LABELS[slug].nav}
-                    </span>
-                    {info ? (
-                      <span className="text-meta text-ink-muted">
-                        {formatEntryCount(info.total)}
-                      </span>
-                    ) : null}
-                  </Link>
-                </li>
+                <section
+                  key={group.title}
+                  className="border border-rule-faint bg-parchment-raised p-5"
+                >
+                  <div className="flex items-baseline justify-between gap-3">
+                    <h3 className="font-display text-title-sm text-ink">{group.title}</h3>
+                    <span className="kicker">{formatEntryCount(total)}</span>
+                  </div>
+                  <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
+                    {group.slugs.map((slug) => (
+                      <li key={slug}>
+                        <Link
+                          href={categoryPath(slug)}
+                          className="text-meta text-bordeaux underline-offset-4 hover:underline"
+                        >
+                          {CATEGORY_LABELS[slug].nav}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
               );
             })}
-          </ul>
+          </div>
 
           <p className="mt-6">
             <a
@@ -363,8 +366,11 @@ export default async function HomePage() {
         <section aria-labelledby="amostra" className="pb-16">
           <div className="border-b-2 border-gold pb-2">
             <h2 id="amostra" className="font-display text-title-md text-ink">
-              Do acervo
+              Descubra algo novo
             </h2>
+            <p className="mt-2 max-w-measure text-meta text-ink-muted">
+              Uma seleção real do acervo para continuar sua leitura.
+            </p>
           </div>
           <EntryGrid entries={data.sample} />
         </section>

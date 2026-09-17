@@ -46,7 +46,7 @@ export function SiteHeader() {
             Compêndio Católico
             <Image
               src="https://upload.wikimedia.org/wikipedia/commons/7/76/Campinas_-_13_de_setembro-96_%28cropped%29.jpg"
-              alt="Beato Carlo Acutis"
+              alt=""
               aria-hidden="true"
               width={56}
               height={56}

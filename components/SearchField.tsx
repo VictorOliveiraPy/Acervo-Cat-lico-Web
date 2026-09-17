@@ -6,6 +6,8 @@ import { useState } from "react";
 type Props = {
   /** Termo já buscado, para o campo não esvaziar ao voltar para /busca. */
   initialQuery?: string;
+  /** Mantém a busca restrita à categoria escolhida. */
+  category?: string;
   /** `prominent` é o campo da página inicial; `compact`, o do cabeçalho. */
   variant?: "compact" | "prominent";
   /** Rótulo acessível — o campo do cabeçalho não tem label visível. */
@@ -31,6 +33,7 @@ const FIELD_STYLE = {
  */
 export function SearchField({
   initialQuery = "",
+  category,
   variant = "compact",
   label = "Buscar no acervo",
 }: Props) {
@@ -39,7 +42,9 @@ export function SearchField({
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    router.push(`/busca?q=${encodeURIComponent(query.trim())}`);
+    const params = new URLSearchParams({ q: query.trim() });
+    if (category) params.set("categoria", category);
+    router.push(`/busca?${params.toString()}`);
   }
 
   return (
@@ -50,6 +55,7 @@ export function SearchField({
       onSubmit={handleSubmit}
       className="flex w-full items-stretch gap-2"
     >
+      {category ? <input type="hidden" name="categoria" value={category} /> : null}
       <label className="sr-only" htmlFor={`search-${variant}`}>
         {label}
       </label>

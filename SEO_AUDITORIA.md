@@ -63,3 +63,48 @@ Conclusao: nao havia bloqueio global por `robots.txt`, JavaScript, HTTP ou canon
 ## Resultado e limite
 
 As correcoes eliminam URLs utilitarias e paginacoes do conjunto que o Google tenta indexar, mantendo o acervo editorial indexavel. Elas nao permitem forcar o Google a indexar 100% das paginas: a decisao final depende de rastreamento, qualidade percebida, novidade, autoridade e sinais externos.
+
+## Auditoria de implementacao do novo layout
+
+Data da revisao: 2026-09-16
+
+### Fase 1 — Diagnostico
+
+- [x] Mantida a stack existente: Next.js App Router, React, Tailwind e Server Components.
+- [x] Mantidas as rotas, chamadas de API, URLs publicas e funcionalidades de busca, liturgia e velas.
+- [x] Identificada a necessidade de hierarquia editorial mais clara na home.
+- [x] Identificada a necessidade de busca contextual nas categorias.
+- [x] Identificada a necessidade de tratar `prefers-reduced-motion` e revisar alt text.
+
+### Fase 2 — Correcoes aplicadas
+
+- [x] Home reorganizada para explorar a fe por grandes grupos reais de categorias, sem inventar contagens.
+- [x] Bloco de amostra renomeado para `Descubra algo novo`, com texto editorial curto.
+- [x] Liturgia da home passou a exibir cor liturgica, Evangelho e primeira leitura quando fornecidos pela API.
+- [x] Categorias receberam busca contextual preservando `categoria` nos modos com e sem JavaScript.
+- [x] Adicionada regra global de reducao de movimento para usuarios que a solicitarem.
+- [x] Imagem decorativa do cabecalho deixou de expor texto alternativo conflitante com `aria-hidden`.
+
+### Fase 3 — Preservacao
+
+- [x] Nenhuma URL ou contrato de API foi alterado.
+- [x] Conteudo editorial existente foi preservado.
+- [x] Dados exibidos na home continuam vindo da API e dos grupos existentes.
+- [x] SEO, sitemap, robots, canonicals e redirecionamento do dominio foram preservados.
+
+### Fase 4 — Validacao
+
+- [x] Diagnostico do VS Code: nenhum erro nos arquivos alterados.
+- [x] TypeScript passou sem diagnosticos usando `tsc --noEmit --incremental false`.
+- [x] Testes passaram: 5 arquivos e 38 testes.
+- [x] Lint do Next passou sem saidas de erro.
+- [ ] Concluir `npm run build` no frontend.
+- [ ] Testar visualmente em 320, 360, 375, 390, 414, 768, 1024, 1280 e 1440 pixels.
+- [ ] Conferir teclado, contraste, foco, leitor de tela e reducao de movimento.
+- [ ] Fazer deploy e verificar HTML, sitemap, canonicals e redirecionamento `www` em producao.
+
+### Pendencias fora deste ciclo
+
+- [ ] Relacionamentos semanticos reais entre verbetes ainda nao existem no contrato da API; nao foram inventados.
+- [ ] Imagens continuam com a estrategia atual de `unoptimized`; uma troca exige decisao de CDN/cache e medicao de performance.
+- [ ] A geracao do sitemap continua dependente da consulta paginada a API; monitorar tempo de geracao no deploy.
