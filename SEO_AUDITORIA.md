@@ -150,7 +150,7 @@ Data da revisao: 2026-09-16
 
 ### Publicacao
 
-- [ ] Commit e push da Sprint 2.
+- [x] Commit e push da Sprint 2: `4f47863`.
 - [ ] Confirmar no deploy que a busca por tags nao aumenta o tempo de resposta das paginas.
 
 ## Relatorio da Sprint 3 — 2026-09-16
@@ -171,6 +171,6 @@ Data da revisao: 2026-09-16
 
 ### Publicacao
 
-- [ ] Commit e push da Sprint 3.
+- [x] Commit e push da Sprint 3: `84abc13`.
 - [ ] Confirmar deploy final na Vercel.
 - [ ] Conectar o barramento de eventos a uma ferramenta de analytics com consentimento adequado.
