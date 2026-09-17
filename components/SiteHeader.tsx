@@ -29,7 +29,7 @@ export function SiteHeader() {
           podia ocupar menos altura. */}
       <div className="mx-auto flex max-w-shell flex-col gap-2.5 px-4 py-3 sm:px-6 md:flex-row md:items-center md:justify-between">
         <Link href="/" className="group flex flex-col">
-          <span className="flex items-center gap-2 font-display text-title-md leading-none text-bordeaux">
+          <span className="flex items-center gap-2 font-display text-title-sm leading-none text-bordeaux sm:text-title-md">
             {/* Emoji de bandeira (🇻🇦) em vez de imagem: Windows não tem a
                 fonte de emoji de bandeiras, então a maioria dos navegadores
                 ali (Chrome, Firefox) mostra as duas letras do código do país
@@ -50,7 +50,7 @@ export function SiteHeader() {
               aria-hidden="true"
               width={56}
               height={56}
-              className="h-7 w-7 shrink-0 rounded-edge object-cover object-[50%_28%]"
+              className="h-6 w-6 shrink-0 rounded-edge object-cover object-[50%_28%] sm:h-7 sm:w-7"
             />
           </span>
           <span className="kicker mt-1 group-hover:text-ink">
@@ -71,7 +71,7 @@ export function SiteHeader() {
               cabe na mesma linha em telas médias/grandes. */}
           <Link
             href="/perguntar"
-            className="shrink-0 text-meta text-ink-muted underline-offset-4 hover:text-bordeaux hover:underline"
+            className="hidden shrink-0 text-meta text-ink-muted underline-offset-4 hover:text-bordeaux hover:underline sm:inline"
           >
             💬 Perguntar ao acervo
           </Link>

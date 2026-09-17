@@ -58,7 +58,7 @@
 
   /* Coluna de leitura do corpo das entradas. */
   .reading-column p {
-    @apply max-w-measure text-lead text-ink;
+    @apply mx-auto max-w-measure text-lead text-ink;
   }
 
   .reading-column p + p {
@@ -70,7 +70,7 @@
    * tipográfico do projeto, e marca onde a leitura começa de fato.
    */
   .reading-column > p:first-of-type::first-letter {
-    @apply font-display text-bordeaux;
+    @apply font-display text-ink-muted;
     float: left;
     font-size: 3.4rem;
     line-height: 2.6rem;

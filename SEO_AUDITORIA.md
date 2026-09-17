@@ -174,3 +174,34 @@ Data da revisao: 2026-09-16
 - [x] Commit e push da Sprint 3: `84abc13`.
 - [ ] Confirmar deploy final na Vercel.
 - [ ] Conectar o barramento de eventos a uma ferramenta de analytics com consentimento adequado.
+
+## Auditoria visual — conforto de leitura — 2026-09-16
+
+### Diagnostico
+
+- [x] Paleta atual avaliada: marfim, carvao, bordô e dourado.
+- [x] Tipografia avaliada: EB Garamond para display e Karla para interface/corpo.
+- [x] Largura e ritmo da coluna de leitura avaliados.
+- [x] Imagens laterais da home e banners fotográficos avaliados como principais fontes de ruido visual.
+- [x] Header sticky, caixa alta, bordas douradas e contraste entre blocos avaliados em paginas longas.
+
+### Correcoes aplicadas
+
+- [x] Removidas as duas imagens laterais persistentes da home.
+- [x] Borda dos banners trocada de dourado para regra neutra.
+- [x] Gradientes dos banners suavizados.
+- [x] CTAs sobre imagens deixaram de usar borda dourada.
+- [x] Header mobile compactado com logo menor e menos uma acao na primeira faixa.
+- [x] Coluna de leitura centralizada e capitular neutralizada para reduzir interrupcoes visuais.
+
+### Validacao
+
+- [x] Diagnostico do VS Code sem erros nos arquivos alterados.
+- [x] TypeScript e lint executados sem saida de erro.
+- [x] Testes executados sem saida de erro.
+- [ ] Medir Core Web Vitals apos deploy.
+- [ ] Revisar visualmente em 320, 375, 414, 768, 1280 e 1440 pixels.
+
+### Publicacao
+
+- [ ] Commit e push da auditoria visual.

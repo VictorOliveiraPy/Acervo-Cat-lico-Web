@@ -29,7 +29,7 @@ export function PhotoBanner({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative overflow-hidden rounded-edge border border-gold">
+    <div className="relative overflow-hidden rounded-edge border border-rule-faint">
       <Image
         src={image}
         alt=""
@@ -41,7 +41,7 @@ export function PhotoBanner({
       />
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-r from-bordeaux-deep/90 via-bordeaux-deep/70 to-bordeaux-deep/40"
+        className="absolute inset-0 bg-gradient-to-r from-bordeaux-deep/85 via-bordeaux-deep/65 to-bordeaux-deep/35"
       />
 
       <div className="relative flex min-h-[220px] flex-col items-start justify-center gap-6 p-6 sm:flex-row sm:items-center sm:justify-between">

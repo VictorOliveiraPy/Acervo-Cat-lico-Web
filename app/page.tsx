@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { EntryGrid } from "@/components/EntryGrid";
@@ -172,47 +171,6 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: safeJsonLd(WEBSITE_JSON_LD) }}
       />
 
-      {/* As duas colunas cobrem a altura da página inteira (herói até o
-          fim de "Do acervo", logo antes do rodapé), não só o herói — por
-          isso vivem aqui fora, num wrapper que envolve tudo, com
-          `inset-y-0` de propósito: a altura desse wrapper é "auto" (dada
-          pelo conteúdo normal em fluxo), e a foto absoluta acompanha esse
-          tanto, seja qual for. Mesma foto nos dois lados (espelhada à
-          esquerda) porque é arquitetura repetitiva (nave de igreja, banco
-          após banco) — corta bem em qualquer altura de recorte, ao
-          contrário de um objeto único (um ostensório, um rosto) que fica
-          estranho cortado no meio. Esmaece em gradiente pro pergaminho
-          antes de chegar na coluna de leitura central. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 left-0 hidden w-[20%] xl:block"
-      >
-        <Image
-          src="/img-acervo/ig-nave-basilica.jpg"
-          alt=""
-          fill
-          sizes="20vw"
-          className="scale-x-[-1] object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-bordeaux-deep/40" />
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent from-0% to-parchment to-60%" />
-      </div>
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 right-0 hidden w-[20%] xl:block"
-      >
-        <Image
-          src="/img-acervo/ig-nave-basilica.jpg"
-          alt=""
-          fill
-          sizes="20vw"
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-bordeaux-deep/40" />
-        <div className="absolute inset-0 bg-gradient-to-l from-transparent from-0% to-parchment to-60%" />
-      </div>
-
       <section>
         <div className="relative mx-auto max-w-shell px-4 py-12 sm:px-6 md:py-16">
           <p className="kicker">Consulta em {categories.length} categorias</p>
@@ -252,7 +210,7 @@ export default async function HomePage() {
               >
                 <Link
                   href="/liturgia-diaria"
-                  className="shrink-0 rounded-edge border border-gold bg-parchment px-5 py-2.5 text-label uppercase tracking-[0.09em] text-ink transition-colors hover:bg-parchment-raised"
+                  className="shrink-0 rounded-edge border border-parchment-raised bg-parchment px-5 py-2.5 text-label uppercase tracking-[0.09em] text-ink transition-colors hover:bg-parchment-raised"
                 >
                   📖 Ler a liturgia de hoje →
                 </Link>
@@ -269,7 +227,7 @@ export default async function HomePage() {
             >
               <Link
                 href="/velas"
-                className="shrink-0 rounded-edge border border-gold bg-parchment px-5 py-2.5 text-label uppercase tracking-[0.09em] text-ink transition-colors hover:bg-parchment-raised"
+                className="shrink-0 rounded-edge border border-parchment-raised bg-parchment px-5 py-2.5 text-label uppercase tracking-[0.09em] text-ink transition-colors hover:bg-parchment-raised"
               >
                 🕯️ Acender uma vela →
               </Link>
