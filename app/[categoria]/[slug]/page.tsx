@@ -18,7 +18,7 @@ import { CATEGORY_LABELS, categoryPath, entryPath } from "@/lib/categories";
 import { entryMetaFields, entryOrdinal, paragraphs } from "@/lib/entryDisplay";
 import { safeJsonLd } from "@/lib/jsonLd";
 import { isCategorySlug, type CategorySlug, type Entry } from "@/lib/schemas";
-import { fetchEntry, fetchEntryPage } from "@/lib/services/acervoService";
+import { fetchEntry, fetchEntryPage, searchAcervo } from "@/lib/services/acervoService";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 /** Quantas outras entradas da mesma categoria aparecem em "Mais de …". */
@@ -34,8 +34,40 @@ const RELATED_COUNT = 4;
  * da API aqui não pode derrubar a página inteira — sem sugestões, a leitura
  * do que já carregou continua de pé.
  */
-async function loadRelated(categoria: CategorySlug, currentSlug: string): Promise<Entry[]> {
+async function loadRelated(
+  categoria: CategorySlug,
+  currentSlug: string,
+  tags: string[],
+): Promise<Entry[]> {
+  const terms = tags.map((tag) => tag.trim()).filter((tag) => tag.length >= 2).slice(0, 3);
+
   try {
+    const taggedResults = await Promise.all(
+      terms.map((term) => searchAcervo({ q: term, limit: RELATED_COUNT + 2 })),
+    );
+    const candidates = new Map<string, { categoria: CategorySlug; slug: string }>();
+    for (const results of taggedResults) {
+      for (const result of results) {
+        if (result.slug !== currentSlug) {
+          candidates.set(`${result.categoria}:${result.slug}`, result);
+        }
+      }
+    }
+
+    const related = await Promise.all(
+      [...candidates.values()].slice(0, RELATED_COUNT).map(async (candidate) => {
+        try {
+          return await fetchEntry(candidate.categoria, candidate.slug);
+        } catch (error: unknown) {
+          if (error instanceof ApiError) return null;
+          throw error;
+        }
+      }),
+    );
+    if (related.filter(Boolean).length > 0) {
+      return related.filter((entry): entry is Entry => entry !== null);
+    }
+
     const page = await fetchEntryPage(categoria, { limit: RELATED_COUNT + 1 });
     return page.itens.filter((entry) => entry.slug !== currentSlug).slice(0, RELATED_COUNT);
   } catch (error: unknown) {
@@ -126,7 +158,7 @@ export default async function EntryPage({ params }: { params: Params }) {
   const fields = entryMetaFields(entry);
   const blocks = paragraphs(entry.corpo);
   const path = entryPath(categoria, params.slug);
-  const related = await loadRelated(categoria, params.slug);
+  const related = await loadRelated(categoria, params.slug, entry.tags);
 
   // Dados estruturados: CreativeWork identifica a entrada em si (título,
   // resumo, imagem), BreadcrumbList espelha a navegação visível logo abaixo
@@ -264,10 +296,10 @@ export default async function EntryPage({ params }: { params: Params }) {
         <section aria-labelledby="mais-da-categoria" className="mt-section">
           <div className="border-b-2 border-gold pb-2">
             <h2 id="mais-da-categoria" className="font-display text-title-md text-ink">
-              Mais de {label.nav}
+              Continue sua leitura
             </h2>
           </div>
-          <EntryList entries={related} />
+          <EntryList entries={related} showCategory />
         </section>
       ) : null}
 

@@ -128,5 +128,27 @@ Data da revisao: 2026-09-16
 
 ### Publicacao
 
-- [ ] Commit e push da Sprint 1.
+- [x] Commit e push da Sprint 1: `94e9120`.
 - [ ] Confirmar deploy da Vercel e eventos no destino de analytics.
+
+## Relatorio da Sprint 2 — 2026-09-16
+
+### Entregas
+
+- [x] Conteudos relacionados agora priorizam tags reais do verbete e podem atravessar categorias.
+- [x] Fallback preservado para outros verbetes da mesma categoria quando nao ha resultados por tags.
+- [x] Titulo da secao de relacionados alterado para `Continue sua leitura`.
+- [x] Categoria exibida nos itens relacionados para deixar clara a procedencia.
+- [x] `Perguntar ao acervo` ganhou CTA visivel na home, sem substituir a busca.
+
+### Validacao
+
+- [x] TypeScript sem erros.
+- [x] 38 testes passando.
+- [x] Lint passou; permanece apenas o aviso conhecido de `img` no cabecalho.
+- [x] Nenhum contrato de API ou URL foi alterado.
+
+### Publicacao
+
+- [ ] Commit e push da Sprint 2.
+- [ ] Confirmar no deploy que a busca por tags nao aumenta o tempo de resposta das paginas.
