@@ -33,6 +33,15 @@ export function generateStaticParams(): Params[] {
   return CATEGORY_SLUGS.map((categoria) => ({ categoria }));
 }
 
+// A lista acima já é exaustiva (todas as 49 categorias existentes) — não há
+// nenhum `categoria` legítimo fora dela. Sem isto, o padrão do Next
+// (`dynamicParams: true`) tenta renderizar sob demanda qualquer segmento não
+// listado; o `notFound()` abaixo ainda dispara e mostra a página certa, mas
+// a resposta sai como HTTP 200 em vez de 404 (soft 404 — o Google indexa
+// como se fosse conteúdo válido). Com `false`, um `categoria` não listado
+// nunca chega a executar a página: cai em 404 real antes disso.
+export const dynamicParams = false;
+
 export function generateMetadata({
   params,
   searchParams,
@@ -48,7 +57,17 @@ export function generateMetadata({
     title: label.heading,
     description: label.tagline,
     alternates: { canonical: path },
-    openGraph: { title: label.heading, description: label.tagline, url: path },
+    // `images` explícito: declarar `openGraph` aqui substitui por inteiro o
+    // que a página raiz herdaria do `app/opengraph-image.tsx` (arquivo de
+    // convenção só é herdado quando a página NÃO define seu próprio
+    // `openGraph`) — sem isto, toda categoria compartilhada no WhatsApp/redes
+    // saía sem nenhuma prévia de imagem.
+    openGraph: {
+      title: label.heading,
+      description: label.tagline,
+      url: path,
+      images: ["/opengraph-image"],
+    },
     robots: { index: !isPaginated, follow: true },
   };
 }

@@ -14,7 +14,15 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: "/liturgia-diaria" },
-  openGraph: { title: TITLE, description: DESCRIPTION, url: "/liturgia-diaria" },
+  // `images` explícito: declarar `openGraph` aqui substitui por inteiro o
+  // que a página herdaria do `app/opengraph-image.tsx` — sem isto, a página
+  // compartilhada no WhatsApp/redes saía sem nenhuma prévia de imagem.
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    url: "/liturgia-diaria",
+    images: ["/opengraph-image"],
+  },
   // Conteúdo do dia, sem valor de arquivo depois que passa — não faz
   // sentido indexar uma versão velha desta página nos resultados de busca.
   robots: { index: false, follow: true },

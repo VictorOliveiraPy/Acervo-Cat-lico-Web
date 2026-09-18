@@ -15,7 +15,7 @@ import type { LiturgiaDiaria } from "@/lib/liturgiaSchemas";
 import { CATEGORY_SLUGS, type CategoryInfo, type Entry } from "@/lib/schemas";
 import { fetchCategories, fetchEntryPage } from "@/lib/services/acervoService";
 import { fetchLiturgiaDiaria } from "@/lib/services/liturgiaService";
-import { SANTO_GUARDIAO_URL, SITE_NAME, SITE_URL } from "@/lib/site";
+import { INSTAGRAM_URL, SANTO_GUARDIAO_URL, SITE_NAME, SITE_URL } from "@/lib/site";
 import { VELA_IMAGEM } from "@/lib/velas";
 
 // Regenera a home (com um sorteio novo pra "Do acervo") a cada 5 minutos —
@@ -37,6 +37,18 @@ const WEBSITE_JSON_LD = {
     target: `${SITE_URL}/busca?q={search_term_string}`,
     "query-input": "required name=search_term_string",
   },
+};
+
+// Declara a marca como entidade própria (nome, logo, perfil social) — ajuda
+// buscadores de IA (Perplexity, ChatGPT Search, Gemini) a reconhecer e citar
+// o "Compêndio Católico" como uma fonte específica, não um site anônimo.
+const ORGANIZATION_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: SITE_NAME,
+  url: SITE_URL,
+  logo: `${SITE_URL}/icon-512`,
+  sameAs: [INSTAGRAM_URL],
 };
 
 /** Termos que provam, em um clique, que a busca atravessa as categorias. */
@@ -169,6 +181,10 @@ export default async function HomePage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(WEBSITE_JSON_LD) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(ORGANIZATION_JSON_LD) }}
       />
 
       <section>

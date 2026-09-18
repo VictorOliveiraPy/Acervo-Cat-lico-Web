@@ -18,7 +18,15 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: "/velas" },
-  openGraph: { title: TITLE, description: DESCRIPTION, url: "/velas" },
+  // `images` explícito: declarar `openGraph` aqui substitui por inteiro o
+  // que a página herdaria do `app/opengraph-image.tsx` — sem isto, a página
+  // compartilhada no WhatsApp/redes saía sem nenhuma prévia de imagem.
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    url: "/velas",
+    images: ["/opengraph-image"],
+  },
   robots: { index: false, follow: true },
 };
 
