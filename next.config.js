@@ -12,11 +12,13 @@
 // CSP com 'unsafe-inline' em script/style: os blocos JSON-LD (dado
 // estruturado) e a hidratação do Next/React são scripts inline legítimos, e
 // não há nenhum script de terceiro no site — não precisa ser mais restrito
-// que isto pra cobrir o que existe hoje. `img-src` só libera o próprio site
-// e a Wikimedia (único host de imagem, ver `images.remotePatterns` abaixo).
+// que isto pra cobrir o que existe hoje. `img-src` libera a Wikimedia (fonte
+// editorial original, ainda usada como fallback) e o bucket R2 que serve as
+// cópias WebP pré-processadas (ver `docs/imagens/` no backend) — mesmos dois
+// hosts de `images.remotePatterns` abaixo.
 const CONTENT_SECURITY_POLICY = [
   "default-src 'self'",
-  "img-src 'self' https://upload.wikimedia.org data:",
+  "img-src 'self' https://upload.wikimedia.org https://pub-78c1274756844d269b56dd7c167c420d.r2.dev data:",
   "script-src 'self' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline'",
   "font-src 'self'",
@@ -42,11 +44,14 @@ const nextConfig = {
     },
   },
   images: {
-    // Todas as imagens do acervo são hotlinks para arquivos de domínio
-    // público / CC verificados manualmente na Wikimedia Commons (ver
-    // app/data/*.json no backend) — único host liberado de propósito.
+    // As imagens do acervo vêm do bucket R2 (cópia WebP pré-processada,
+    // ver `docs/imagens/` no backend) quando o backend já sincronizou
+    // aquela entrada, com fallback pro hotlink original da Wikimedia
+    // (arquivos de domínio público / CC verificados manualmente, ver
+    // app/data/*.json no backend) quando ainda não sincronizou.
     remotePatterns: [
       { protocol: "https", hostname: "upload.wikimedia.org", pathname: "/**" },
+      { protocol: "https", hostname: "pub-78c1274756844d269b56dd7c167c420d.r2.dev", pathname: "/**" },
     ],
     // O acervo já passa de mil imagens únicas (uma por verbete, cada uma
     // conta como "source image" separada pra cota de Otimização de Imagem
