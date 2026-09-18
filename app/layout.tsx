@@ -74,8 +74,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" className={`${display.variable} ${body.variable}`}>
+    <html
+      lang="pt-BR"
+      className={`${display.variable} ${body.variable}`}
+      // O script `reading-size-init` abaixo adiciona `data-reading-size`
+      // antes da hidratação (evita o flash de tamanho normal pra quem já
+      // escolheu A+/A++) — o servidor nunca sabe esse valor (só existe no
+      // localStorage do navegador), então sem isso o React acusaria um
+      // mismatch de hidratação só por causa desse atributo.
+      suppressHydrationWarning
+    >
       <body className="flex min-h-screen flex-col">
+        {/* Aplica o modo leitura salvo (lib/readingSize.ts) antes da
+            primeira pintura — sem isso, quem escolheu "A++" veria o texto
+            no tamanho normal por um instante a cada carregamento novo
+            (`beforeInteractive` roda antes da hidratação, não depois). */}
+        <Script id="reading-size-init" strategy="beforeInteractive">
+          {`try{var s=localStorage.getItem("compendio:reading-size");if(s==="larger"||s==="largest"){document.documentElement.dataset.readingSize=s;}}catch(e){}`}
+        </Script>
         <a
           href="#conteudo"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-edge focus:bg-bordeaux focus:px-4 focus:py-2 focus:text-meta focus:text-parchment-raised"

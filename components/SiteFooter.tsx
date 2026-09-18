@@ -4,6 +4,7 @@ import { CATEGORY_LABELS, categoryPath } from "@/lib/categories";
 import { CATEGORY_GROUPS } from "@/lib/categoryGroups";
 import { ApiError } from "@/lib/api";
 import { HIMETRICA_SHARE_URL } from "@/lib/himetricaShareUrl";
+import { SeloCarlosAcutis } from "@/components/SeloCarlosAcutis";
 import { fetchHealth } from "@/lib/services/acervoService";
 import { INSTAGRAM_URL, MELHORPERFIL_URL, SANTO_GUARDIAO_URL } from "@/lib/site";
 import type { HealthStatus } from "@/lib/schemas";
@@ -161,6 +162,18 @@ export async function SiteFooter() {
           </p>
           <p className="mt-1 text-meta text-ink-muted">
             Santo Anselmo de Cantuária, Proslogion, séc. XI
+          </p>
+        </div>
+
+        {/* Padroeiro da internet e dos cibernautas — referência direta ao que
+            este acervo faz: catalogar e publicar conteúdo católico online.
+            Selo próprio (cruz + halo + pixels), sem retrato, pra não virar
+            mascote do site — ver SeloCarlosAcutis. */}
+        <div className="mt-6 flex flex-col items-center gap-2 border-t border-rule-faint pt-6 text-center">
+          <SeloCarlosAcutis size={40} />
+          <p className="kicker text-bordeaux">Sob a intercessão de São Carlos Acutis</p>
+          <p className="text-meta text-ink-muted">
+            Padroeiro da internet e dos cibernautas · 1991–2006
           </p>
         </div>
       </div>

@@ -73,7 +73,7 @@ export function SiteHeader() {
             href="/perguntar"
             className="hidden shrink-0 text-meta text-ink-muted underline-offset-4 hover:text-bordeaux hover:underline sm:inline"
           >
-            💬 Perguntar ao acervo
+            <span aria-hidden="true">💬</span> Perguntar ao acervo
           </Link>
           <Link
             href="/velas"

@@ -76,4 +76,30 @@
     line-height: 2.6rem;
     padding: 0.35rem 0.55rem 0 0;
   }
+
+  /*
+   * Modo leitura (`ReadingSizeControl`/`lib/readingSize.ts`): o atributo vai
+   * na <html> (não num wrapper local) de propósito — a escolha precisa
+   * valer em qualquer verbete que a pessoa abrir depois, e a <html> é o que
+   * sobrevive à navegação client-side do App Router sem re-render.
+   */
+  [data-reading-size="larger"] .reading-column p {
+    font-size: 1.375rem;
+    line-height: 2.15rem;
+  }
+
+  [data-reading-size="largest"] .reading-column p {
+    font-size: 1.5625rem;
+    line-height: 2.5rem;
+  }
+
+  [data-reading-size="larger"] .reading-column > p:first-of-type::first-letter {
+    font-size: 3.9rem;
+    line-height: 3rem;
+  }
+
+  [data-reading-size="largest"] .reading-column > p:first-of-type::first-letter {
+    font-size: 4.4rem;
+    line-height: 3.4rem;
+  }
 }

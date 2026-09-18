@@ -14,6 +14,7 @@ import {
 import { EntryList } from "@/components/EntryList";
 import { EntryActions } from "@/components/EntryActions";
 import { OrnamentalDivider } from "@/components/OrnamentalDivider";
+import { ReadingSizeControl } from "@/components/ReadingSizeControl";
 import { ApiError, getErrorMessage } from "@/lib/api";
 import { CATEGORY_LABELS, categoryPath, entryPath } from "@/lib/categories";
 import { entryMetaFields, entryOrdinal, paragraphs } from "@/lib/entryDisplay";
@@ -255,7 +256,12 @@ export default async function EntryPage({ params }: { params: Params }) {
         </section>
       ) : null}
 
-      <div className="reading-column mt-12">
+      <div className="mt-12 flex items-center justify-end gap-3">
+        <p className="kicker">Tamanho do texto</p>
+        <ReadingSizeControl />
+      </div>
+
+      <div className="reading-column mt-6">
         {entry.categoria === "oracoes" ? (
           <h2 className="kicker mb-4">Sobre esta oração</h2>
         ) : null}

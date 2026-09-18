@@ -63,7 +63,7 @@ export function EntryGrid({ entries }: Props) {
             />
 
             <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-3">
-              <h3 className="font-display text-body font-bold leading-tight text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.8)] sm:text-title-sm">
+              <h3 className="min-w-0 line-clamp-2 font-display text-body font-bold leading-tight text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.8)] sm:text-title-sm">
                 {entry.titulo}
               </h3>
               <span className="shrink-0 whitespace-nowrap rounded-full border border-white/40 bg-black/50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-white">
