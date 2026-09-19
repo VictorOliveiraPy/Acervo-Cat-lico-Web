@@ -9,7 +9,7 @@
  *
  * Antes cada tipo tinha sua própria foto do santo/devoção — mas o card de
  * uma vela acesa é sobre a vela, não sobre um retrato; agora todos usam a
- * mesma foto de vela votiva (`VELA_IMAGEM`), e o rótulo (`label`) é quem
+ * mesma foto de vela acesa (`VELA_IMAGEM`), e o rótulo (`label`) é quem
  * diz por quem é a intenção.
  */
 
@@ -35,9 +35,14 @@ export const VELA_TIPOS: readonly VelaTipoInfo[] = [
   { tipo: "sao_joao_batista", label: "São João Batista" },
 ] as const;
 
-/** Foto compartilhada por toda vela — rack de velas votivas acesas. */
-export const VELA_IMAGEM = "/img-acervo/vela-votiva.jpg";
-export const VELA_IMAGEM_CREDITO = "Zarn02 — Wikimedia Commons, CC BY-SA 3.0";
+/**
+ * Foto compartilhada por toda vela. Trocada em 2026-09-18: a anterior
+ * (rack de copos votivos vermelhos) mal deixava a vela em si aparecer —
+ * esta mostra o formato de vela de verdade (cera + chama), o que a seção
+ * "Acender uma vela" precisa comunicar num relance.
+ */
+export const VELA_IMAGEM = "/img-acervo/vela-acesa.jpg";
+export const VELA_IMAGEM_CREDITO = "Domínio público — Wikimedia Commons";
 
 /** Vela pré-selecionada ao abrir o formulário — a primeira da lista acima. */
 export const DEFAULT_VELA_TIPO: VelaTipo = "jesus";
