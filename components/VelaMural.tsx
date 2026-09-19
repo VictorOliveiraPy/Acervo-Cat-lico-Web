@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { VELA_IMAGEM, formatVelaDate, formatVelaLocation, velaTipoInfo } from "@/lib/velas";
+import { formatVelaDate, formatVelaLocation, velaTipoInfo } from "@/lib/velas";
 import type { Vela } from "@/lib/velasSchemas";
 
 /**
@@ -30,7 +30,7 @@ export function VelaMural({ velas }: { velas: Vela[] }) {
             className="flex gap-4 rounded-edge border border-rule-faint bg-parchment-raised p-4"
           >
             <Image
-              src={VELA_IMAGEM}
+              src={info.imagem}
               alt="Vela acesa"
               width={88}
               height={88}

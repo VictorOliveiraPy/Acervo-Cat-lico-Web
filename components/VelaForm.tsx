@@ -6,7 +6,7 @@ import { useFormState, useFormStatus } from "react-dom";
 
 import { acenderVelaAction, type AcenderVelaState } from "@/app/velas/actions";
 import { trackEvent } from "@/lib/analytics";
-import { DEFAULT_VELA_TIPO, VELA_IMAGEM, VELA_IMAGEM_CREDITO, VELA_TIPOS } from "@/lib/velas";
+import { DEFAULT_VELA_TIPO, VELA_TIPOS } from "@/lib/velas";
 import {
   VELA_CIDADE_MAX,
   VELA_EMAIL_MAX,
@@ -42,6 +42,10 @@ function VelaPicker({
   selected: VelaTipo;
   onSelect: (tipo: VelaTipo) => void;
 }) {
+  // Fotos diferentes por tipo (ver lib/velas.ts) vêm de autores/licenças
+  // diferentes — a lista de créditos precisa cobrir todas, não só uma.
+  const creditos = [...new Set(VELA_TIPOS.map((item) => item.imagemCredito))];
+
   return (
     <fieldset>
       <legend className="kicker">Escolha a vela</legend>
@@ -66,7 +70,7 @@ function VelaPicker({
                 className="sr-only"
               />
               <Image
-                src={VELA_IMAGEM}
+                src={item.imagem}
                 alt="Vela acesa"
                 width={128}
                 height={128}
@@ -77,7 +81,7 @@ function VelaPicker({
           );
         })}
       </div>
-      <p className="mt-3 text-meta text-ink-muted/70">Foto: {VELA_IMAGEM_CREDITO}</p>
+      <p className="mt-3 text-meta text-ink-muted/70">Fotos: {creditos.join(" · ")}</p>
     </fieldset>
   );
 }

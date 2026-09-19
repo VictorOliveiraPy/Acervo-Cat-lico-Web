@@ -7,10 +7,15 @@
  * vice-versa) quebra a escolha na tela ou a gravação; os dois lados têm
  * que mudar juntos.
  *
- * Antes cada tipo tinha sua própria foto do santo/devoção — mas o card de
- * uma vela acesa é sobre a vela, não sobre um retrato; agora todos usam a
- * mesma foto de vela acesa (`VELA_IMAGEM`), e o rótulo (`label`) é quem
- * diz por quem é a intenção.
+ * Cada tipo tem sua própria foto de vela (não um retrato do santo — o card
+ * continua sendo sobre a vela) — trocado em 2026-09-19 depois de duas
+ * rodadas de ajuste: a primeira foto (rack de copos votivos) mal deixava a
+ * vela aparecer; a segunda (uma vela só, compartilhada por todas) corrigiu
+ * isso mas ainda deixava as 12 opções visualmente idênticas. Boas fotos de
+ * "vela inteira" verificadas no Wikimedia Commons são um recurso escasso,
+ * então 7 fotos distintas se repetem entre as 12 devoções por afinidade
+ * temática (cor litúrgica, símbolo, tom) — 12 fotos únicas exigiria aceitar
+ * material de qualidade/composição bem inferior às já aprovadas.
  */
 
 import type { VelaTipo } from "@/lib/velasSchemas";
@@ -18,31 +23,63 @@ import type { VelaTipo } from "@/lib/velasSchemas";
 export type VelaTipoInfo = {
   tipo: VelaTipo;
   label: string;
+  imagem: string;
+  imagemCredito: string;
+};
+
+const CIRIO_PASCAL = {
+  imagem: "/img-acervo/vela-cirio-pascal.jpg",
+  imagemCredito: "Chris Nyborg — Wikimedia Commons, CC BY-SA 3.0",
+};
+/** Medalhão do Cordeiro de Deus — João Batista é quem o proclama (Jo 1,29). */
+const CORDEIRO = {
+  imagem: "/img-acervo/vela-cordeiro.jpg",
+  imagemCredito: "Acabashi — Wikimedia Commons, CC BY-SA 4.0",
+};
+/** Monograma Chi-Rho — tom solene, para os dois Doutores/fundadores. */
+const CHIRHO = {
+  imagem: "/img-acervo/vela-chirho.jpg",
+  imagemCredito: "Acabashi — Wikimedia Commons, CC BY-SA 4.0",
+};
+/** Vermelha — cor litúrgica do Espírito Santo/Pentecostes. */
+const VERMELHA = {
+  imagem: "/img-acervo/vela-vermelha.jpg",
+  imagemCredito: "Donald Olszewski — Wikimedia Commons, CC BY 4.0",
+};
+/** Tom rosado/malva suave — mariano; combina com as rosas de Santa Terezinha. */
+const ROSADA = {
+  imagem: "/img-acervo/vela-rosada.jpg",
+  imagemCredito: "WillieWax — Wikimedia Commons, CC BY-SA 3.0",
+};
+/** Branca elegante, com castiçais ao fundo. */
+const BRANCA = {
+  imagem: "/img-acervo/vela-branca.jpg",
+  imagemCredito: "Solaris2006 — Wikimedia Commons, CC BY-SA 3.0",
+};
+/** Marfim simples — a foto padrão/genérica (também usada no banner da home). */
+const MARFIM = {
+  imagem: "/img-acervo/vela-acesa.jpg",
+  imagemCredito: "Richard W.M. Jones (retoque: Forrestjunky) — Wikimedia Commons, domínio público",
 };
 
 export const VELA_TIPOS: readonly VelaTipoInfo[] = [
-  { tipo: "jesus", label: "Jesus Cristo" },
-  { tipo: "nossa_senhora", label: "Nossa Senhora" },
-  { tipo: "aparecida", label: "N. Sra. Aparecida" },
-  { tipo: "sao_jose", label: "São José" },
-  { tipo: "espirito_santo", label: "Espírito Santo" },
-  { tipo: "sao_judas_tadeu", label: "São Judas Tadeu" },
-  { tipo: "carlo_acutis", label: "São Carlo Acutis" },
-  { tipo: "santo_agostinho", label: "Santo Agostinho" },
-  { tipo: "sao_bento", label: "São Bento" },
-  { tipo: "santa_terezinha", label: "Santa Terezinha" },
-  { tipo: "santo_antonio", label: "Santo Antônio" },
-  { tipo: "sao_joao_batista", label: "São João Batista" },
+  { tipo: "jesus", label: "Jesus Cristo", ...CIRIO_PASCAL },
+  { tipo: "nossa_senhora", label: "Nossa Senhora", ...ROSADA },
+  { tipo: "aparecida", label: "N. Sra. Aparecida", ...BRANCA },
+  { tipo: "sao_jose", label: "São José", ...MARFIM },
+  { tipo: "espirito_santo", label: "Espírito Santo", ...VERMELHA },
+  { tipo: "sao_judas_tadeu", label: "São Judas Tadeu", ...BRANCA },
+  { tipo: "carlo_acutis", label: "São Carlo Acutis", ...MARFIM },
+  { tipo: "santo_agostinho", label: "Santo Agostinho", ...CHIRHO },
+  { tipo: "sao_bento", label: "São Bento", ...CHIRHO },
+  { tipo: "santa_terezinha", label: "Santa Terezinha", ...ROSADA },
+  { tipo: "santo_antonio", label: "Santo Antônio", ...MARFIM },
+  { tipo: "sao_joao_batista", label: "São João Batista", ...CORDEIRO },
 ] as const;
 
-/**
- * Foto compartilhada por toda vela. Trocada em 2026-09-18: a anterior
- * (rack de copos votivos vermelhos) mal deixava a vela em si aparecer —
- * esta mostra o formato de vela de verdade (cera + chama), o que a seção
- * "Acender uma vela" precisa comunicar num relance.
- */
-export const VELA_IMAGEM = "/img-acervo/vela-acesa.jpg";
-export const VELA_IMAGEM_CREDITO = "Domínio público — Wikimedia Commons";
+/** Foto genérica do banner "Acenda uma vela" da home — não é de um tipo específico. */
+export const VELA_IMAGEM = MARFIM.imagem;
+export const VELA_IMAGEM_CREDITO = MARFIM.imagemCredito;
 
 /** Vela pré-selecionada ao abrir o formulário — a primeira da lista acima. */
 export const DEFAULT_VELA_TIPO: VelaTipo = "jesus";
