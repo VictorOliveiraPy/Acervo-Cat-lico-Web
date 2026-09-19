@@ -23,9 +23,14 @@ export const metadata: Metadata = {
     url: "/liturgia-diaria",
     images: ["/opengraph-image"],
   },
-  // Conteúdo do dia, sem valor de arquivo depois que passa — não faz
-  // sentido indexar uma versão velha desta página nos resultados de busca.
-  robots: { index: false, follow: true },
+  // Indexável de propósito (revertido de `noindex` na auditoria de SEO de
+  // 2026-09-18): "liturgia de hoje"/"evangelho de hoje" é busca de altíssimo
+  // volume recorrente no nicho católico — todo site de referência do ramo
+  // (Vatican News, Aleteia, CNBB) indexa a mesma URL estável mesmo com
+  // conteúdo trocando todo dia. O Google recrawla páginas que mudam com
+  // frequência e mostra o conteúdo atual, não uma "versão velha" — manter
+  // `noindex` só abre mão de tráfego de graça sem ganhar nada em troca.
+  robots: { index: true, follow: true },
 };
 
 /**

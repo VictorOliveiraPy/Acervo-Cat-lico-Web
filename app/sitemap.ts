@@ -36,6 +36,10 @@ async function fetchAllSlugs(categoria: CategorySlug): Promise<string[]> {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
     { url: SITE_URL, changeFrequency: "weekly", priority: 1 },
+    // Indexável desde a auditoria de SEO de 2026-09-18 (ver
+    // app/liturgia-diaria/page.tsx) — troca de conteúdo todo dia, daí
+    // `changeFrequency: "daily"` em vez de "weekly".
+    { url: `${SITE_URL}/liturgia-diaria`, changeFrequency: "daily", priority: 0.9 },
   ];
 
   const categoryPages: MetadataRoute.Sitemap = CATEGORY_SLUGS.map((categoria) => ({
