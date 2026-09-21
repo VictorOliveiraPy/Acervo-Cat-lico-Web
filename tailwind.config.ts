@@ -55,6 +55,11 @@ const config: Config = {
         state: {
           notice: "#7A5B12",
           error: "#8C2F1F",
+          // Indicador de "online" do widget de chat — único uso de verde no
+          // projeto, de propósito: é convenção universal de status, não
+          // decisão de marca (por isso mora em `state`, junto de
+          // notice/error, nunca ao lado de bordeaux/gold/purple).
+          ok: "#1F7A3D",
         },
       },
       fontFamily: {

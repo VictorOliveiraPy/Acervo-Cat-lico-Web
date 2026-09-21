@@ -29,7 +29,8 @@ function SubmitButton() {
 /** Uma fonte citada, com link pro verbete real quando a categoria é
  * reconhecida — a API sempre devolve uma categoria válida, mas o contrato
  * no frontend não estreita esse tipo, então a checagem fica aqui. */
-function FonteLink({ fonte }: { fonte: FonteCitada }) {
+/** Exportado: reusado por `ChatWidget` pra não duplicar o link de fonte citada. */
+export function FonteLink({ fonte }: { fonte: FonteCitada }) {
   if (!isCategorySlug(fonte.categoria)) {
     return <span className="text-ink-muted">{fonte.titulo}</span>;
   }
