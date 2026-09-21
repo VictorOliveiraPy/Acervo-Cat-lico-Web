@@ -70,6 +70,14 @@ const nextConfig = {
         destination: "https://compendio-catolico.com/:path*",
         permanent: true,
       },
+      {
+        // `/perguntar` era a página dedicada do chatbot, substituída pelo
+        // widget flutuante (`ChatWidget`, disponível em toda página) —
+        // redirect, não 404, pra quem já tinha o link salvo/indexado.
+        source: "/perguntar",
+        destination: "/",
+        permanent: true,
+      },
     ];
   },
   async headers() {

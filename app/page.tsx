@@ -250,20 +250,6 @@ export default async function HomePage() {
             </PhotoBanner>
           </div>
 
-          <div className="mt-6 flex flex-col gap-3 border border-rule-faint bg-parchment-raised p-5 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="kicker text-bordeaux">Pergunte ao acervo</p>
-              <p className="mt-1 max-w-measure text-meta text-ink-muted">
-                Não sabe por onde começar? Faça uma pergunta e receba uma resposta com fontes do acervo.
-              </p>
-            </div>
-            <Link
-              href="/perguntar"
-              className="shrink-0 text-label uppercase tracking-[0.09em] text-bordeaux underline-offset-4 hover:underline"
-            >
-              Fazer uma pergunta →
-            </Link>
-          </div>
         </div>
       </section>
 

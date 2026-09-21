@@ -64,17 +64,6 @@ export function SiteHeader() {
               <SearchField label="Buscar em todo o acervo" />
             </div>
           )}
-          {/* Chatbot do acervo: até aqui só alcançável pelo rodapé — um
-              diferencial real (poucos sites católicos têm isso) invisível na
-              navegação principal. Link de texto, não botão, pra não crescer
-              a altura do cabeçalho nem competir com "Acender uma vela";
-              cabe na mesma linha em telas médias/grandes. */}
-          <Link
-            href="/perguntar"
-            className="hidden shrink-0 text-meta text-ink-muted underline-offset-4 hover:text-bordeaux hover:underline sm:inline"
-          >
-            <span aria-hidden="true">💬</span> Perguntar ao acervo
-          </Link>
           <Link
             href="/velas"
             className="flex shrink-0 items-center justify-center gap-2 rounded-edge border border-bordeaux bg-bordeaux px-4 py-2.5 text-label uppercase tracking-[0.09em] text-parchment-raised transition-colors hover:bg-bordeaux-soft"

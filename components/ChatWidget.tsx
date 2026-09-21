@@ -2,8 +2,9 @@
 
 /**
  * Widget de chat flutuante, disponível em qualquer página (montado uma vez
- * em `app/layout.tsx`) — complementa `/perguntar` (página dedicada, útil
- * pra SEO/link direto) sem substituí-la.
+ * em `app/layout.tsx`) — única forma de conversar com o chatbot do acervo.
+ * Existiu uma página dedicada (`/perguntar`), removida a favor deste widget
+ * (ver `next.config.js::redirects` pro link antigo).
  *
  * Identidade visual: "Sob a intercessão de São Carlos Acutis", usando o
  * mesmo selo simbólico do rodapé (`SeloCarlosAcutis` — cruz, halo e pixels,
@@ -20,8 +21,8 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 
-import { perguntarWidgetAction } from "@/app/perguntar/actions";
-import { FonteLink } from "@/components/ChatForm";
+import { perguntarWidgetAction } from "@/components/chatWidgetActions";
+import { FonteLink } from "@/components/FonteLink";
 import { SeloCarlosAcutis } from "@/components/SeloCarlosAcutis";
 import { CHAT_PERGUNTA_MAX, type FonteCitada } from "@/lib/chatSchemas";
 
