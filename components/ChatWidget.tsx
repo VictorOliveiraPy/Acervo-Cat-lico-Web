@@ -158,8 +158,8 @@ export function ChatWidget() {
                 <div
                   className={
                     message.role === "user"
-                      ? "rounded-edge bg-bordeaux px-3 py-2 text-body text-parchment-raised"
-                      : "rounded-edge border border-rule-faint bg-parchment-raised px-3 py-2 text-body text-ink"
+                      ? "whitespace-pre-wrap rounded-edge bg-bordeaux px-3 py-2 text-body text-parchment-raised"
+                      : "whitespace-pre-wrap rounded-edge border border-rule-faint bg-parchment-raised px-3 py-2 text-body text-ink"
                   }
                 >
                   {message.text}
