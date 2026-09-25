@@ -75,6 +75,8 @@ const baseEntrySchema = z.object({
   slug: z.string(),
   titulo: z.string(),
   resumo: z.string(),
+  /** Data (ISO) da última alteração do conteúdo, quando a API a informa. */
+  atualizado_em: z.string().nullable().default(null),
   corpo: z.string(),
   tags: z.array(z.string()).default([]),
   imagem: z.string().nullable().default(null),

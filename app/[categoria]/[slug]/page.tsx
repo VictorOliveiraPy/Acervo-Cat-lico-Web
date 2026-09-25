@@ -13,14 +13,22 @@ import {
 } from "@/components/Editorial";
 import { EntryList } from "@/components/EntryList";
 import { EntryActions } from "@/components/EntryActions";
+import { EntryNeighbors } from "@/components/EntryNeighbors";
 import { OrnamentalDivider } from "@/components/OrnamentalDivider";
 import { ReadingSizeControl } from "@/components/ReadingSizeControl";
 import { ApiError, getErrorMessage } from "@/lib/api";
 import { CATEGORY_LABELS, categoryPath, entryPath } from "@/lib/categories";
 import { entryMetaFields, entryOrdinal, paragraphs } from "@/lib/entryDisplay";
 import { safeJsonLd } from "@/lib/jsonLd";
+import { neighborsOf } from "@/lib/neighbors";
 import { isCategorySlug, type CategorySlug, type Entry } from "@/lib/schemas";
-import { fetchEntry, fetchEntryPage, searchAcervo } from "@/lib/services/acervoService";
+import {
+  fetchCategoryIndex,
+  fetchEntry,
+  fetchEntryPage,
+  searchAcervo,
+  type CategoryIndexItem,
+} from "@/lib/services/acervoService";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 /** Quantas outras entradas da mesma categoria aparecem em "Mais de …". */
@@ -74,6 +82,19 @@ async function loadRelated(
     return page.itens.filter((entry) => entry.slug !== currentSlug).slice(0, RELATED_COUNT);
   } catch (error: unknown) {
     if (error instanceof ApiError) return [];
+    throw error;
+  }
+}
+
+/**
+ * Entrada anterior e próxima na categoria. Falha da API aqui não derruba a
+ * página: sem vizinhas, o resto da leitura continua de pé.
+ */
+async function loadNeighbors(categoria: CategorySlug, slug: string) {
+  try {
+    return neighborsOf<CategoryIndexItem>(await fetchCategoryIndex(categoria), slug);
+  } catch (error: unknown) {
+    if (error instanceof ApiError) return { previous: null, next: null };
     throw error;
   }
 }
@@ -160,7 +181,10 @@ export default async function EntryPage({ params }: { params: Params }) {
   const fields = entryMetaFields(entry);
   const blocks = paragraphs(entry.corpo);
   const path = entryPath(categoria, params.slug);
-  const related = await loadRelated(categoria, params.slug, entry.tags);
+  const [related, neighbors] = await Promise.all([
+    loadRelated(categoria, params.slug, entry.tags),
+    loadNeighbors(categoria, params.slug),
+  ]);
 
   // Dados estruturados: CreativeWork identifica a entrada em si (título,
   // resumo, imagem), BreadcrumbList espelha a navegação visível logo abaixo
@@ -175,6 +199,7 @@ export default async function EntryPage({ params }: { params: Params }) {
     inLanguage: "pt-BR",
     isPartOf: { "@type": "WebSite", name: SITE_NAME, url: SITE_URL },
     ...(entry.imagem ? { image: entry.imagem } : {}),
+    ...(entry.atualizado_em ? { dateModified: entry.atualizado_em } : {}),
   };
 
   const breadcrumbJsonLd = {
@@ -299,6 +324,8 @@ export default async function EntryPage({ params }: { params: Params }) {
 
         <SourceList sources={entry.fontes} />
       </footer>
+
+      <EntryNeighbors categoria={categoria} neighbors={neighbors} />
 
       {related.length > 0 ? (
         <section aria-labelledby="mais-da-categoria" className="mt-section">

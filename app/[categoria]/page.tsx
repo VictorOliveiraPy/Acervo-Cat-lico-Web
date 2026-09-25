@@ -52,23 +52,32 @@ export function generateMetadata({
   if (!isCategorySlug(params.categoria)) return { title: "Categoria" };
   const label = CATEGORY_LABELS[params.categoria];
   const path = categoryPath(params.categoria);
-  const isPaginated = parseOffset(searchParams.offset) > 0;
+  // Página N da listagem é uma página de verdade (indexável, canônica de si mesma):
+  // é por ela que o robô descobre as entradas que não cabem na primeira. Deslocamento
+  // fora do múltiplo do tamanho da página volta para a página que o contém, para
+  // `?offset=7` não virar uma cópia indexável.
+  const pageOffset = Math.floor(parseOffset(searchParams.offset) / PAGE_SIZE) * PAGE_SIZE;
+  const canonical = pageOffset > 0 ? `${path}?offset=${pageOffset}` : path;
+  const heading =
+    pageOffset > 0
+      ? `${label.heading} — página ${pageOffset / PAGE_SIZE + 1}`
+      : label.heading;
   return {
-    title: label.heading,
+    title: heading,
     description: label.tagline,
-    alternates: { canonical: path },
+    alternates: { canonical },
     // `images` explícito: declarar `openGraph` aqui substitui por inteiro o
     // que a página raiz herdaria do `app/opengraph-image.tsx` (arquivo de
     // convenção só é herdado quando a página NÃO define seu próprio
     // `openGraph`) — sem isto, toda categoria compartilhada no WhatsApp/redes
     // saía sem nenhuma prévia de imagem.
     openGraph: {
-      title: label.heading,
+      title: heading,
       description: label.tagline,
-      url: path,
+      url: canonical,
       images: ["/opengraph-image"],
     },
-    robots: { index: !isPaginated, follow: true },
+    robots: { index: true, follow: true },
   };
 }
 

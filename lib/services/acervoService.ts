@@ -20,8 +20,14 @@ import {
   type SearchResult,
 } from "@/lib/schemas";
 
-/** Itens por página nas listagens (o backend limita a 100). */
-export const PAGE_SIZE = 12;
+/**
+ * Itens por página nas listagens (o backend limita a 100).
+ *
+ * 100, o máximo: quase todas as categorias cabem em uma ou duas páginas, então
+ * cada entrada fica a um clique da categoria. Com 12 por página, uma entrada
+ * no fim de "papas" ficava a 16 cliques e o Google não chegava até ela.
+ */
+export const PAGE_SIZE = 100;
 
 /**
  * Mínimo de caracteres aceito por `/api/search`.
@@ -47,6 +53,40 @@ export function fetchEntryPage(
   return apiGet(`/${categoria}`, entryPageSchema, {
     query: { limit, offset },
   });
+}
+
+/** O mínimo de cada entrada que o índice de uma categoria precisa. */
+export type CategoryIndexItem = {
+  slug: string;
+  titulo: string;
+  atualizado_em: string | null;
+};
+
+/** Teto de itens por página que o backend aceita. */
+const INDEX_PAGE_SIZE = 100;
+
+/**
+ * Todas as entradas de uma categoria, na ordem curada pelo acervo, só com o que
+ * o sitemap e os links de anterior/próximo usam. Pagina até cobrir o total.
+ */
+export async function fetchCategoryIndex(categoria: CategorySlug): Promise<CategoryIndexItem[]> {
+  const items: CategoryIndexItem[] = [];
+  let offset = 0;
+
+  while (true) {
+    const page = await fetchEntryPage(categoria, { limit: INDEX_PAGE_SIZE, offset });
+    items.push(
+      ...page.itens.map((entry) => ({
+        slug: entry.slug,
+        titulo: entry.titulo,
+        atualizado_em: entry.atualizado_em,
+      })),
+    );
+    offset += page.itens.length;
+    if (page.itens.length === 0 || offset >= page.total) break;
+  }
+
+  return items;
 }
 
 /** Entrada completa de uma categoria (corpo, campos próprios e fontes). */
