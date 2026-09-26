@@ -3,6 +3,7 @@ import Link from "next/link";
 import { EntryGrid } from "@/components/EntryGrid";
 import { OrnamentalDivider } from "@/components/OrnamentalDivider";
 import { PhotoBanner } from "@/components/PhotoBanner";
+import { SantosCaminhantes } from "@/components/SantosCaminhantes";
 import { SearchField } from "@/components/SearchField";
 import { StatusMessage } from "@/components/Editorial";
 import { ApiError, getApiBaseUrl, getErrorMessage } from "@/lib/api";
@@ -178,6 +179,7 @@ export default async function HomePage() {
 
   return (
     <div className="relative overflow-hidden">
+      <SantosCaminhantes />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(WEBSITE_JSON_LD) }}

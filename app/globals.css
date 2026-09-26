@@ -53,6 +53,64 @@
 }
 
 @layer components {
+  /*
+   * Procissão de santos da home (components/SantosCaminhantes.tsx). O santo
+   * só anda no primeiro terço do ciclo e espera fora de cena no resto, o que
+   * deixa o elenco revezando sem sobrepor todo mundo ao mesmo tempo.
+   */
+  .santo-caminha {
+    animation-name: santo-caminha;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    will-change: transform;
+  }
+
+  .santo-caminha:hover,
+  .santo-caminha:active {
+    animation-play-state: paused;
+  }
+
+  .santo-passo {
+    animation: santo-balanco 0.7s ease-in-out infinite alternate;
+    transform-origin: 50% 100%;
+  }
+
+  .santo-pe-a {
+    animation: santo-pe 0.7s ease-in-out infinite alternate;
+  }
+
+  .santo-pe-b {
+    animation: santo-pe 0.7s ease-in-out infinite alternate-reverse;
+  }
+
+  @keyframes santo-caminha {
+    0% {
+      transform: translateX(-9rem);
+    }
+    33.33%,
+    100% {
+      transform: translateX(calc(100vw + 1rem));
+    }
+  }
+
+  @keyframes santo-balanco {
+    from {
+      transform: translateY(0) rotate(-1.5deg);
+    }
+    to {
+      transform: translateY(-3px) rotate(1.5deg);
+    }
+  }
+
+  @keyframes santo-pe {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(-2px);
+    }
+  }
+
   /* Rótulo de seção em caixa alta — o mesmo em cabeçalho, ficha e busca. */
   .kicker {
     @apply font-sans text-label uppercase tracking-[0.09em] text-ink-muted;
