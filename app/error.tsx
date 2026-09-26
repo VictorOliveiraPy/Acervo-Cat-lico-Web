@@ -24,8 +24,8 @@ export default function Error({
 
   return (
     <div className="mx-auto max-w-shell px-4 py-16 sm:px-6">
-      <div className="max-w-measure rounded-edge border border-state-error bg-parchment-raised px-6 py-8">
-        <p className="kicker text-state-error">Erro</p>
+      <div className="max-w-measure rounded-edge border border-danger bg-surface px-6 py-8">
+        <p className="kicker text-danger">Erro</p>
         <h1 className="mt-2 font-display text-title-md text-ink">
           Não conseguimos montar esta página
         </h1>
@@ -42,7 +42,7 @@ export default function Error({
         <button
           type="button"
           onClick={reset}
-          className="mt-6 rounded-edge border border-bordeaux bg-bordeaux px-5 py-2.5 text-label uppercase tracking-[0.09em] text-parchment-raised transition-colors hover:bg-bordeaux-soft"
+          className="mt-6 rounded-edge border border-accent bg-accent px-5 py-2.5 text-label uppercase tracking-[0.09em] text-surface transition-colors hover:bg-accent-hover"
         >
           Tentar de novo
         </button>

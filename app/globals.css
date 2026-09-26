@@ -17,7 +17,7 @@
   }
 
   body {
-    @apply bg-parchment text-ink font-body text-body antialiased;
+    @apply bg-canvas text-ink font-sans text-body antialiased;
   }
 
   h1,
@@ -27,14 +27,16 @@
     text-wrap: balance;
   }
 
-  /* Foco sempre visível: o acervo é muito navegado por teclado (leitura). */
+  /* Foco sempre visível: o acervo é muito navegado por teclado (leitura).
+     O anel usa o próprio bordô do acento — é o mesmo sinal de "ativo" em
+     toda a interface, não uma cor nova só para foco. */
   :focus-visible {
-    outline: 2px solid theme("colors.gold.DEFAULT");
+    outline: 2px solid theme("colors.accent.DEFAULT");
     outline-offset: 3px;
   }
 
   ::selection {
-    background-color: theme("colors.gold.wash");
+    background-color: theme("colors.accent.soft");
     color: theme("colors.ink.DEFAULT");
   }
 
@@ -53,7 +55,7 @@
 @layer components {
   /* Rótulo de seção em caixa alta — o mesmo em cabeçalho, ficha e busca. */
   .kicker {
-    @apply font-body text-label uppercase tracking-[0.09em] text-ink-muted;
+    @apply font-sans text-label uppercase tracking-[0.09em] text-ink-muted;
   }
 
   /* Coluna de leitura do corpo das entradas. */

@@ -19,7 +19,7 @@ function Excerpt({ text, term }: { text: string; term: string }) {
         segment.isMatch ? (
           <mark
             key={index}
-            className="bg-gold-wash px-0.5 text-ink"
+            className="bg-accent-soft px-0.5 text-ink"
           >
             {segment.text}
           </mark>
@@ -68,10 +68,10 @@ export function SearchResults({
 
         return (
           <section key={group.slug} aria-labelledby={`grupo-${group.slug}`}>
-            <div className="flex items-baseline justify-between gap-4 border-b-2 border-gold pb-2">
+            <div className="flex items-baseline justify-between gap-4 border-b-2 border-border-strong pb-2">
               <h2
                 id={`grupo-${group.slug}`}
-                className="font-display text-title-sm text-bordeaux"
+                className="font-display text-title-sm text-accent"
               >
                 {group.label}
               </h2>
@@ -86,13 +86,13 @@ export function SearchResults({
               {shown.map((result) => (
                 <li
                   key={`${result.categoria}:${result.slug}`}
-                  className="border-b border-rule-faint"
+                  className="border-b border-border"
                 >
                   <Link
                     href={entryPath(result.categoria, result.slug)}
-                    className="group block py-5 transition-colors hover:bg-parchment-raised"
+                    className="group block py-5 transition-colors hover:bg-surface"
                   >
-                    <h3 className="font-display text-title-sm text-ink group-hover:text-bordeaux">
+                    <h3 className="font-display text-title-sm text-ink group-hover:text-accent">
                       {result.titulo}
                     </h3>
                     <Excerpt text={result.trecho} term={term} />
@@ -108,7 +108,7 @@ export function SearchResults({
         <button
           type="button"
           onClick={() => setVisibleCount((count) => count + REVEAL_STEP)}
-          className="self-start rounded-edge border border-bordeaux px-5 py-2.5 text-label uppercase tracking-[0.09em] text-bordeaux transition-colors hover:bg-bordeaux hover:text-parchment-raised"
+          className="self-start rounded-edge border border-accent px-5 py-2.5 text-label uppercase tracking-[0.09em] text-accent transition-colors hover:bg-accent hover:text-surface"
         >
           Mostrar mais resultados ({totalResults - visibleCount} restantes)
         </button>

@@ -9,6 +9,9 @@ type Props = {
  * dele catalogando milagres eucarísticos no site que ele mesmo construiu.
  * Um traço só (`currentColor`), sem retrato: mesma moderação ornamental do
  * resto do acervo, não um mascote.
+ *
+ * O traço usa `text-ink-muted` por padrão — o selo é marca institucional
+ * neutra, não ação; o bordô fica reservado a link e foco.
  */
 export function SeloCarlosAcutis({ size = 44, className }: Props) {
   return (
@@ -17,7 +20,7 @@ export function SeloCarlosAcutis({ size = 44, className }: Props) {
       height={size}
       viewBox="0 0 100 100"
       aria-hidden="true"
-      className={className ?? "text-gold"}
+      className={className ?? "text-ink-muted"}
     >
       <g stroke="currentColor" fill="none" strokeLinecap="round">
         <line x1="50" y1="4" x2="50" y2="14" strokeWidth="2.5" />

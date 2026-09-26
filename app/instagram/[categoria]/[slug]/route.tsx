@@ -23,7 +23,9 @@ const BORDEAUX_DEEP = "#4E1620";
 const GOLD = "#B8912F";
 const GOLD_BRIGHT = "#D9B673";
 const GOLD_WASH = "#E8DCBA";
-const PARCHMENT_MUTED = "#D6C6A8";
+// Texto secundário sobre o bordô do cartão (a "letra miúda"): um bege
+// dessaturado que segura leitura sem competir com o título em `GOLD_WASH`.
+const CARD_MUTED = "#D6C6A8";
 
 // Moldura de dupla linha dourada sobre fundo bordô — mesma linguagem visual
 // do cartão de compartilhamento de "Acender uma vela" (ver `post-velas.png`),
@@ -184,7 +186,7 @@ export async function GET(request: Request, { params }: { params: Params }) {
                   fontFamily: EB_GARAMOND_FONT_FAMILY,
                   fontSize: 30,
                   lineHeight: 1.5,
-                  color: PARCHMENT_MUTED,
+                  color: CARD_MUTED,
                   textAlign: "center",
                   justifyContent: "center",
                 }}

@@ -8,13 +8,13 @@ import { PRIMARY_CATEGORY_SLUGS } from "@/lib/categoryGroups";
 import type { CategorySlug } from "@/lib/schemas";
 
 const LINK_BASE =
-  "-mb-px flex h-9 items-center border-b-2 font-body text-meta transition-colors";
+  "-mb-px flex h-9 items-center border-b-2 font-sans text-meta transition-colors";
 
 function linkStyle(isActive: boolean): string {
   return `${LINK_BASE} ${
     isActive
-      ? "border-bordeaux text-bordeaux"
-      : "border-transparent text-ink-muted hover:border-gold hover:text-ink"
+      ? "border-accent text-accent"
+      : "border-transparent text-ink-muted hover:border-border-strong hover:text-ink"
   }`;
 }
 
@@ -46,7 +46,7 @@ export function CategoryNav() {
   return (
     <nav
       aria-label="Categorias de acesso direto"
-      className="border-t border-rule-faint bg-parchment-deep"
+      className="border-t border-border bg-raised"
     >
       <ul className="mx-auto flex max-w-shell items-stretch gap-6 overflow-x-auto px-4 sm:px-6">
         {PRIMARY_CATEGORY_SLUGS.map((slug) => (

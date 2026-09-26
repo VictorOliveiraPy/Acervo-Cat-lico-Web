@@ -46,7 +46,7 @@ export function EntryGrid({ entries }: Props) {
             ) : (
               <div
                 aria-hidden="true"
-                className="flex h-full w-full items-center justify-center bg-parchment-deep text-title-lg"
+                className="flex h-full w-full items-center justify-center bg-raised text-title-lg"
               >
                 {CATEGORY_LABELS[entry.categoria].icon}
               </div>

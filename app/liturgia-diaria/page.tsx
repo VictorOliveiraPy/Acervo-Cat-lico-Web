@@ -51,7 +51,7 @@ function VerseText({ texto }: { texto: string }) {
     <p className="max-w-measure text-body leading-loose text-ink">
       {partes.map((parte, index) =>
         index % 2 === 1 ? (
-          <sup key={index} className="mr-0.5 font-display text-meta font-semibold text-bordeaux">
+          <sup key={index} className="mr-0.5 font-display text-meta font-semibold text-accent">
             {parte}
           </sup>
         ) : (
@@ -78,8 +78,8 @@ function Leitura({
   variant?: "prosa" | "salmo";
 }) {
   return (
-    <section aria-labelledby={`leitura-${rotulo}`} className="border-t border-rule-faint pt-8">
-      <p id={`leitura-${rotulo}`} className="kicker text-bordeaux">
+    <section aria-labelledby={`leitura-${rotulo}`} className="border-t border-border pt-8">
+      <p id={`leitura-${rotulo}`} className="kicker text-accent">
         {rotulo}
       </p>
       <p className="mt-1 text-meta text-ink-muted">{leitura.referencia}</p>
@@ -116,7 +116,7 @@ export default async function LiturgiaDiariaPage() {
             <p className="mt-4 flex items-center gap-2 text-meta text-ink-muted">
               <span
                 aria-hidden="true"
-                className="h-3 w-3 rounded-full border border-rule-faint"
+                className="h-3 w-3 rounded-full border border-border"
                 style={{
                   backgroundColor: liturgicalColorHex(liturgia.cor_liturgica) ?? "transparent",
                 }}
@@ -134,7 +134,7 @@ export default async function LiturgiaDiariaPage() {
             <Leitura rotulo="Evangelho" leitura={liturgia.evangelho} />
           </div>
 
-          <p className="mt-10 border-t border-rule-faint pt-4 text-meta text-ink-muted">
+          <p className="mt-10 border-t border-border pt-4 text-meta text-ink-muted">
             Fonte: {liturgia.fonte}. Para uso litúrgico oficial na Missa, consulte
             sempre o Lecionário aprovado pela Conferência Episcopal.
           </p>

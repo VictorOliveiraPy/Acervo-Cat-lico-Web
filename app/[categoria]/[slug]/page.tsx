@@ -166,7 +166,7 @@ export default async function EntryPage({ params }: { params: Params }) {
             Volte para{" "}
             <Link
               href={categoryPath(categoria)}
-              className="text-bordeaux underline underline-offset-4"
+              className="text-accent underline underline-offset-4"
             >
               {label.nav}
             </Link>{" "}
@@ -235,7 +235,7 @@ export default async function EntryPage({ params }: { params: Params }) {
         ]}
       />
 
-      <header className="border-b border-rule-faint pb-8">
+      <header className="border-b border-border pb-8">
         <p className="kicker">{[label.nav, ordinal].filter(Boolean).join(" · ")}</p>
         <h1 className="mt-2 max-w-measure font-display text-title-lg text-ink md:text-title-xl">
           {entry.titulo}
@@ -257,7 +257,7 @@ export default async function EntryPage({ params }: { params: Params }) {
               afresco panorâmico) — uma faixa de altura constante evita
               layout shift e mantém o ritmo editorial da página, ao custo de
               recortar (`object-cover`) o excesso lateral ou vertical. */}
-          <div className="relative h-72 w-full max-w-measure overflow-hidden border border-rule-faint sm:h-96">
+          <div className="relative h-72 w-full max-w-measure overflow-hidden border border-border sm:h-96">
             <Image
               src={entry.imagem}
               alt={entry.titulo}
@@ -298,7 +298,7 @@ export default async function EntryPage({ params }: { params: Params }) {
             key={index}
             className={
               index === 0
-                ? "first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:font-display first-letter:text-[3.4em] first-letter:font-bold first-letter:leading-[0.78] first-letter:text-bordeaux"
+                ? "first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:font-display first-letter:text-[3.4em] first-letter:font-bold first-letter:leading-[0.78] first-letter:text-accent"
                 : undefined
             }
           >
@@ -329,7 +329,7 @@ export default async function EntryPage({ params }: { params: Params }) {
 
       {related.length > 0 ? (
         <section aria-labelledby="mais-da-categoria" className="mt-section">
-          <div className="border-b-2 border-gold pb-2">
+          <div className="border-b-2 border-border-strong pb-2">
             <h2 id="mais-da-categoria" className="font-display text-title-md text-ink">
               Continue sua leitura
             </h2>
@@ -341,7 +341,7 @@ export default async function EntryPage({ params }: { params: Params }) {
       <p className="mt-10">
         <Link
           href={categoryPath(categoria)}
-          className="text-meta text-bordeaux underline underline-offset-4 hover:text-bordeaux-soft"
+          className="text-meta text-accent underline underline-offset-4 hover:text-accent-hover"
         >
           ← Todas as entradas de {label.nav}
         </Link>

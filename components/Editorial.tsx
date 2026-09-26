@@ -26,7 +26,7 @@ export function PageHeader({
   meta,
 }: PageHeaderProps) {
   return (
-    <div className="border-b border-rule-faint pb-8">
+    <div className="border-b border-border pb-8">
       {kicker ? <p className="kicker">{kicker}</p> : null}
       <h1 className="mt-2 font-display text-title-lg text-ink md:text-title-xl">
         {title}
@@ -49,8 +49,8 @@ export function PageHeader({
  */
 export function EditorialNotice({ children }: { children: React.ReactNode }) {
   return (
-    <aside className="rounded-edge border-l-2 border-state-notice bg-gold-wash/40 px-5 py-4">
-      <p className="kicker text-state-notice">Nota editorial</p>
+    <aside className="rounded-edge border-l-2 border-warning bg-accent-soft/40 px-5 py-4">
+      <p className="kicker text-warning">Nota editorial</p>
       <p className="mt-2 max-w-measure text-meta text-ink">{children}</p>
     </aside>
   );
@@ -67,7 +67,7 @@ export function EditorialNotice({ children }: { children: React.ReactNode }) {
  */
 export function PrayerText({ texto }: { texto: string }) {
   return (
-    <blockquote className="max-w-measure border-l-2 border-gold py-1 pl-6 font-display text-lead italic text-ink">
+    <blockquote className="max-w-measure border-l-2 border-border-strong py-1 pl-6 font-display text-lead italic text-ink">
       <p className="whitespace-pre-line">{texto}</p>
     </blockquote>
   );
@@ -80,7 +80,7 @@ export function MetaList({ fields }: { fields: MetaField[] }) {
   return (
     <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-2">
       {fields.map(({ label, value }) => (
-        <div key={label} className="border-t border-rule-faint pt-3">
+        <div key={label} className="border-t border-border pt-3">
           <dt className="kicker">{label}</dt>
           <dd className="mt-1 text-body text-ink">{value}</dd>
         </div>
@@ -104,7 +104,7 @@ export function TagList({ tags }: { tags: string[] }) {
         <li key={tag}>
           <Link
             href={`/busca?q=${encodeURIComponent(tag)}`}
-            className="inline-flex items-center rounded-edge border border-rule-faint bg-parchment-raised px-2.5 py-1 text-meta text-ink-muted transition-colors hover:border-bordeaux hover:text-bordeaux"
+            className="inline-flex items-center rounded-edge border border-border bg-surface px-2.5 py-1 text-meta text-ink-muted transition-colors hover:border-accent hover:text-accent"
           >
             {tag}
           </Link>
@@ -127,7 +127,7 @@ export function SourceList({ sources }: { sources: string[] }) {
         {sources.map((source) => (
           <li
             key={source}
-            className="max-w-measure border-t border-rule-faint pt-2 text-meta text-ink-muted"
+            className="max-w-measure border-t border-border pt-2 text-meta text-ink-muted"
           >
             {source}
           </li>
@@ -152,7 +152,7 @@ export function Breadcrumbs({
             {step.href ? (
               <Link
                 href={step.href}
-                className="underline-offset-4 hover:text-bordeaux hover:underline"
+                className="underline-offset-4 hover:text-accent hover:underline"
               >
                 {step.label}
               </Link>
@@ -181,11 +181,11 @@ export function StatusMessage({
   children?: React.ReactNode;
   tone?: "info" | "error";
 }) {
-  const border = tone === "error" ? "border-state-error" : "border-rule-faint";
-  const heading = tone === "error" ? "text-state-error" : "text-ink";
+  const border = tone === "error" ? "border-danger" : "border-border";
+  const heading = tone === "error" ? "text-danger" : "text-ink";
 
   return (
-    <div className={`rounded-edge border ${border} bg-parchment-raised px-6 py-8`}>
+    <div className={`rounded-edge border ${border} bg-surface px-6 py-8`}>
       <h2 className={`font-display text-title-sm ${heading}`}>{title}</h2>
       {children ? (
         <div className="mt-3 max-w-measure text-body text-ink-muted">

@@ -22,14 +22,14 @@ export function SiteHeader() {
   const isHome = pathname === "/";
 
   return (
-    <header className="sticky top-0 z-30 border-b border-rule-faint bg-parchment shadow-sm">
+    <header className="sticky top-0 z-30 border-b border-border bg-canvas">
       {/* `py-3`/`gap-2.5`, não `py-band`/`gap-band`: pedido explícito de
           diminuir o cabeçalho, depois que "Todas as categorias" saiu da
           faixa de baixo (`CategoryNav`) — o resto do cabeçalho também
           podia ocupar menos altura. */}
       <div className="mx-auto flex max-w-shell flex-col gap-2.5 px-4 py-3 sm:px-6 md:flex-row md:items-center md:justify-between">
         <Link href="/" className="group flex flex-col">
-          <span className="flex items-center gap-2 font-display text-title-sm leading-none text-bordeaux sm:text-title-md">
+          <span className="flex items-center gap-2 font-display text-title-sm leading-none text-accent sm:text-title-md">
             {/* Emoji de bandeira (🇻🇦) em vez de imagem: Windows não tem a
                 fonte de emoji de bandeiras, então a maioria dos navegadores
                 ali (Chrome, Firefox) mostra as duas letras do código do país
@@ -66,7 +66,7 @@ export function SiteHeader() {
           )}
           <Link
             href="/velas"
-            className="flex shrink-0 items-center justify-center gap-2 rounded-edge border border-bordeaux bg-bordeaux px-4 py-2.5 text-label uppercase tracking-[0.09em] text-parchment-raised transition-colors hover:bg-bordeaux-soft"
+            className="flex shrink-0 items-center justify-center gap-2 rounded-edge border border-accent bg-accent px-4 py-2.5 text-label uppercase tracking-[0.09em] text-surface transition-colors hover:bg-accent-hover"
           >
             <span aria-hidden="true">🕯️</span>
             Acender uma vela

@@ -16,7 +16,7 @@ const BORDEAUX_DEEP = "#4E1620";
 const GOLD = "#B8912F";
 const GOLD_BRIGHT = "#D9B673";
 const GOLD_WASH = "#E8DCBA";
-const PARCHMENT_MUTED = "#D6C6A8";
+const canvas_MUTED = "#D6C6A8";
 
 const OUTER_MARGIN = 40;
 const FRAME_GAP = 10;
@@ -150,7 +150,7 @@ export async function GET(request: Request) {
                       fontStyle: "italic",
                       fontSize: 32,
                       lineHeight: 1.5,
-                      color: PARCHMENT_MUTED,
+                      color: canvas_MUTED,
                       textAlign: "center",
                       justifyContent: "center",
                     }}

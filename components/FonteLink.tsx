@@ -16,7 +16,7 @@ export function FonteLink({ fonte }: { fonte: FonteCitada }) {
   return (
     <Link
       href={entryPath(fonte.categoria, fonte.slug)}
-      className="text-bordeaux underline-offset-4 hover:underline"
+      className="text-accent underline-offset-4 hover:underline"
     >
       {fonte.titulo}
       <span className="text-ink-muted"> — {CATEGORY_LABELS[fonte.categoria].nav}</span>

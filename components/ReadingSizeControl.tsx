@@ -51,8 +51,8 @@ export function ReadingSizeControl() {
           aria-label={`Tamanho do texto: ${DESCRIPTION[option]}`}
           className={`rounded-edge border px-3 py-1.5 text-label transition-colors ${
             size === option
-              ? "border-bordeaux bg-bordeaux text-parchment-raised"
-              : "border-rule-faint text-ink-muted hover:border-bordeaux hover:text-bordeaux"
+              ? "border-accent bg-accent text-surface"
+              : "border-border text-ink-muted hover:border-accent hover:text-accent"
           }`}
         >
           {LABEL[option]}

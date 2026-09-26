@@ -30,11 +30,11 @@ export async function SiteFooter() {
   const health = await loadHealth();
 
   return (
-    <footer className="mt-section border-t-2 border-gold bg-parchment-deep">
+    <footer className="mt-section border-t-2 border-border-strong bg-raised">
       <div className="mx-auto max-w-shell px-4 py-10 sm:px-6">
         <div className="flex flex-col gap-8 md:flex-row md:justify-between">
           <div className="max-w-measure">
-            <h2 className="font-display text-title-sm text-bordeaux">
+            <h2 className="font-display text-title-sm text-accent">
               Sobre este acervo
             </h2>
             <p className="mt-3 text-meta text-ink-muted">
@@ -48,7 +48,7 @@ export async function SiteFooter() {
                 {health.categorias} categorias.
               </p>
             ) : (
-              <p className="mt-4 text-meta text-state-notice">
+              <p className="mt-4 text-meta text-warning">
                 Não foi possível confirmar o tamanho do acervo agora; o conteúdo
                 em cache continua disponível.
               </p>
@@ -63,7 +63,7 @@ export async function SiteFooter() {
                 href={SANTO_GUARDIAO_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-bordeaux underline-offset-4 hover:underline"
+                className="text-accent underline-offset-4 hover:underline"
               >
                 Santo Guardião
               </a>{" "}
@@ -84,7 +84,7 @@ export async function SiteFooter() {
         <nav
           id="todas-categorias"
           aria-label="Categorias, por assunto"
-          className="mt-10 scroll-mt-20 border-t border-rule-faint pt-8"
+          className="mt-10 scroll-mt-20 border-t border-border pt-8"
         >
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {CATEGORY_GROUPS.map((group) => (
@@ -95,7 +95,7 @@ export async function SiteFooter() {
                     <li key={slug}>
                       <Link
                         href={categoryPath(slug)}
-                        className="text-meta text-ink-muted underline-offset-4 hover:text-bordeaux hover:underline"
+                        className="text-meta text-ink-muted underline-offset-4 hover:text-accent hover:underline"
                       >
                         {CATEGORY_LABELS[slug].nav}
                       </Link>
@@ -107,10 +107,10 @@ export async function SiteFooter() {
           </div>
         </nav>
 
-        <div className="mt-8 flex flex-wrap items-center gap-4 border-t border-rule-faint pt-4 text-meta text-ink-muted">
+        <div className="mt-8 flex flex-wrap items-center gap-4 border-t border-border pt-4 text-meta text-ink-muted">
           <Link
             href="/liturgia-diaria"
-            className="underline-offset-4 hover:text-bordeaux hover:underline"
+            className="underline-offset-4 hover:text-accent hover:underline"
           >
             Liturgia diária →
           </Link>
@@ -118,7 +118,7 @@ export async function SiteFooter() {
             href={INSTAGRAM_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline-offset-4 hover:text-bordeaux hover:underline"
+            className="underline-offset-4 hover:text-accent hover:underline"
           >
             Instagram →
           </a>
@@ -126,7 +126,7 @@ export async function SiteFooter() {
             href={MELHORPERFIL_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline-offset-4 hover:text-bordeaux hover:underline"
+            className="underline-offset-4 hover:text-accent hover:underline"
           >
             melhorperfil →
           </a>
@@ -135,7 +135,7 @@ export async function SiteFooter() {
               href={HIMETRICA_SHARE_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="underline-offset-4 hover:text-bordeaux hover:underline"
+              className="underline-offset-4 hover:text-accent hover:underline"
             >
               Estatísticas do site →
             </a>
@@ -147,11 +147,11 @@ export async function SiteFooter() {
             sem número de página a verificar. Atribuição embaixo evita deixar
             a frase flutuando sem fonte, o que o próprio catálogo cobra de
             qualquer citação. */}
-        <div className="mt-8 border-t border-rule-faint pt-6 text-center">
-          {/* `text-gold` sobre `parchment-deep` (fundo deste rodapé) mede
-              ~2,3:1 — bem abaixo do mínimo de 4,5:1. `text-bordeaux` (mesma
+        <div className="mt-8 border-t border-border pt-6 text-center">
+          {/* `text-ink-muted` sobre `raised` (fundo deste rodapé) mede
+              ~5,4:1 — passa em AA, mas o bordô é mais forte para a assinatura. `text-accent` (mesma
               cor já usada nos títulos deste rodapé) passa em ~8,9:1. */}
-          <p className="font-display text-label uppercase tracking-[0.2em] text-bordeaux">
+          <p className="font-display text-label uppercase tracking-[0.2em] text-accent">
             Fides Quaerens Intellectvm
           </p>
           <p className="mt-1 text-meta text-ink-muted">
@@ -163,9 +163,9 @@ export async function SiteFooter() {
             este acervo faz: catalogar e publicar conteúdo católico online.
             Selo próprio (cruz + halo + pixels), sem retrato, pra não virar
             mascote do site — ver SeloCarlosAcutis. */}
-        <div className="mt-6 flex flex-col items-center gap-2 border-t border-rule-faint pt-6 text-center">
+        <div className="mt-6 flex flex-col items-center gap-2 border-t border-border pt-6 text-center">
           <SeloCarlosAcutis size={40} />
-          <p className="kicker text-bordeaux">Sob a intercessão de São Carlos Acutis</p>
+          <p className="kicker text-accent">Sob a intercessão de São Carlos Acutis</p>
           <p className="text-meta text-ink-muted">
             Padroeiro da internet e dos cibernautas · 1991–2006
           </p>

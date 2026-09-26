@@ -74,7 +74,7 @@ function SearchFilters({
         <span
           key={slug}
           aria-disabled="true"
-          className={`${chipStyle} border-rule-faint/70 text-ink-muted/60`}
+          className={`${chipStyle} border-border/70 text-ink-muted/60`}
         >
           {label}
           <span className="tabular-nums">0</span>
@@ -88,8 +88,8 @@ function SearchFilters({
         aria-current={isSelected ? "true" : undefined}
         className={`${chipStyle} ${
           isSelected
-            ? "border-bordeaux bg-bordeaux text-parchment-raised"
-            : "border-rule-faint bg-parchment-raised text-ink-muted hover:border-bordeaux hover:text-bordeaux"
+            ? "border-accent bg-accent text-surface"
+            : "border-border bg-surface text-ink-muted hover:border-accent hover:text-accent"
         }`}
       >
         {label}
@@ -106,8 +106,8 @@ function SearchFilters({
           aria-current={selected === null ? "true" : undefined}
           className={`${chipStyle} ${
             selected === null
-              ? "border-bordeaux bg-bordeaux text-parchment-raised"
-              : "border-rule-faint bg-parchment-raised text-ink-muted hover:border-bordeaux hover:text-bordeaux"
+              ? "border-accent bg-accent text-surface"
+              : "border-border bg-surface text-ink-muted hover:border-accent hover:text-accent"
           }`}
         >
           Todas as categorias
@@ -121,7 +121,7 @@ function SearchFilters({
 
       {withoutResults.length > 0 ? (
         <details className="mt-3">
-          <summary className="cursor-pointer text-meta text-ink-muted underline-offset-4 hover:text-bordeaux hover:underline">
+          <summary className="cursor-pointer text-meta text-ink-muted underline-offset-4 hover:text-accent hover:underline">
             +{withoutResults.length} categorias sem ocorrência
           </summary>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -220,7 +220,7 @@ export default async function SearchPage({
     <div className="mx-auto max-w-shell px-4 py-10 sm:px-6">
       {header}
 
-      <div className="mt-8 border-y border-rule-faint py-5">
+      <div className="mt-8 border-y border-border py-5">
         <SearchFilters
           term={term}
           selected={selected}

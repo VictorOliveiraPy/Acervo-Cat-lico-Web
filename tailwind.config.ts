@@ -3,10 +3,14 @@ import type { Config } from "tailwindcss";
 /**
  * Tokens de design do acervo — fonte única de cor, tipografia e espaçamento.
  *
- * A paleta decidida pelo time é fechada (pergaminho, bordô, púrpura, dourado).
- * Os neutros derivados (`parchment.deep`, `rule.faint`) foram escolhidos com
- * viés quente do próprio pergaminho, não cinza puro: um filete cinza-neutro
- * sobre fundo creme lê como acidente, não como decisão editorial.
+ * A paleta é neutra fria (branco + três degraus de cinza) com um único acento
+ * cromático, o bordô. Cores são nomeadas por PAPEL (`canvas`, `surface`,
+ * `accent`), nunca por valor: um componente pede "a superfície do cartão", não
+ * "o cinza #EEF1F4" — assim trocar o tom não obriga a varrer o código.
+ *
+ * Os neutros foram escolhidos com viés frio (canal azul no topo) de propósito:
+ * sobre vidro, um cinza quente lê como papel amarelado por acidente. O único
+ * matiz da interface é o bordô, reservado a ação primária, link e foco.
  */
 const config: Config = {
   content: [
@@ -17,54 +21,50 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        parchment: {
-          DEFAULT: "#F5F0E6", // superfície principal
-          raised: "#FBF8F1", // folha sobre a mesa (cards, painéis)
-          deep: "#ECE4D3", // faixa recuada (segunda banda do cabeçalho)
+        // Superfícies, do mais claro ao mais recuado.
+        canvas: "#FFFFFF", // fundo da página
+        surface: "#F7F8FA", // cards, campos, painéis
+        raised: "#EEF1F4", // faixas recuadas, chips, skeleton
+
+        // Linhas: `border` é o filete visível de 1px que substitui a sombra.
+        border: {
+          DEFAULT: "#DDE1E7",
+          strong: "#C4CAD3", // divisória mais marcada, sem virar preto
         },
-        bordeaux: {
-          DEFAULT: "#6B1F2A",
-          soft: "#8A3441", // hover/estado ativo, mesma família
-          // Mesmo hex de BORDEAUX_DEEP em app/instagram/[categoria]/[slug]/
-          // route.tsx — bordô mais escuro para gradiente sobre foto (ver
-          // `PhotoBanner`), não para uso em texto/filete.
-          deep: "#4E1620",
-        },
-        purple: {
-          DEFAULT: "#4A2545",
-        },
-        gold: {
-          DEFAULT: "#B8912F", // reservado a filetes e detalhes
-          wash: "#E8DCBA", // dourado rebaixado, para preenchimento sutil
-          // Mesmo hex de GOLD_BRIGHT em app/instagram/[categoria]/[slug]/
-          // route.tsx: o dourado padrão sobre fundo escuro/foto mede
-          // ~3,85:1 (abaixo do mínimo de 4,5:1 pra texto corrido); este
-          // tom passa em ~5,9:1. Usar em texto sobre foto/overlay escuro,
-          // nunca sobre o pergaminho claro (onde o DEFAULT já contrasta bem).
-          bright: "#D9B673",
-        },
+
+        // Texto.
         ink: {
-          DEFAULT: "#241B22",
-          muted: "#6E6058",
+          DEFAULT: "#1A1D21", // corpo e títulos
+          muted: "#5A6069", // texto secundário (resumos, legendas)
         },
-        rule: {
-          faint: "#DCD2BE", // filete de separação discreto
+
+        // Acento único: bordô.
+        accent: {
+          DEFAULT: "#7A2E3A",
+          hover: "#5E222C",
+          active: "#4A1A22",
+          soft: "#F3E4E7", // preenchimento lavado (seleção, realce de busca)
         },
-        // Cor semântica é separada do bordô da marca de propósito:
-        // estado (ok/aviso/erro) não pode se confundir com identidade.
-        state: {
-          notice: "#7A5B12",
-          error: "#8C2F1F",
-          // Indicador de "online" do widget de chat — único uso de verde no
-          // projeto, de propósito: é convenção universal de status, não
-          // decisão de marca (por isso mora em `state`, junto de
-          // notice/error, nunca ao lado de bordeaux/gold/purple).
-          ok: "#1F7A3D",
+
+        // Cor semântica, separada do acento de marca: estado não se confunde
+        // com identidade.
+        success: {
+          DEFAULT: "#1D6B3C",
+          soft: "#E3F0E7",
+        },
+        warning: {
+          DEFAULT: "#7A5210",
+          soft: "#F6EEDD",
+        },
+        danger: {
+          DEFAULT: "#973027",
+          soft: "#F6E3E1",
         },
       },
       fontFamily: {
+        // Fonte de destaque (títulos) e de corpo, via variáveis do next/font.
         display: ["var(--font-display)", "Georgia", "Times New Roman", "serif"],
-        body: ["var(--font-body)", "system-ui", "Segoe UI", "sans-serif"],
+        sans: ["var(--font-body)", "system-ui", "Segoe UI", "sans-serif"],
       },
       fontSize: {
         // Escala tipográfica única (rótulo → título de página).
@@ -86,9 +86,13 @@ const config: Config = {
         shell: "76rem", // largura máxima do cabeçalho/rodapé/grades
       },
       borderRadius: {
-        // Cantos praticamente retos: o projeto é impresso, não app de celular.
+        // Cantos praticamente retos: o acervo é impresso, não app de celular.
         none: "0",
         edge: "2px",
+      },
+      boxShadow: {
+        // Sem sombras no cromo: profundidade vem de espaço e do filete de 1px.
+        none: "none",
       },
     },
   },

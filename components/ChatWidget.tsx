@@ -106,28 +106,28 @@ export function ChatWidget() {
           type="button"
           onClick={() => setIsOpen(true)}
           aria-label="Abrir assistente do Compêndio Católico"
-          className="fixed bottom-5 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full border border-gold/40 bg-bordeaux text-parchment-raised shadow-lg transition-colors hover:bg-bordeaux-soft"
+          className="fixed bottom-5 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full border border-border bg-accent text-surface shadow-md transition-colors hover:bg-accent-hover"
         >
-          <SeloCarlosAcutis size={30} className="text-parchment-raised" />
-          <span className="absolute right-0.5 top-0.5 h-3 w-3 rounded-full border-2 border-bordeaux bg-state-ok" />
+          <SeloCarlosAcutis size={30} className="text-surface" />
+          <span className="absolute right-0.5 top-0.5 h-3 w-3 rounded-full border-2 border-accent bg-success" />
         </button>
       ) : (
         <div
           role="dialog"
           aria-modal="true"
           aria-labelledby={titleId}
-          className="fixed inset-0 z-40 flex flex-col bg-parchment-raised sm:inset-auto sm:bottom-5 sm:right-5 sm:h-[min(640px,80vh)] sm:w-[380px] sm:rounded-edge sm:border sm:border-rule-faint sm:shadow-xl"
+          className="fixed inset-0 z-40 flex flex-col bg-surface sm:inset-auto sm:bottom-5 sm:right-5 sm:h-[min(640px,80vh)] sm:w-[380px] sm:rounded-edge sm:border sm:border-border sm:shadow-md"
         >
           {/* Header */}
-          <div className="flex items-center justify-between bg-bordeaux px-4 py-3 text-parchment-raised sm:rounded-t-edge">
+          <div className="flex items-center justify-between bg-accent px-4 py-3 text-surface sm:rounded-t-edge">
             <div className="flex items-center gap-3">
-              <SeloCarlosAcutis size={30} className="shrink-0 text-gold-bright" />
+              <SeloCarlosAcutis size={30} className="shrink-0 text-surface" />
               <div>
                 <p id={titleId} className="font-display text-title-sm leading-tight">
                   Assistente do Compêndio
                 </p>
-                <div className="flex items-center gap-1.5 text-meta text-parchment/80">
-                  <span className="h-2 w-2 rounded-full bg-state-ok" aria-hidden="true" />
+                <div className="flex items-center gap-1.5 text-meta text-canvas/80">
+                  <span className="h-2 w-2 rounded-full bg-success" aria-hidden="true" />
                   Sob a intercessão de São Carlos Acutis
                 </div>
               </div>
@@ -136,7 +136,7 @@ export function ChatWidget() {
               type="button"
               onClick={() => setIsOpen(false)}
               aria-label="Fechar assistente"
-              className="shrink-0 rounded-edge p-1.5 text-parchment-raised/80 hover:bg-bordeaux-soft hover:text-parchment-raised"
+              className="shrink-0 rounded-edge p-1.5 text-surface/80 hover:bg-accent-hover hover:text-surface"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -148,7 +148,7 @@ export function ChatWidget() {
           <div
             ref={threadRef}
             aria-live="polite"
-            className="flex flex-1 flex-col gap-3 overflow-y-auto bg-parchment px-4 py-4"
+            className="flex flex-1 flex-col gap-3 overflow-y-auto bg-canvas px-4 py-4"
           >
             {messages.map((message) => (
               <div
@@ -158,8 +158,8 @@ export function ChatWidget() {
                 <div
                   className={
                     message.role === "user"
-                      ? "whitespace-pre-wrap rounded-edge bg-bordeaux px-3 py-2 text-body text-parchment-raised"
-                      : "whitespace-pre-wrap rounded-edge border border-rule-faint bg-parchment-raised px-3 py-2 text-body text-ink"
+                      ? "whitespace-pre-wrap rounded-edge bg-accent px-3 py-2 text-body text-surface"
+                      : "whitespace-pre-wrap rounded-edge border border-border bg-surface px-3 py-2 text-body text-ink"
                   }
                 >
                   {message.text}
@@ -179,20 +179,20 @@ export function ChatWidget() {
               </div>
             ))}
             {pending ? (
-              <div className="max-w-[85%] self-start rounded-edge border border-rule-faint bg-parchment-raised px-3 py-2 text-body text-ink-muted">
+              <div className="max-w-[85%] self-start rounded-edge border border-border bg-surface px-3 py-2 text-body text-ink-muted">
                 Buscando no acervo…
               </div>
             ) : null}
           </div>
 
           {error ? (
-            <p className="border-t border-rule-faint bg-parchment px-4 py-2 text-meta text-state-error">
+            <p className="border-t border-border bg-canvas px-4 py-2 text-meta text-danger">
               {error}
             </p>
           ) : null}
 
           {/* Input */}
-          <div className="flex items-center gap-2 border-t border-rule-faint bg-parchment-raised p-3 sm:rounded-b-edge">
+          <div className="flex items-center gap-2 border-t border-border bg-surface p-3 sm:rounded-b-edge">
             <label htmlFor={inputId} className="sr-only">
               Sua pergunta
             </label>
@@ -210,14 +210,14 @@ export function ChatWidget() {
                   void handleSend();
                 }
               }}
-              className="flex-1 rounded-edge border border-rule-faint bg-parchment px-3 py-2 text-body text-ink placeholder:text-ink-muted focus:border-bordeaux focus:outline-none disabled:opacity-60"
+              className="flex-1 rounded-edge border border-border bg-canvas px-3 py-2 text-body text-ink placeholder:text-ink-muted focus:border-accent focus:outline-none disabled:opacity-60"
             />
             <button
               type="button"
               onClick={() => void handleSend()}
               disabled={pending || !input.trim()}
               aria-label="Enviar pergunta"
-              className="shrink-0 rounded-edge bg-bordeaux p-2.5 text-parchment-raised transition-colors hover:bg-bordeaux-soft disabled:cursor-not-allowed disabled:opacity-50"
+              className="shrink-0 rounded-edge bg-accent p-2.5 text-surface transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path

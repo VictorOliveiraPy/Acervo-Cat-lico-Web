@@ -209,7 +209,7 @@ export default async function HomePage() {
               <Link
                 key={term}
                 href={`/busca?q=${encodeURIComponent(term)}`}
-                className="rounded-edge border border-rule-faint bg-parchment-raised px-2.5 py-1 text-meta text-ink-muted transition-colors hover:border-bordeaux hover:text-bordeaux"
+                className="rounded-edge border border-border bg-surface px-2.5 py-1 text-meta text-ink-muted transition-colors hover:border-accent hover:text-accent"
               >
                 {term}
               </Link>
@@ -226,7 +226,7 @@ export default async function HomePage() {
               >
                 <Link
                   href="/liturgia-diaria"
-                  className="shrink-0 rounded-edge border border-parchment-raised bg-parchment px-5 py-2.5 text-label uppercase tracking-[0.09em] text-ink transition-colors hover:bg-parchment-raised"
+                  className="shrink-0 rounded-edge border border-surface bg-canvas px-5 py-2.5 text-label uppercase tracking-[0.09em] text-ink transition-colors hover:bg-surface"
                 >
                   📖 Ler a liturgia de hoje →
                 </Link>
@@ -243,7 +243,7 @@ export default async function HomePage() {
             >
               <Link
                 href="/velas"
-                className="shrink-0 rounded-edge border border-parchment-raised bg-parchment px-5 py-2.5 text-label uppercase tracking-[0.09em] text-ink transition-colors hover:bg-parchment-raised"
+                className="shrink-0 rounded-edge border border-surface bg-canvas px-5 py-2.5 text-label uppercase tracking-[0.09em] text-ink transition-colors hover:bg-surface"
               >
                 🕯️ Acender uma vela →
               </Link>
@@ -284,7 +284,7 @@ export default async function HomePage() {
               return (
                 <section
                   key={group.title}
-                  className="border border-rule-faint bg-parchment-raised p-5"
+                  className="border border-border bg-surface p-5"
                 >
                   <div className="flex items-baseline justify-between gap-3">
                     <h3 className="font-display text-title-sm text-ink">{group.title}</h3>
@@ -295,7 +295,7 @@ export default async function HomePage() {
                       <li key={slug}>
                         <Link
                           href={categoryPath(slug)}
-                          className="text-meta text-bordeaux underline-offset-4 hover:underline"
+                          className="text-meta text-accent underline-offset-4 hover:underline"
                         >
                           {CATEGORY_LABELS[slug].nav}
                         </Link>
@@ -310,7 +310,7 @@ export default async function HomePage() {
           <p className="mt-6">
             <a
               href="#todas-categorias"
-              className="text-meta text-bordeaux underline-offset-4 hover:underline"
+              className="text-meta text-accent underline-offset-4 hover:underline"
             >
               Ver todas as {categories.length} categorias ↓
             </a>
@@ -331,7 +331,7 @@ export default async function HomePage() {
               href={SANTO_GUARDIAO_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="shrink-0 rounded-edge border border-gold bg-parchment px-5 py-2.5 text-label uppercase tracking-[0.09em] text-ink transition-colors hover:bg-parchment-raised"
+              className="shrink-0 rounded-edge border border-border-strong bg-canvas px-5 py-2.5 text-label uppercase tracking-[0.09em] text-ink transition-colors hover:bg-surface"
             >
               Conhecer o Santo Guardião →
             </a>
@@ -339,7 +339,7 @@ export default async function HomePage() {
         </section>
 
         <section aria-labelledby="amostra" className="pb-16">
-          <div className="border-b-2 border-gold pb-2">
+          <div className="border-b-2 border-border-strong pb-2">
             <h2 id="amostra" className="font-display text-title-md text-ink">
               Descubra algo novo
             </h2>

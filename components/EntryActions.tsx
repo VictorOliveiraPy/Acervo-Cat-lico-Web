@@ -67,7 +67,7 @@ export function EntryActions({ categoria, slug, titulo }: Props) {
       <button
         type="button"
         onClick={toggleFavorite}
-        className="rounded-edge border border-bordeaux px-4 py-2 text-label uppercase tracking-[0.09em] text-bordeaux transition-colors hover:bg-bordeaux hover:text-parchment-raised"
+        className="rounded-edge border border-accent px-4 py-2 text-label uppercase tracking-[0.09em] text-accent transition-colors hover:bg-accent hover:text-surface"
         aria-pressed={isFavorite}
       >
         {isFavorite ? "★ Salvo" : "☆ Guardar"}
@@ -75,7 +75,7 @@ export function EntryActions({ categoria, slug, titulo }: Props) {
       <button
         type="button"
         onClick={shareEntry}
-        className="rounded-edge border border-rule-faint px-4 py-2 text-label uppercase tracking-[0.09em] text-ink-muted transition-colors hover:border-bordeaux hover:text-bordeaux"
+        className="rounded-edge border border-border px-4 py-2 text-label uppercase tracking-[0.09em] text-ink-muted transition-colors hover:border-accent hover:text-accent"
       >
         Compartilhar
       </button>

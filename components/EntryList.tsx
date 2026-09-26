@@ -23,6 +23,10 @@ type Props = {
  * padrão "episódio": miniatura maior à esquerda, título em destaque e um
  * rótulo discreto embaixo dele (a categoria, ou a posição/destaque da
  * entrada), como uma lista de episódios de programa.
+ *
+ * O hover não levanta a linha (nada de sombra/deslocamento): a página é plana
+ * e a profundidade vem do filete de 1px; hover aqui é só uma tinta de
+ * superfície para confirmar qual linha o ponteiro está sobre.
  */
 export function EntryList({ entries, showCategory = false }: Props) {
   return (
@@ -35,10 +39,10 @@ export function EntryList({ entries, showCategory = false }: Props) {
           : (ordinal ?? highlight);
 
         return (
-          <li key={entry.id} className="border-t border-rule-faint">
+          <li key={entry.id} className="border-t border-border">
             <Link
               href={entryPath(entry.categoria, entry.slug)}
-              className="group flex flex-col gap-4 py-6 transition-all hover:-translate-y-0.5 hover:bg-parchment-raised hover:shadow-md sm:flex-row sm:gap-6"
+              className="group flex flex-col gap-4 py-6 transition-colors hover:bg-surface sm:flex-row sm:gap-6"
             >
               {entry.imagem ? (
                 <Image
@@ -46,22 +50,22 @@ export function EntryList({ entries, showCategory = false }: Props) {
                   alt={entry.titulo}
                   width={160}
                   height={112}
-                  className="h-28 w-full shrink-0 rounded-edge border border-rule-faint object-cover sm:h-24 sm:w-32"
+                  className="h-28 w-full shrink-0 rounded-edge border border-border object-cover sm:h-24 sm:w-32"
                 />
               ) : (
                 <div
                   aria-hidden="true"
-                  className="flex h-28 w-full shrink-0 items-center justify-center rounded-edge border border-rule-faint bg-parchment-raised text-title-md sm:h-24 sm:w-32"
+                  className="flex h-28 w-full shrink-0 items-center justify-center rounded-edge border border-border bg-surface text-title-md sm:h-24 sm:w-32"
                 >
                   {CATEGORY_LABELS[entry.categoria].icon}
                 </div>
               )}
 
               <div className="min-w-0">
-                <h3 className="font-display text-title-sm text-ink group-hover:text-bordeaux">
+                <h3 className="font-display text-title-sm text-ink group-hover:text-accent">
                   {entry.titulo}
                 </h3>
-                {label ? <p className="mt-1 kicker text-bordeaux">{label}</p> : null}
+                {label ? <p className="mt-1 kicker text-accent">{label}</p> : null}
                 <p className="mt-2 max-w-measure text-body text-ink-muted">
                   {entry.resumo}
                 </p>

@@ -20,14 +20,14 @@ export function Pagination({ basePath, state }: Props) {
   if (state.totalPages <= 1) return null;
 
   const linkStyle =
-    "rounded-edge border border-bordeaux px-4 py-2 text-meta text-bordeaux transition-colors hover:bg-bordeaux hover:text-parchment-raised";
+    "rounded-edge border border-accent px-4 py-2 text-meta text-accent transition-colors hover:bg-accent hover:text-surface";
   const disabledStyle =
-    "rounded-edge border border-rule-faint px-4 py-2 text-meta text-ink-muted/70";
+    "rounded-edge border border-border px-4 py-2 text-meta text-ink-muted/70";
 
   return (
     <nav
       aria-label="Paginação da listagem"
-      className="flex flex-wrap items-center justify-between gap-4 border-t border-rule-faint pt-6"
+      className="flex flex-wrap items-center justify-between gap-4 border-t border-border pt-6"
     >
       <p className="text-meta text-ink-muted">
         Página {state.page} de {state.totalPages} · {state.rangeLabel}

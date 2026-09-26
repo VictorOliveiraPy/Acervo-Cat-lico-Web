@@ -73,11 +73,11 @@ export function SearchField({
         onChange={(event) => setQuery(event.target.value)}
         placeholder="Buscar qualquer tema do mundo católico…"
         autoComplete="off"
-        className={`${FIELD_STYLE[variant]} w-full rounded-edge border border-rule-faint bg-parchment-raised px-3 font-body text-ink placeholder:text-ink-muted/80 focus:border-bordeaux focus:outline-none`}
+        className={`${FIELD_STYLE[variant]} w-full rounded-edge border border-border bg-surface px-3 font-sans text-ink placeholder:text-ink-muted/80 focus:border-accent focus:outline-none`}
       />
       <button
         type="submit"
-        className={`${FIELD_STYLE[variant]} shrink-0 rounded-edge border border-bordeaux bg-bordeaux px-5 font-body text-label uppercase tracking-[0.09em] text-parchment-raised transition-colors hover:bg-bordeaux-soft`}
+        className={`${FIELD_STYLE[variant]} shrink-0 rounded-edge border border-accent bg-accent px-5 font-sans text-label uppercase tracking-[0.09em] text-surface transition-colors hover:bg-accent-hover`}
       >
         Buscar
       </button>

@@ -16,17 +16,17 @@ export function EntryNeighbors({ categoria, neighbors }: Props) {
   if (!previous && !next) return null;
 
   const linkStyle =
-    "group flex flex-col gap-1 rounded-edge border border-rule-faint px-4 py-3 transition-colors hover:border-bordeaux hover:bg-parchment-raised";
+    "group flex flex-col gap-1 rounded-edge border border-border px-4 py-3 transition-colors hover:border-accent hover:bg-surface";
 
   return (
     <nav
       aria-label="Entradas vizinhas"
-      className="mt-section grid gap-4 border-t border-rule-faint pt-6 sm:grid-cols-2"
+      className="mt-section grid gap-4 border-t border-border pt-6 sm:grid-cols-2"
     >
       {previous ? (
         <Link href={entryPath(categoria, previous.slug)} rel="prev" className={linkStyle}>
           <span className="kicker">← Anterior</span>
-          <span className="font-display text-title-md text-ink group-hover:text-bordeaux">
+          <span className="font-display text-title-md text-ink group-hover:text-accent">
             {previous.titulo}
           </span>
         </Link>
@@ -40,7 +40,7 @@ export function EntryNeighbors({ categoria, neighbors }: Props) {
           className={`${linkStyle} sm:text-right`}
         >
           <span className="kicker">Próxima →</span>
-          <span className="font-display text-title-md text-ink group-hover:text-bordeaux">
+          <span className="font-display text-title-md text-ink group-hover:text-accent">
             {next.titulo}
           </span>
         </Link>

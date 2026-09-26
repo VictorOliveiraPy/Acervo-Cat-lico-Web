@@ -59,7 +59,7 @@ export default async function VelasPage({
       </div>
 
       <section aria-labelledby="mural" className="mt-14">
-        <div className="flex items-baseline justify-between gap-4 border-b-2 border-gold pb-2">
+        <div className="flex items-baseline justify-between gap-4 border-b-2 border-border-strong pb-2">
           <h2 id="mural" className="font-display text-title-md text-ink">
             Mural de velas
           </h2>

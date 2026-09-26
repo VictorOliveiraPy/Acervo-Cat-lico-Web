@@ -33,7 +33,7 @@ export default function NotFound() {
             <li key={slug}>
               <Link
                 href={categoryPath(slug)}
-                className="block rounded-edge border border-rule-faint bg-parchment-raised px-4 py-2.5 text-body text-ink transition-colors hover:border-bordeaux hover:text-bordeaux"
+                className="block rounded-edge border border-border bg-surface px-4 py-2.5 text-body text-ink transition-colors hover:border-accent hover:text-accent"
               >
                 {CATEGORY_LABELS[slug].nav}
               </Link>
@@ -45,7 +45,7 @@ export default function NotFound() {
               não só da home) — não precisa navegar pra lugar nenhum. */}
           <a
             href="#todas-categorias"
-            className="text-meta text-bordeaux underline-offset-4 hover:underline"
+            className="text-meta text-accent underline-offset-4 hover:underline"
           >
             Ou veja todas as categorias no rodapé ↓
           </a>

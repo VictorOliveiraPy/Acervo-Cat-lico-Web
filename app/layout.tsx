@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { EB_Garamond, Karla } from "next/font/google";
+import { Cormorant_Garamond, Source_Sans_3 } from "next/font/google";
 import Script from "next/script";
 
 import "@/app/globals.css";
@@ -12,16 +12,18 @@ import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 /*
  * As duas fontes do projeto, expostas como as variáveis CSS que o
  * `tailwind.config.ts` já espera (`--font-display`, `--font-body`):
- * Garamond para títulos e corpo de leitura (tradição impressa do conteúdo),
- * Karla para rótulos, metadados e controles (papel utilitário).
+ * Cormorant Garamond para títulos (tradição impressa do conteúdo) e
+ * Source Sans 3 para corpo, rótulos e controles (papel utilitário, legível
+ * em texto longo).
  */
-const display = EB_Garamond({
+const display = Cormorant_Garamond({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
   variable: "--font-display",
 });
 
-const body = Karla({
+const body = Source_Sans_3({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-body",
@@ -66,7 +68,7 @@ export const metadata: Metadata = {
 // Precisa ser export separado de `metadata` desde o Next 14 (o campo
 // `themeColor` dentro de `metadata` foi descontinuado em favor deste).
 export const viewport: Viewport = {
-  themeColor: "#6B1F2A",
+  themeColor: "#7A2E3A",
 };
 
 export default function RootLayout({
@@ -95,7 +97,7 @@ export default function RootLayout({
         </Script>
         <a
           href="#conteudo"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-edge focus:bg-bordeaux focus:px-4 focus:py-2 focus:text-meta focus:text-parchment-raised"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-edge focus:bg-accent focus:px-4 focus:py-2 focus:text-meta focus:text-canvas"
         >
           Ir para o conteúdo
         </a>
