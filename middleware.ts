@@ -15,6 +15,12 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(url, 308);
   }
 
+  if (verdict.kind === "rewrite") {
+    const url = request.nextUrl.clone();
+    url.pathname = verdict.to;
+    return NextResponse.rewrite(url);
+  }
+
   if (verdict.kind === "not-found") {
     // Reescreve para um caminho que nenhuma rota atende: o Next responde com o
     // `not-found.tsx` do site e HTTP 404 de verdade (3 segmentos: não casa com

@@ -4,6 +4,7 @@ import Script from "next/script";
 
 import "@/app/globals.css";
 import { ChatWidget } from "@/components/ChatWidget";
+import { PtOnly } from "@/components/PtOnly";
 import { PwaRegister } from "@/components/PwaRegister";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -106,7 +107,9 @@ export default function RootLayout({
           {children}
         </main>
         <SiteFooter />
-        <ChatWidget />
+        <PtOnly>
+          <ChatWidget />
+        </PtOnly>
         <PwaRegister />
         {/* Himetrica é um tracker client-side (a chave é feita pra rodar no
             navegador — não é segredo, é padrão deles mesmos, igual site ID

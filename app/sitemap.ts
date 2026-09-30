@@ -1,8 +1,10 @@
 import type { MetadataRoute } from "next";
 
 import { categoryPath, entryPath } from "@/lib/categories";
-import { CATEGORY_SLUGS, type CategorySlug } from "@/lib/schemas";
-import { fetchCategoryIndex } from "@/lib/services/acervoService";
+import { ENABLED_LOCALES, HREFLANG, localePath, type Locale } from "@/lib/i18n";
+import { ApiError } from "@/lib/api";
+import { CATEGORY_SLUGS } from "@/lib/schemas";
+import { fetchCategories, fetchCategoryIndex } from "@/lib/services/acervoService";
 import { SITE_URL } from "@/lib/site";
 
 /** A data mais recente entre as informadas, ou nada se nenhuma veio. */
@@ -22,6 +24,52 @@ export const revalidate = 3600;
  * cresce por commit (ver `README.md`), e um sitemap desatualizado deixa
  * entradas novas fora do que o Google enxerga.
  */
+/**
+ * URLs de um idioma traduzido: home, categorias e entradas que já existem lá.
+ * Cada uma declara o par em português (`alternates.languages`) — o `hreflang`
+ * do Google só vale quando os dois lados se apontam. Falha da API num idioma
+ * não derruba o sitemap inteiro: ele sai só com o que já foi lido.
+ */
+async function localizedPages(lang: Locale): Promise<MetadataRoute.Sitemap> {
+  try {
+    const categories = await fetchCategories(undefined, lang);
+    const perCategory = await Promise.all(
+      categories.map(async (info) => ({
+        categoria: info.categoria,
+        items: await fetchCategoryIndex(info.categoria, lang),
+      })),
+    );
+    const pair = (path: string) => ({
+      languages: {
+        "pt-BR": `${SITE_URL}${path}`,
+        [HREFLANG[lang]]: `${SITE_URL}${localePath(lang, path)}`,
+      },
+    });
+    return [
+      { url: `${SITE_URL}${localePath(lang, "/")}`, changeFrequency: "weekly", priority: 0.7 },
+      ...perCategory.map(({ categoria, items }) => ({
+        url: `${SITE_URL}${localePath(lang, categoryPath(categoria))}`,
+        ...lastModifiedOf(items.map((item) => item.atualizado_em)),
+        alternates: pair(categoryPath(categoria)),
+        changeFrequency: "weekly" as const,
+        priority: 0.6,
+      })),
+      ...perCategory.flatMap(({ categoria, items }) =>
+        items.map((item) => ({
+          url: `${SITE_URL}${localePath(lang, entryPath(categoria, item.slug))}`,
+          ...lastModifiedOf([item.atualizado_em]),
+          alternates: pair(entryPath(categoria, item.slug)),
+          changeFrequency: "monthly" as const,
+          priority: 0.5,
+        })),
+      ),
+    ];
+  } catch (error: unknown) {
+    if (error instanceof ApiError) return [];
+    throw error;
+  }
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
     { url: SITE_URL, changeFrequency: "weekly", priority: 1 },
@@ -56,5 +104,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   );
 
-  return [...staticPages, ...categoryPages, ...entryPages];
+  const translated = (await Promise.all(ENABLED_LOCALES.map(localizedPages))).flat();
+
+  return [...staticPages, ...categoryPages, ...entryPages, ...translated];
 }

@@ -5,7 +5,8 @@
  * as páginas chamam daqui e nunca montam URL de API por conta própria.
  */
 
-import { apiGet, type GetOptions } from "@/lib/api";
+import { ApiError, apiGet, type GetOptions } from "@/lib/api";
+import { DEFAULT_LOCALE, ENABLED_LOCALES, type Locale, type SiteLang } from "@/lib/i18n";
 import {
   categoryInfoListSchema,
   entryPageSchema,
@@ -40,17 +41,29 @@ export const MIN_SEARCH_LENGTH = 2;
 /** Teto de resultados devolvidos pela busca (o backend corta em 50). */
 export const SEARCH_LIMIT = 50;
 
+/**
+ * Prefixo de rota do idioma: português é a raiz (`/santos`); os demais vivem
+ * em `/i18n/{lang}` na API e só têm o que já foi traduzido.
+ */
+function langPrefix(lang: SiteLang): string {
+  return lang === DEFAULT_LOCALE ? "" : `/i18n/${lang}`;
+}
+
 /** Categorias com nome, descrição, total de entradas e aviso editorial. */
-export function fetchCategories(options?: GetOptions): Promise<CategoryInfo[]> {
-  return apiGet("/categories", categoryInfoListSchema, options);
+export function fetchCategories(
+  options?: GetOptions,
+  lang: SiteLang = DEFAULT_LOCALE,
+): Promise<CategoryInfo[]> {
+  return apiGet(`${langPrefix(lang)}/categories`, categoryInfoListSchema, options);
 }
 
 /** Página de entradas de uma categoria, na ordem curada pelo acervo. */
 export function fetchEntryPage(
   categoria: CategorySlug,
   { limit = PAGE_SIZE, offset = 0 }: { limit?: number; offset?: number } = {},
+  lang: SiteLang = DEFAULT_LOCALE,
 ): Promise<EntryPage> {
-  return apiGet(`/${categoria}`, entryPageSchema, {
+  return apiGet(`${langPrefix(lang)}/${categoria}`, entryPageSchema, {
     query: { limit, offset },
   });
 }
@@ -69,12 +82,15 @@ const INDEX_PAGE_SIZE = 100;
  * Todas as entradas de uma categoria, na ordem curada pelo acervo, só com o que
  * o sitemap e os links de anterior/próximo usam. Pagina até cobrir o total.
  */
-export async function fetchCategoryIndex(categoria: CategorySlug): Promise<CategoryIndexItem[]> {
+export async function fetchCategoryIndex(
+  categoria: CategorySlug,
+  lang: SiteLang = DEFAULT_LOCALE,
+): Promise<CategoryIndexItem[]> {
   const items: CategoryIndexItem[] = [];
   let offset = 0;
 
   while (true) {
-    const page = await fetchEntryPage(categoria, { limit: INDEX_PAGE_SIZE, offset });
+    const page = await fetchEntryPage(categoria, { limit: INDEX_PAGE_SIZE, offset }, lang);
     items.push(
       ...page.itens.map((entry) => ({
         slug: entry.slug,
@@ -93,8 +109,9 @@ export async function fetchCategoryIndex(categoria: CategorySlug): Promise<Categ
 export function fetchEntry(
   categoria: CategorySlug,
   slug: string,
+  lang: SiteLang = DEFAULT_LOCALE,
 ): Promise<Entry> {
-  return apiGet(`/${categoria}/${encodeURIComponent(slug)}`, entrySchema);
+  return apiGet(`${langPrefix(lang)}/${categoria}/${encodeURIComponent(slug)}`, entrySchema);
 }
 
 /**
@@ -127,4 +144,33 @@ export async function searchAcervo({
 /** Status da API e tamanho do acervo carregado. */
 export function fetchHealth(): Promise<HealthStatus> {
   return apiGet("/health", healthStatusSchema, { revalidateSeconds: 30 });
+}
+
+/**
+ * Idiomas em que uma entrada em português já tem tradução publicada.
+ *
+ * Alimenta o `hreflang` recíproco da página em português: o Google só aceita o
+ * par quando os dois lados se apontam. Só consulta a entrada nas categorias que
+ * já têm alguma tradução, então categorias sem nenhuma não custam chamada extra.
+ * Qualquer falha de API vira "sem tradução" — o `hreflang` é um extra, não pode
+ * derrubar os metadados da página.
+ */
+export async function fetchTranslationLangs(
+  categoria: CategorySlug,
+  slug: string,
+): Promise<Locale[]> {
+  const found = await Promise.all(
+    ENABLED_LOCALES.map(async (lang) => {
+      try {
+        const categories = await fetchCategories(undefined, lang);
+        if (!categories.some((info) => info.categoria === categoria)) return null;
+        await fetchEntry(categoria, slug, lang);
+        return lang;
+      } catch (error: unknown) {
+        if (error instanceof ApiError) return null;
+        throw error;
+      }
+    }),
+  );
+  return found.filter((lang): lang is Locale => lang !== null);
 }

@@ -40,4 +40,26 @@ describe("classifyPath", () => {
     expect(classifyPath("/santos/s%C3%A3o-jose")).toEqual({ kind: "ok" });
     expect(classifyPath("/Santos/s%C3%A3o")).toEqual({ kind: "redirect", to: "/santos/s%C3%A3o" });
   });
+
+  describe("prefixo de idioma", () => {
+    it("reescreve /es e /en para a árvore interna de idiomas", () => {
+      expect(classifyPath("/es")).toEqual({ kind: "rewrite", to: "/i18n/es" });
+      expect(classifyPath("/en/oracoes")).toEqual({ kind: "rewrite", to: "/i18n/en/oracoes" });
+      expect(classifyPath("/es/oracoes/ave-maria")).toEqual({
+        kind: "rewrite",
+        to: "/i18n/es/oracoes/ave-maria",
+      });
+    });
+
+    it("dá 404 para categoria desconhecida, caminho fundo demais ou /i18n direto", () => {
+      expect(classifyPath("/es/nao-existe")).toEqual({ kind: "not-found" });
+      expect(classifyPath("/es/oracoes/ave-maria/extra")).toEqual({ kind: "not-found" });
+      expect(classifyPath("/fr/oracoes")).toEqual({ kind: "not-found" });
+      expect(classifyPath("/i18n/es/oracoes")).toEqual({ kind: "not-found" });
+    });
+
+    it("redireciona maiúsculas também sob o prefixo", () => {
+      expect(classifyPath("/ES/Oracoes")).toEqual({ kind: "redirect", to: "/es/oracoes" });
+    });
+  });
 });

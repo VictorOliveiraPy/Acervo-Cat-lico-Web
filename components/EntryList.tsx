@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { CATEGORY_LABELS, entryPath } from "@/lib/categories";
 import { entryHighlight, entryOrdinal } from "@/lib/entryDisplay";
+import { DEFAULT_LOCALE, localePath, type SiteLang } from "@/lib/i18n";
 import type { Entry } from "@/lib/schemas";
 
 type Props = {
@@ -13,6 +14,8 @@ type Props = {
    * importa mais que a ordem dela dentro da própria categoria.
    */
   showCategory?: boolean;
+  /** Idioma dos links; português (padrão) não leva prefixo. */
+  lang?: SiteLang;
 };
 
 /**
@@ -28,7 +31,7 @@ type Props = {
  * e a profundidade vem do filete de 1px; hover aqui é só uma tinta de
  * superfície para confirmar qual linha o ponteiro está sobre.
  */
-export function EntryList({ entries, showCategory = false }: Props) {
+export function EntryList({ entries, showCategory = false, lang = DEFAULT_LOCALE }: Props) {
   return (
     <ul className="flex flex-col">
       {entries.map((entry) => {
@@ -41,7 +44,7 @@ export function EntryList({ entries, showCategory = false }: Props) {
         return (
           <li key={entry.id} className="border-t border-border">
             <Link
-              href={entryPath(entry.categoria, entry.slug)}
+              href={localePath(lang, entryPath(entry.categoria, entry.slug))}
               className="group flex flex-col gap-4 py-6 transition-colors hover:bg-surface sm:flex-row sm:gap-6"
             >
               {entry.imagem ? (

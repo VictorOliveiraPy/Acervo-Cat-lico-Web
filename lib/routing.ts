@@ -12,11 +12,14 @@
  * sem `loading.tsx` acima (ver `app/[categoria]/[slug]/page.tsx`).
  */
 
+import { isLocale } from "@/lib/i18n";
 import { CATEGORY_SLUGS } from "@/lib/schemas";
 
 export type PathVerdict =
   | { kind: "ok" }
   | { kind: "redirect"; to: string }
+  /** `/es/oracoes` é servida pela árvore interna `app/i18n/[lang]/oracoes`. */
+  | { kind: "rewrite"; to: string }
   | { kind: "not-found" };
 
 const CATEGORIES = new Set<string>(CATEGORY_SLUGS);
@@ -61,6 +64,15 @@ export function classifyPath(pathname: string): PathVerdict {
   const segments = pathname.split("/").filter(Boolean);
   const first = segments[0];
   if (first === undefined) return OK;
+
+  if (isLocale(first)) {
+    // `/es`, `/es/{categoria}` e `/es/{categoria}/{slug}`. O que não é
+    // categoria conhecida (ou é mais fundo que isso) é 404 real, como no português.
+    const rest = segments.slice(1);
+    if (rest.length > MAX_CATEGORY_SEGMENTS) return NOT_FOUND;
+    if (rest.length > 0 && !CATEGORIES.has(rest[0] as string)) return NOT_FOUND;
+    return { kind: "rewrite", to: `/i18n/${first}${rest.length ? `/${rest.join("/")}` : ""}` };
+  }
 
   if (CATEGORIES.has(first)) return segments.length <= MAX_CATEGORY_SEGMENTS ? OK : NOT_FOUND;
   if (first === "instagram") return segments.length <= MAX_INSTAGRAM_SEGMENTS ? OK : NOT_FOUND;

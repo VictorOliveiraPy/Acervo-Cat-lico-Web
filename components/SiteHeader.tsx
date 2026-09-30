@@ -5,7 +5,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { CategoryNav } from "@/components/CategoryNav";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { SearchField } from "@/components/SearchField";
+import { DEFAULT_LOCALE, dictionaryFor, langFromPathname, localePath } from "@/lib/i18n";
 
 /**
  * Cabeçalho em duas faixas: identidade + busca na primeira, categorias na
@@ -19,6 +21,10 @@ import { SearchField } from "@/components/SearchField";
  */
 export function SiteHeader() {
   const pathname = usePathname();
+  const lang = langFromPathname(pathname);
+  const isPortuguese = lang === DEFAULT_LOCALE;
+  const t = dictionaryFor(lang);
+  // Busca, velas e o menu de categorias ainda são só em português.
   const isHome = pathname === "/";
 
   return (
@@ -28,7 +34,7 @@ export function SiteHeader() {
           faixa de baixo (`CategoryNav`) — o resto do cabeçalho também
           podia ocupar menos altura. */}
       <div className="mx-auto flex max-w-shell flex-col gap-2.5 px-4 py-3 sm:px-6 md:flex-row md:items-center md:justify-between">
-        <Link href="/" className="group flex flex-col">
+        <Link href={localePath(lang, "/")} className="group flex flex-col">
           <span className="flex items-center gap-2 font-display text-title-sm leading-none text-accent sm:text-title-md">
             {/* Emoji de bandeira (🇻🇦) em vez de imagem: Windows não tem a
                 fonte de emoji de bandeiras, então a maioria dos navegadores
@@ -43,7 +49,7 @@ export function SiteHeader() {
               height={20}
               className="h-5 w-5 shrink-0"
             />
-            Compêndio Católico
+            {t.homeHeading}
             <Image
               src="https://upload.wikimedia.org/wikipedia/commons/7/76/Campinas_-_13_de_setembro-96_%28cropped%29.jpg"
               alt=""
@@ -54,27 +60,30 @@ export function SiteHeader() {
             />
           </span>
           <span className="kicker mt-1 group-hover:text-ink">
-            Catálogo de consulta · fé, doutrina e vida católica
+            {t.siteTagline}
           </span>
         </Link>
 
         <div className="flex w-full flex-col flex-wrap gap-3 sm:flex-row sm:items-center sm:justify-end md:w-auto">
-          {isHome ? null : (
+          <LanguageSwitcher />
+          {isHome || !isPortuguese ? null : (
             <div className="w-full md:max-w-sm">
               <SearchField label="Buscar em todo o acervo" />
             </div>
           )}
-          <Link
-            href="/velas"
-            className="flex shrink-0 items-center justify-center gap-2 rounded-edge border border-accent bg-accent px-4 py-2.5 text-label uppercase tracking-[0.09em] text-surface transition-colors hover:bg-accent-hover"
-          >
-            <span aria-hidden="true">🕯️</span>
-            Acender uma vela
-          </Link>
+          {isPortuguese ? (
+            <Link
+              href="/velas"
+              className="flex shrink-0 items-center justify-center gap-2 rounded-edge border border-accent bg-accent px-4 py-2.5 text-label uppercase tracking-[0.09em] text-surface transition-colors hover:bg-accent-hover"
+            >
+              <span aria-hidden="true">🕯️</span>
+              Acender uma vela
+            </Link>
+          ) : null}
         </div>
       </div>
 
-      <CategoryNav />
+      {isPortuguese ? <CategoryNav /> : null}
     </header>
   );
 }
