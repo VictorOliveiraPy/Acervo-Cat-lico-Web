@@ -10,9 +10,11 @@ import type { CategorySlug } from "@/lib/schemas";
  * Não há pontos, XP nem níveis, e oração não entra aqui como atividade: a
  * regra aprovada é não gamificar a oração nem a santidade.
  *
- * Lições novas saem diretamente do Catecismo Maior de São Pio X, decisão do
- * responsável pelo acervo. Nada de escrever doutrina de memória: sem o texto da
- * fonte em mãos, a lição não entra.
+ * Fonte das lições novas, por decisão do responsável pelo acervo, conforme o uso:
+ * explicação aprofundada, Catecismo Maior de São Pio X (1905); perguntas curtas e
+ * exercícios, Catecismo da Doutrina Cristã (1912); temas atuais que os dois não
+ * tratam, Catecismo da Igreja Católica (1992) ou seu Compêndio. Nada de escrever
+ * doutrina de memória: sem o texto da fonte em mãos, a lição não entra.
  */
 
 export type LessonOption = {
