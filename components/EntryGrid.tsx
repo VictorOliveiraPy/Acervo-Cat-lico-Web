@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { BrandMark } from "@/components/BrandMark";
 import { CATEGORY_LABELS, entryPath } from "@/lib/categories";
+import { saintAssetFor } from "@/lib/saintAssets";
 import type { Entry } from "@/lib/schemas";
 
 type Props = {
@@ -18,7 +19,8 @@ export function EntryGrid({ entries }: Props) {
   return (
     <ul className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
       {entries.map((entry) => {
-        const image = entry.imagem;
+        const saintAsset = saintAssetFor(entry);
+        const image = saintAsset?.card ?? entry.imagem;
         const label = CATEGORY_LABELS[entry.categoria];
         return (
           <li key={entry.id}>
@@ -33,7 +35,7 @@ export function EntryGrid({ entries }: Props) {
                     alt={entry.titulo}
                     fill
                     sizes="(min-width: 768px) 25vw, 50vw"
-                    className="object-cover"
+                    className={`object-cover ${saintAsset ? "object-top" : ""}`}
                   />
                 ) : (
                   <div

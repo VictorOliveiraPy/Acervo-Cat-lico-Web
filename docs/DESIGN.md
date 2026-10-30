@@ -70,13 +70,12 @@ Registro explícito em `lib/saintAssets.ts`, indexado pelo **slug do verbete na
 API**. Só entram artes com revisão de iconografia; os demais lotes do kit ficam
 em `SAINT_CATALOG` como pendentes e não aparecem no site.
 
-- Avatar (círculo de até 96px): destaque da home e contexto da lição.
-- Card 320×400: galeria em `/santos`.
-- Retrato (10rem de largura): complemento no próprio verbete, nunca como herói.
+- Avatar (círculo de até 96px): listas, destaque da home e contexto da lição.
+- Card 320×400: galeria em `/santos` e amostra da home.
+- Retrato (no máximo 16rem de largura): no próprio verbete, nunca como herói.
 
-A ilustração **soma, não substitui**: imagem, `alt`, `og:image` e JSON-LD dos
-verbetes continuam sendo os do acervo, para não mexer no que os buscadores já
-conhecem.
+Com arte revisada, a ilustração **substitui** a imagem antiga na tela. `og:image`
+e JSON-LD continuam com a imagem do acervo, a que os buscadores já conhecem.
 
 ## Academia da Fé
 

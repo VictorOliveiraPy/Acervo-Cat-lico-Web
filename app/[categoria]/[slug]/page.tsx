@@ -271,7 +271,25 @@ export default async function EntryPage({ params }: { params: Params }) {
             </div>
           ) : null}
 
-          {entry.imagem ? (
+          {saintAsset ? (
+            <figure className="mt-8">
+              {/* Com arte revisada, a ilustração substitui a imagem antiga nesta página.
+                  `og:image` e JSON-LD seguem com a do acervo, a que buscadores já conhecem. */}
+              <div className="relative aspect-[2/3] w-full max-w-[16rem] overflow-hidden rounded-panel border border-border bg-surface">
+                <Image
+                  src={saintAsset.portrait}
+                  alt={saintAsset.alt}
+                  fill
+                  sizes="16rem"
+                  className="object-cover object-top"
+                  priority
+                />
+              </div>
+              <figcaption className="mt-2 max-w-measure text-meta text-ink-muted">
+                {saintAsset.credit}
+              </figcaption>
+            </figure>
+          ) : entry.imagem ? (
             <figure className="mt-8">
               {/* Altura fixa + `fill`: as imagens vêm da Wikimedia Commons com
                   proporções bem diferentes entre si, e a faixa constante evita
@@ -291,23 +309,6 @@ export default async function EntryPage({ params }: { params: Params }) {
                   {entry.imagem_credito}
                 </figcaption>
               ) : null}
-            </figure>
-          ) : null}
-
-          {/* A ilustração do kit soma à imagem do verbete, sem substituí-la: a
-              imagem do acervo é a que buscadores e redes sociais já conhecem. */}
-          {saintAsset ? (
-            <figure className="mt-6 flex items-start gap-4">
-              <div className="relative aspect-[2/3] w-40 shrink-0 overflow-hidden rounded-panel border border-border bg-surface">
-                <Image
-                  src={saintAsset.portrait}
-                  alt={saintAsset.alt}
-                  fill
-                  sizes="10rem"
-                  className="object-cover object-top"
-                />
-              </div>
-              <figcaption className="min-w-0 text-meta text-ink-muted">{saintAsset.credit}</figcaption>
             </figure>
           ) : null}
 

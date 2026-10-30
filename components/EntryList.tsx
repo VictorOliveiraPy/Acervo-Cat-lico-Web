@@ -5,6 +5,7 @@ import { BrandMark } from "@/components/BrandMark";
 import { CATEGORY_LABELS, entryPath } from "@/lib/categories";
 import { entryHighlight, entryOrdinal } from "@/lib/entryDisplay";
 import { DEFAULT_LOCALE, localePath, type SiteLang } from "@/lib/i18n";
+import { saintAssetFor } from "@/lib/saintAssets";
 import type { Entry } from "@/lib/schemas";
 
 type Props = {
@@ -36,6 +37,7 @@ export function EntryList({ entries, showCategory = false, lang = DEFAULT_LOCALE
   return (
     <ul className="flex flex-col">
       {entries.map((entry) => {
+        const saintAsset = saintAssetFor(entry);
         const image = entry.imagem;
         const ordinal = entryOrdinal(entry);
         const highlight = entryHighlight(entry);
@@ -49,7 +51,17 @@ export function EntryList({ entries, showCategory = false, lang = DEFAULT_LOCALE
               href={localePath(lang, entryPath(entry.categoria, entry.slug))}
               className="group flex flex-col gap-4 py-6 transition-colors hover:bg-surface sm:flex-row sm:gap-6"
             >
-              {image ? (
+              {saintAsset ? (
+                // O avatar tem 128px e transparência fora do círculo: não pode ser
+                // esticado para a largura da linha, como as fotos.
+                <Image
+                  src={saintAsset.avatar}
+                  alt={entry.titulo}
+                  width={96}
+                  height={96}
+                  className="h-24 w-24 shrink-0 rounded-full object-cover sm:mx-4"
+                />
+              ) : image ? (
                 <Image
                   src={image}
                   alt={entry.titulo}
