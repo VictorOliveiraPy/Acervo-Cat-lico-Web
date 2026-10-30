@@ -46,7 +46,7 @@ export function CategoryNav() {
   return (
     <nav
       aria-label="Categorias de acesso direto"
-      className="border-t border-border bg-raised"
+      className="border-t border-border bg-canvas"
     >
       <ul className="mx-auto flex max-w-shell items-stretch gap-6 overflow-x-auto px-4 sm:px-6">
         {PRIMARY_CATEGORY_SLUGS.map((slug) => (

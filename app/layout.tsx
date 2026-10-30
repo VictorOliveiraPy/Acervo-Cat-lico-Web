@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Source_Sans_3 } from "next/font/google";
+import localFont from "next/font/local";
 import Script from "next/script";
 
 import "@/app/globals.css";
@@ -11,23 +11,19 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
 /*
- * As duas fontes do projeto, expostas como as variáveis CSS que o
- * `tailwind.config.ts` já espera (`--font-display`, `--font-body`):
- * Cormorant Garamond para títulos (tradição impressa do conteúdo) e
- * Source Sans 3 para corpo, rótulos e controles (papel utilitário, legível
- * em texto longo).
+ * EB Garamond já pertence ao repositório e é carregada localmente: o build
+ * não depende do Google Fonts e a identidade editorial não muda conforme a
+ * rede. Corpo e controles usam a pilha sans-serif de sistema definida no
+ * Tailwind, como prevê o guia aprovado.
  */
-const display = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+const display = localFont({
+  src: [
+    { path: "../public/fonts/EBGaramond-Regular.ttf", weight: "400", style: "normal" },
+    { path: "../public/fonts/EBGaramond-Italic.ttf", weight: "400", style: "italic" },
+    { path: "../public/fonts/EBGaramond-Bold.ttf", weight: "700", style: "normal" },
+  ],
   display: "swap",
   variable: "--font-display",
-});
-
-const body = Source_Sans_3({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-body",
 });
 
 // metadataBase resolve as URLs relativas de OG/Twitter/canonical pro domínio
@@ -69,7 +65,7 @@ export const metadata: Metadata = {
 // Precisa ser export separado de `metadata` desde o Next 14 (o campo
 // `themeColor` dentro de `metadata` foi descontinuado em favor deste).
 export const viewport: Viewport = {
-  themeColor: "#7A2E3A",
+  themeColor: "#8C313E",
 };
 
 export default function RootLayout({
@@ -80,7 +76,7 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${display.variable} ${body.variable}`}
+      className={display.variable}
       // O script `reading-size-init` abaixo adiciona `data-reading-size`
       // antes da hidratação (evita o flash de tamanho normal pra quem já
       // escolheu A+/A++) — o servidor nunca sabe esse valor (só existe no

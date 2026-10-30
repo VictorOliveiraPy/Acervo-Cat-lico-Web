@@ -4,6 +4,7 @@ import Link from "next/link";
 import { CATEGORY_LABELS, entryPath } from "@/lib/categories";
 import { entryHighlight, entryOrdinal } from "@/lib/entryDisplay";
 import { DEFAULT_LOCALE, localePath, type SiteLang } from "@/lib/i18n";
+import { saintAssetFor } from "@/lib/saintAssets";
 import type { Entry } from "@/lib/schemas";
 
 type Props = {
@@ -35,6 +36,8 @@ export function EntryList({ entries, showCategory = false, lang = DEFAULT_LOCALE
   return (
     <ul className="flex flex-col">
       {entries.map((entry) => {
+        const saintAsset = saintAssetFor(entry);
+        const image = saintAsset?.avatar ?? entry.imagem;
         const ordinal = entryOrdinal(entry);
         const highlight = entryHighlight(entry);
         const label = showCategory
@@ -47,13 +50,15 @@ export function EntryList({ entries, showCategory = false, lang = DEFAULT_LOCALE
               href={localePath(lang, entryPath(entry.categoria, entry.slug))}
               className="group flex flex-col gap-4 py-6 transition-colors hover:bg-surface sm:flex-row sm:gap-6"
             >
-              {entry.imagem ? (
+              {image ? (
                 <Image
-                  src={entry.imagem}
-                  alt={entry.titulo}
+                  src={image}
+                  alt={saintAsset?.alt ?? entry.titulo}
                   width={160}
                   height={112}
-                  className="h-28 w-full shrink-0 rounded-edge border border-border object-cover sm:h-24 sm:w-32"
+                  className={`h-28 w-full shrink-0 border border-border object-cover sm:h-24 sm:w-32 ${
+                    saintAsset ? "rounded-panel bg-surface object-top" : "rounded-edge"
+                  }`}
                 />
               ) : (
                 <div

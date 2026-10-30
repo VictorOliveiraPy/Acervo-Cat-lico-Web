@@ -79,12 +79,12 @@ describe("tokens de cor da interface", () => {
   it("deve manter o acento da marca no bordô decidido pelo time", () => {
     // O tom cheio é o do plano de design; não é para ninguém "clareá-lo" sem
     // perceber ao mexer no arquivo.
-    expect(COLORS.accent.toUpperCase()).toBe("#7A2E3A");
+    expect(COLORS.accent.toUpperCase()).toBe("#8C313E");
   });
 
-  it("deve manter o fundo da página neutro, sem viés quente de pergaminho", () => {
-    // Regressão: o projeto inteiro era creme (`#F5F0E6`). Se alguém reintroduzir
-    // um fundo com o canal azul muito abaixo dos outros, este teste avisa.
+  it("deve manter o fundo editorial neutro, sem viés quente de pergaminho", () => {
+    // O canvas aprovado é levemente mineral. Um creme amarelado continua
+    // sendo uma regressão e este teste o detecta.
     const [r, g, b] = [1, 3, 5].map((offset) =>
       parseInt(COLORS.canvas.slice(offset, offset + 2), 16),
     ) as [number, number, number];

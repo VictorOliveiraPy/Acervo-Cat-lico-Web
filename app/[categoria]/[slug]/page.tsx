@@ -22,6 +22,7 @@ import { entryMetaFields, entryOrdinal, paragraphs } from "@/lib/entryDisplay";
 import { safeJsonLd } from "@/lib/jsonLd";
 import { HREFLANG, localePath } from "@/lib/i18n";
 import { neighborsOf } from "@/lib/neighbors";
+import { saintAssetFor } from "@/lib/saintAssets";
 import { isCategorySlug, type CategorySlug, type Entry } from "@/lib/schemas";
 import {
   fetchCategoryIndex,
@@ -128,6 +129,7 @@ export async function generateMetadata({
 
   try {
     const entry = await fetchEntry(params.categoria, params.slug);
+    const saintAsset = saintAssetFor(entry);
     const path = entryPath(params.categoria, params.slug);
     const translations = await fetchTranslationLangs(params.categoria, params.slug);
     return {
@@ -150,7 +152,11 @@ export async function generateMetadata({
         title: entry.titulo,
         description: entry.resumo,
         url: path,
-        images: entry.imagem ? [{ url: entry.imagem }] : undefined,
+        images: saintAsset?.card
+          ? [{ url: saintAsset.card }]
+          : entry.imagem
+            ? [{ url: entry.imagem }]
+            : undefined,
       },
     };
   } catch (error: unknown) {
@@ -193,6 +199,8 @@ export default async function EntryPage({ params }: { params: Params }) {
   }
 
   const ordinal = entryOrdinal(entry);
+  const saintAsset = saintAssetFor(entry);
+  const editorialImage = saintAsset?.portrait ?? entry.imagem;
   const fields = entryMetaFields(entry);
   const blocks = paragraphs(entry.corpo);
   const path = entryPath(categoria, params.slug);
@@ -213,7 +221,7 @@ export default async function EntryPage({ params }: { params: Params }) {
     url: `${SITE_URL}${path}`,
     inLanguage: "pt-BR",
     isPartOf: { "@type": "WebSite", name: SITE_NAME, url: SITE_URL },
-    ...(entry.imagem ? { image: entry.imagem } : {}),
+    ...(editorialImage ? { image: editorialImage } : {}),
     ...(entry.atualizado_em ? { dateModified: entry.atualizado_em } : {}),
   };
 
@@ -265,26 +273,32 @@ export default async function EntryPage({ params }: { params: Params }) {
         </div>
       ) : null}
 
-      {entry.imagem ? (
+      {editorialImage ? (
         <figure className="mt-8">
           {/* Altura fixa + `fill`: as imagens vêm da Wikimedia Commons com
               proporções bem diferentes entre si (ícone quadrado, retrato,
               afresco panorâmico) — uma faixa de altura constante evita
               layout shift e mantém o ritmo editorial da página, ao custo de
               recortar (`object-cover`) o excesso lateral ou vertical. */}
-          <div className="relative h-72 w-full max-w-measure overflow-hidden border border-border sm:h-96">
+          <div
+            className={
+              saintAsset
+                ? "relative aspect-[2/3] w-full max-w-sm overflow-hidden rounded-panel border border-border bg-surface"
+                : "relative h-72 w-full max-w-measure overflow-hidden border border-border sm:h-96"
+            }
+          >
             <Image
-              src={entry.imagem}
-              alt={entry.titulo}
+              src={editorialImage}
+              alt={saintAsset?.alt ?? entry.titulo}
               fill
               sizes="(min-width: 1024px) 68ch, 100vw"
-              className="object-cover"
+              className={saintAsset ? "object-cover object-top" : "object-cover"}
               priority
             />
           </div>
-          {entry.imagem_credito ? (
+          {saintAsset?.credit || entry.imagem_credito ? (
             <figcaption className="mt-2 max-w-measure text-meta text-ink-muted">
-              {entry.imagem_credito}
+              {saintAsset?.credit ?? entry.imagem_credito}
             </figcaption>
           ) : null}
         </figure>

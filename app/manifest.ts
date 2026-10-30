@@ -18,8 +18,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: SITE_DESCRIPTION,
     start_url: "/",
     display: "standalone",
-    background_color: "#FFFFFF", // canvas — tela de splash ao abrir
-    theme_color: "#7A2E3A", // accent — barra de status/cor do app
+    background_color: "#F3F4F1", // canvas aprovado — tela de splash ao abrir
+    theme_color: "#8C313E", // accent aprovado — barra de status/cor do app
     lang: "pt-BR",
     icons: [
       { src: "/icon-192", sizes: "192x192", type: "image/png" },

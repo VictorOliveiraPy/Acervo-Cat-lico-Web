@@ -59,7 +59,7 @@ export function SearchField({
       method="get"
       role="search"
       onSubmit={handleSubmit}
-      className="flex w-full items-stretch gap-2"
+      className="flex w-full items-stretch gap-1 rounded-panel border border-border-strong bg-raised p-1 transition-colors focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/15"
     >
       {category ? <input type="hidden" name="categoria" value={category} /> : null}
       <label className="sr-only" htmlFor={`search-${variant}`}>
@@ -73,11 +73,11 @@ export function SearchField({
         onChange={(event) => setQuery(event.target.value)}
         placeholder="Buscar qualquer tema do mundo católico…"
         autoComplete="off"
-        className={`${FIELD_STYLE[variant]} w-full rounded-edge border border-border bg-surface px-3 font-sans text-ink placeholder:text-ink-muted/80 focus:border-accent focus:outline-none`}
+        className={`${FIELD_STYLE[variant]} min-w-0 w-full border-0 bg-transparent px-3 font-sans text-ink placeholder:text-ink-muted/80 focus:outline-none`}
       />
       <button
         type="submit"
-        className={`${FIELD_STYLE[variant]} shrink-0 rounded-edge border border-accent bg-accent px-5 font-sans text-label uppercase tracking-[0.09em] text-surface transition-colors hover:bg-accent-hover`}
+        className={`${FIELD_STYLE[variant]} shrink-0 rounded-edge border border-accent bg-accent px-5 font-sans text-label uppercase tracking-[0.09em] text-white transition-colors hover:bg-accent-hover`}
       >
         Buscar
       </button>

@@ -1,47 +1,50 @@
 /**
  * Tokens de design do acervo — cor, tipografia e a matemática de contraste.
  *
- * Fonte única de verdade para tudo que NÃO passa por class utilitária do
+ * Fonte única de verdade para tudo que NÃO passa por classe utilitária do
  * Tailwind: metadados (`themeColor`), `ImageResponse`/Satori, testes de
  * contraste, manifest. Os mesmos valores vivem em `tailwind.config.ts` e em
  * `app/globals.css` — se um mudar, os outros mudam na mesma tarefa.
  *
  * Cores nomeadas por PAPEL (`canvas`, `surface`, `accent`), nunca por valor:
- * um componente pede "a superfície do card", não "o cinza #EEF1F4".
+ * um componente pede "a superfície do card", não um hexadecimal.
  */
 
 export const COLORS = {
   // Superfícies, do mais claro ao mais recuado.
-  /** Fundo da página. Branco puro: a coluna de leitura longa é o herói. */
-  canvas: "#FFFFFF",
+  /** Fundo editorial aprovado. */
+  canvas: "#F3F4F1",
   /** Cards, campos, painéis. */
-  surface: "#F7F8FA",
+  surface: "#FBFCF9",
   /** Faixas recuadas, chips, skeleton. */
-  raised: "#EEF1F4",
+  raised: "#FFFFFF",
 
   // Linhas.
   /** Filete visível de 1px que substitui a sombra. */
-  border: "#DDE1E7",
+  border: "#D2D9D6",
   /** Divisória mais marcada, sem virar preto. */
-  borderStrong: "#C4CAD3",
+  borderStrong: "#AEB9B6",
 
   // Texto.
   /** Corpo e títulos. */
-  ink: "#1A1D21",
+  ink: "#253039",
   /** Texto secundário: resumos, legendas, kicker. */
-  muted: "#5A6069",
+  muted: "#41505A",
 
   // Acento único: o vinho litúrgico. Só ação primária, link e foco.
-  accent: "#7A2E3A",
-  accentHover: "#5E222C",
-  accentActive: "#4A1A22",
+  accent: "#8C313E",
+  accentHover: "#722632",
+  accentActive: "#722632",
   /** Preenchimento lavado (seleção, realce de busca). */
-  accentSoft: "#F3E4E7",
+  accentSoft: "#F5E9EB",
+
+  /** Azul mineral institucional para fundos de alto contraste. */
+  mineral: "#263E4D",
 
   // Cor semântica, separada do acento de marca: estado não se confunde com
   // identidade.
-  success: "#1F6B47",
-  successSoft: "#E3F0E7",
+  success: "#326D51",
+  successSoft: "#E7F2EB",
   warning: "#8A5A00",
   warningSoft: "#F6EEDD",
   danger: "#A3322B",
@@ -54,8 +57,8 @@ export const COLORS = {
 export type ColorToken = keyof typeof COLORS;
 
 export const FONTS = {
-  display: "Cormorant Garamond",
-  sans: "Source Sans 3",
+  display: "EB Garamond",
+  sans: "Inter, ui-sans-serif, system-ui",
 } as const;
 
 export type FontToken = keyof typeof FONTS;
@@ -82,24 +85,20 @@ export const CONTRAST_PAIRS: ReadonlyArray<
 ];
 
 /**
- * Véu bordô dos banners fotográficos.
+ * Véu azul-mineral dos banners fotográficos.
  *
- * Todas as cores derivam do `accentActive` (`#4A1A22`) em alpha, porque sobre
+ * Os véus usam o azul mineral aprovado, porque sobre
  * uma foto o olho vê a composição, não o rgba. Os alphas foram medidos contra
  * os dois extremos (foto branca e foto preta) — o pior caso é a foto bem
  * clara, e é ele que o teste usa:
  *
- * - `veil` (0.75): o título branco cheio passa 6.63:1, e a 85% ainda 5.33:1.
- * - `categoryVeil` (0.78): um pouco mais fechado porque o `CategoryBanner`
- *   tem texto em 70% de opacidade no rodapé (`text-canvas/70`) — nesse ponto
- *   o par bate 4.54:1, o mínimo AA.
- * - `creditBar`: bordô sólido atrás do crédito da foto; branco a 70% dá
- *   7.69:1, folga confortável para texto pequeno.
+ * Os alphas são validados abaixo contra fotos claras e escuras; `categoryVeil`
+ * é um pouco mais fechado porque o banner também contém texto secundário.
  */
 export const PHOTO_OVERLAY = {
-  veil: "rgba(74, 26, 34, 0.75)",
-  categoryVeil: "rgba(74, 26, 34, 0.78)",
-  creditBar: "#4A1A22",
+  veil: "rgba(38, 62, 77, 0.82)",
+  categoryVeil: "rgba(38, 62, 77, 0.84)",
+  creditBar: "#263E4D",
   onVeil: "#FFFFFF",
 } as const;
 

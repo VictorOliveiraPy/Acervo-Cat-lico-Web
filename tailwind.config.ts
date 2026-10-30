@@ -3,10 +3,9 @@ import type { Config } from "tailwindcss";
 /**
  * Tokens de design do acervo — fonte única de cor, tipografia e espaçamento.
  *
- * A paleta é neutra fria (branco + três degraus de cinza) com um único acento
- * cromático, o bordô. Cores são nomeadas por PAPEL (`canvas`, `surface`,
- * `accent`), nunca por valor: um componente pede "a superfície do cartão", não
- * "o cinza #EEF1F4" — assim trocar o tom não obriga a varrer o código.
+ * Paleta aprovada no Design System 1.0 do Compêndio. Cores são nomeadas por
+ * PAPEL (`canvas`, `surface`, `accent`), nunca por valor: os componentes
+ * continuam desacoplados dos hexadecimais do compêndio de implementação.
  *
  * Os neutros foram escolhidos com viés frio (canal azul no topo) de propósito:
  * sobre vidro, um cinza quente lê como papel amarelado por acidente. O único
@@ -22,35 +21,39 @@ const config: Config = {
     extend: {
       colors: {
         // Superfícies, do mais claro ao mais recuado.
-        canvas: "#FFFFFF", // fundo da página
-        surface: "#F7F8FA", // cards, campos, painéis
-        raised: "#EEF1F4", // faixas recuadas, chips, skeleton
+        canvas: "#F3F4F1", // fundo editorial aprovado
+        surface: "#FBFCF9", // cards, campos, painéis
+        raised: "#FFFFFF", // faixas elevadas e campos
 
         // Linhas: `border` é o filete visível de 1px que substitui a sombra.
         border: {
-          DEFAULT: "#DDE1E7",
-          strong: "#C4CAD3", // divisória mais marcada, sem virar preto
+          DEFAULT: "#D2D9D6",
+          strong: "#AEB9B6", // divisória mais marcada, sem virar preto
         },
 
         // Texto.
         ink: {
-          DEFAULT: "#1A1D21", // corpo e títulos
-          muted: "#5A6069", // texto secundário (resumos, legendas)
+          DEFAULT: "#253039", // corpo e títulos
+          muted: "#41505A", // texto secundário (resumos, legendas)
         },
 
         // Acento único: bordô.
         accent: {
-          DEFAULT: "#7A2E3A",
-          hover: "#5E222C",
-          active: "#4A1A22",
-          soft: "#F3E4E7", // preenchimento lavado (seleção, realce de busca)
+          DEFAULT: "#8C313E",
+          hover: "#722632",
+          active: "#722632",
+          soft: "#F5E9EB", // preenchimento lavado (seleção, realce de busca)
         },
+
+        // Azul mineral institucional para superfícies de contraste, não para
+        // competir com o bordô nas ações.
+        mineral: "#263E4D",
 
         // Cor semântica, separada do acento de marca: estado não se confunde
         // com identidade.
         success: {
-          DEFAULT: "#1D6B3C",
-          soft: "#E3F0E7",
+          DEFAULT: "#326D51",
+          soft: "#E7F2EB",
         },
         warning: {
           DEFAULT: "#7A5210",
@@ -64,7 +67,7 @@ const config: Config = {
       fontFamily: {
         // Fonte de destaque (títulos) e de corpo, via variáveis do next/font.
         display: ["var(--font-display)", "Georgia", "Times New Roman", "serif"],
-        sans: ["var(--font-body)", "system-ui", "Segoe UI", "sans-serif"],
+        sans: ["Inter", "ui-sans-serif", "system-ui", "Segoe UI", "sans-serif"],
       },
       fontSize: {
         // Escala tipográfica única (rótulo → título de página).
@@ -86,9 +89,10 @@ const config: Config = {
         shell: "76rem", // largura máxima do cabeçalho/rodapé/grades
       },
       borderRadius: {
-        // Cantos praticamente retos: o acervo é impresso, não app de celular.
         none: "0",
-        edge: "2px",
+        edge: "5px",
+        panel: "9px",
+        feature: "16px",
       },
       boxShadow: {
         // Sem sombras no cromo: profundidade vem de espaço e do filete de 1px.

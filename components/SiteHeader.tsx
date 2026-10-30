@@ -28,7 +28,7 @@ export function SiteHeader() {
   const isHome = pathname === "/";
 
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-canvas">
+    <header className="sticky top-0 z-30 border-b border-border bg-surface/95 backdrop-blur-md">
       {/* `py-3`/`gap-2.5`, não `py-band`/`gap-band`: pedido explícito de
           diminuir o cabeçalho, depois que "Todas as categorias" saiu da
           faixa de baixo (`CategoryNav`) — o resto do cabeçalho também
@@ -41,7 +41,7 @@ export function SiteHeader() {
                 ali (Chrome, Firefox) mostra as duas letras do código do país
                 ("VA") soltas em vez da bandeira — troca pro SVG da própria
                 bandeira, que renderiza igual em qualquer SO. */}
-            <img
+            <Image
               src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Flag_of_Vatican_City_%282023%E2%80%93present%29.svg"
               alt=""
               aria-hidden="true"

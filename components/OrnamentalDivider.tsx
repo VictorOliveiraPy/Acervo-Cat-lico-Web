@@ -13,7 +13,7 @@
  *
  * A cruz é o glifo `†` (dagger, U+2020) de propósito: existe em praticamente
  * toda fonte (ao contrário de glifos como ✠/☩, que dependem de suporte do
- * navegador e podem cair pra uma fonte de sistema destoante em Cormorant
+ * navegador e podem cair para uma fonte de sistema destoante da EB Garamond
  * Garamond).
  */
 export function OrnamentalDivider() {
