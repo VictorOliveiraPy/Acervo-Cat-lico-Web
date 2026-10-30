@@ -1,22 +1,25 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { EntryGrid } from "@/components/EntryGrid";
+import { EditorialStrip, GothicWindow } from "@/components/HomeArt";
+import { LessonProgressLink } from "@/components/LessonProgressLink";
 import { OrnamentalDivider } from "@/components/OrnamentalDivider";
-import { PhotoBanner } from "@/components/PhotoBanner";
 import { SearchField } from "@/components/SearchField";
 import { StatusMessage } from "@/components/Editorial";
+import { LESSONS } from "@/lib/academia";
 import { ApiError, getApiBaseUrl, getErrorMessage } from "@/lib/api";
-import { CATEGORY_LABELS, categoryPath } from "@/lib/categories";
+import { CATEGORY_LABELS, categoryPath, entryPath } from "@/lib/categories";
 import { CATEGORY_GROUPS } from "@/lib/categoryGroups";
 import { formatEntryCount } from "@/lib/entryDisplay";
 import { safeJsonLd } from "@/lib/jsonLd";
 import { formatLiturgiaDate } from "@/lib/liturgia";
 import type { LiturgiaDiaria } from "@/lib/liturgiaSchemas";
+import { featuredSaint, type SaintAsset } from "@/lib/saintAssets";
 import { CATEGORY_SLUGS, type CategoryInfo, type Entry } from "@/lib/schemas";
-import { fetchCategories, fetchEntryPage } from "@/lib/services/acervoService";
+import { fetchCategories, fetchEntry, fetchEntryPage } from "@/lib/services/acervoService";
 import { fetchLiturgiaDiaria } from "@/lib/services/liturgiaService";
 import { INSTAGRAM_URL, SANTO_GUARDIAO_URL, SITE_NAME, SITE_URL } from "@/lib/site";
-import { VELA_IMAGEM } from "@/lib/velas";
 
 // Regenera a home (com um sorteio novo pra "Do acervo") a cada 5 minutos —
 // o mesmo intervalo padrão de cache das leituras da API (`DEFAULT_REVALIDATE_
@@ -64,7 +67,7 @@ const SUGGESTED_TERMS = [
 const SAMPLE_CATEGORIES = ["santos", "milagres-eucaristicos", "concilios"] as const;
 
 /** Itens por categoria na amostra — 3 categorias × 4 preenchem a grade de 4
- * colunas em 3 linhas cheias, no estilo mosaico da referência. */
+ * colunas em 3 linhas cheias. */
 const SAMPLE_PER_CATEGORY = 4;
 
 type HomeData = {
@@ -143,6 +146,22 @@ async function loadLiturgia(): Promise<LiturgiaDiaria | null> {
   }
 }
 
+/**
+ * O destaque só aparece com o verbete confirmado pela API: um link quebrado na
+ * home é pior que uma faixa a menos. Como a liturgia, a falha aqui não derruba
+ * a página.
+ */
+async function loadFeaturedSaint(): Promise<{ saint: SaintAsset; resumo: string } | null> {
+  const saint = featuredSaint(new Date());
+  try {
+    const entry = await fetchEntry("santos", saint.slug);
+    return { saint, resumo: entry.resumo };
+  } catch (error: unknown) {
+    if (error instanceof ApiError) return null;
+    throw error;
+  }
+}
+
 function sortByNavOrder(categories: CategoryInfo[]): CategoryInfo[] {
   const order = new Map(CATEGORY_SLUGS.map((slug, index) => [slug, index]));
   return [...categories].sort(
@@ -153,6 +172,7 @@ function sortByNavOrder(categories: CategoryInfo[]): CategoryInfo[] {
 export default async function HomePage() {
   let data: HomeData;
   const liturgiaPromise = loadLiturgia();
+  const featuredPromise = loadFeaturedSaint();
   try {
     data = await loadHome();
   } catch (error: unknown) {
@@ -174,10 +194,11 @@ export default async function HomePage() {
   const categories = sortByNavOrder(data.categories);
   const totalEntries = categories.reduce((sum, info) => sum + info.total, 0);
   const categoryBySlug = new Map(categories.map((info) => [info.categoria, info]));
-  const liturgia = await liturgiaPromise;
+  const [liturgia, featured] = await Promise.all([liturgiaPromise, featuredPromise]);
+  const [nextLesson] = LESSONS;
 
   return (
-    <div className="relative overflow-hidden">
+    <div>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(WEBSITE_JSON_LD) }}
@@ -187,87 +208,133 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: safeJsonLd(ORGANIZATION_JSON_LD) }}
       />
 
-      <section>
-        <div className="relative mx-auto max-w-shell px-4 py-12 sm:px-6 md:py-16">
-          <p className="kicker">Consulta em {categories.length} categorias</p>
-          <h1 className="mt-3 max-w-measure font-display text-title-lg text-ink md:text-title-xl">
-            Uma busca só para todo o mundo católico.
-          </h1>
-          <p className="mt-5 max-w-measure text-lead text-ink-muted">
-            Digite um nome, um tema ou um lugar: a busca cobre {totalEntries}{" "}
-            entradas em {categories.length} categorias — de santos e papas a
-            pecados, orações e a Missa.
-          </p>
+      <div className="mx-auto max-w-shell px-4 sm:px-6">
+        <section className="grid items-center gap-8 py-12 md:grid-cols-[1.1fr_0.9fr] md:py-20">
+          <div className="min-w-0">
+            <p className="eyebrow">Consulta em {categories.length} categorias</p>
+            <h1 className="mt-3 font-display text-title-lg text-ink md:text-title-xl">
+              Uma busca só para todo o mundo católico.
+            </h1>
+            <p className="mt-5 max-w-xl text-lead text-ink-muted">
+              Digite um nome, um tema ou um lugar: a busca cobre {totalEntries}{" "}
+              entradas em {categories.length} categorias — de santos e papas a
+              pecados, orações e a Missa.
+            </p>
 
-          <div className="mt-8 max-w-2xl">
-            <SearchField variant="prominent" label="Buscar em todo o acervo" />
+            <div className="mt-7 max-w-xl">
+              <SearchField variant="prominent" label="Buscar em todo o acervo" />
+            </div>
+            <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2">
+              <span className="kicker">Experimente</span>
+              {SUGGESTED_TERMS.map((term) => (
+                <Link
+                  key={term}
+                  href={`/busca?q=${encodeURIComponent(term)}`}
+                  className="rounded-edge border border-border bg-surface px-2.5 py-1 text-meta text-ink-muted transition-colors hover:border-accent hover:text-accent"
+                >
+                  {term}
+                </Link>
+              ))}
+            </div>
           </div>
 
-          <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2">
-            <span className="kicker">Experimente</span>
-            {SUGGESTED_TERMS.map((term) => (
-              <Link
-                key={term}
-                href={`/busca?q=${encodeURIComponent(term)}`}
-                className="rounded-edge border border-border bg-surface px-2.5 py-1 text-meta text-ink-muted transition-colors hover:border-accent hover:text-accent"
+          <GothicWindow className="mx-auto hidden w-full max-w-sm md:block" />
+        </section>
+
+        <section aria-labelledby="caminhos" className="border-t border-border py-10">
+          <p className="eyebrow">Por onde começar</p>
+          <h2 id="caminhos" className="mt-2 font-display text-title-lg text-ink">
+            Dois caminhos, um só acervo.
+          </h2>
+
+          <div className="mt-6 grid overflow-hidden rounded-panel border border-border bg-surface md:grid-cols-2">
+            <a
+              href="#categorias"
+              className="group flex flex-col gap-3 p-6 transition-colors hover:bg-canvas"
+            >
+              <span className="eyebrow">01 / Explorar</span>
+              <span className="font-display text-title-md text-ink">Consultar a biblioteca</span>
+              <span className="text-meta text-ink-muted">
+                Leia explicações claras, com contexto e referências para aprofundar.
+              </span>
+              <span className="btn-tertiary mt-auto">
+                Ver as categorias <span aria-hidden="true">→</span>
+              </span>
+            </a>
+            <Link
+              href="/academia"
+              className="group flex flex-col gap-3 border-t border-border p-6 transition-colors hover:bg-canvas md:border-l md:border-t-0"
+            >
+              <span className="eyebrow">02 / Aprender</span>
+              <span className="font-display text-title-md text-ink">Estudar com orientação</span>
+              <span className="text-meta text-ink-muted">
+                Aprenda em etapas, pratique e acompanhe o que compreendeu.
+              </span>
+              <span className="btn-tertiary mt-auto">
+                Abrir a Academia da Fé <span aria-hidden="true">→</span>
+              </span>
+            </Link>
+          </div>
+
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            {featured ? (
+              <EditorialStrip
+                eyebrow="Santo em destaque"
+                title={featured.saint.name}
+                description={featured.resumo}
+                media={
+                  <Image
+                    src={featured.saint.avatar}
+                    alt=""
+                    width={96}
+                    height={96}
+                    className="h-20 w-20 shrink-0 rounded-full object-cover sm:h-24 sm:w-24"
+                  />
+                }
               >
-                {term}
-              </Link>
-            ))}
-          </div>
+                <Link href={entryPath("santos", featured.saint.slug)} className="btn-tertiary">
+                  Conhecer sua história <span aria-hidden="true">→</span>
+                </Link>
+              </EditorialStrip>
+            ) : null}
 
-          {liturgia ? (
-            <div className="mt-10">
-              <PhotoBanner
-                image="/img-acervo/ig-missal-velas.jpg"
-                kicker={formatLiturgiaDate(liturgia.data)}
+            {nextLesson ? (
+              <EditorialStrip
+                eyebrow={`Academia da Fé · ${nextLesson.module}`}
+                title={nextLesson.title}
+                description={nextLesson.subtitle}
+              >
+                <LessonProgressLink slug={nextLesson.slug} />
+              </EditorialStrip>
+            ) : null}
+
+            {liturgia ? (
+              <EditorialStrip
+                eyebrow={formatLiturgiaDate(liturgia.data)}
                 title={liturgia.celebracao || "Liturgia do dia"}
                 description={`${liturgia.cor_liturgica ? `${liturgia.cor_liturgica} · ` : ""}Evangelho: ${liturgia.evangelho.referencia} · 1ª leitura: ${liturgia.primeira_leitura.referencia}`}
               >
-                <Link
-                  href="/liturgia-diaria"
-                  className="shrink-0 rounded-edge border border-surface bg-canvas px-5 py-2.5 text-label uppercase tracking-[0.09em] text-ink transition-colors hover:bg-surface"
-                >
-                  📖 Ler a liturgia de hoje →
+                <Link href="/liturgia-diaria" className="btn-tertiary">
+                  Ler a liturgia de hoje <span aria-hidden="true">→</span>
                 </Link>
-              </PhotoBanner>
-            </div>
-          ) : null}
+              </EditorialStrip>
+            ) : null}
 
-          <div className="mt-6">
-            <PhotoBanner
-              image={VELA_IMAGEM}
-              kicker="Oração"
+            <EditorialStrip
+              eyebrow="Oração"
               title="Acenda uma vela por quem você ama"
               description="Escolha entre Jesus, Nossa Senhora e outras devoções, escreva seu nome e uma intenção — ela entra para o mural de quem já passou por aqui rezando."
             >
-              <Link
-                href="/velas"
-                className="shrink-0 rounded-edge border border-surface bg-canvas px-5 py-2.5 text-label uppercase tracking-[0.09em] text-ink transition-colors hover:bg-surface"
-              >
-                🕯️ Acender uma vela →
+              <Link href="/velas" className="btn-tertiary">
+                Acender uma vela <span aria-hidden="true">→</span>
               </Link>
-            </PhotoBanner>
+            </EditorialStrip>
           </div>
+        </section>
 
-        </div>
-      </section>
+        <OrnamentalDivider />
 
-      <OrnamentalDivider />
-
-      {/* `relative`: sem isso, essa div (estática) pinta ATRÁS das duas
-          colunas de foto (`position: absolute`) na zona onde se sobrepõem
-          em telas entre ~1280px e ~2000px de largura — a regra do CSS é que
-          elemento posicionado sempre pinta por cima de estático, não importa
-          a ordem no DOM. O bloco do herói já funcionava por acaso (a div
-          dele também é `relative`); esse aqui não era, e a foto cobria o
-          início do índice de categorias. */}
-      <div className="relative mx-auto max-w-shell px-4 sm:px-6">
-        {/* `pb-6`, não `pb-12` como as demais seções: o conteúdo aqui é só
-            uma vitrine curta (7 chips + 1 link) desde que o índice completo
-            foi pro rodapé — com o mesmo respiro pesado de uma seção cheia,
-            sobrava um vão vazio grande antes do próximo divisor. */}
-        <section aria-labelledby="categorias" className="pt-12 pb-6">
+        <section aria-labelledby="categorias" className="scroll-mt-32 pb-6 pt-6">
           <div className="flex items-baseline justify-between gap-4">
             <h2 id="categorias" className="font-display text-title-md text-ink">
               Explore a fé
@@ -284,7 +351,7 @@ export default async function HomePage() {
               return (
                 <section
                   key={group.title}
-                  className="border border-border bg-surface p-5"
+                  className="rounded-panel border border-border bg-surface p-5"
                 >
                   <div className="flex items-baseline justify-between gap-3">
                     <h3 className="font-display text-title-sm text-ink">{group.title}</h3>
@@ -319,11 +386,9 @@ export default async function HomePage() {
 
         <OrnamentalDivider />
 
-        <section className="py-12">
-          <PhotoBanner
-            image="/img-acervo/ig-terezinha-estatua.jpg"
-            imagePosition="top"
-            kicker="Plataforma irmã"
+        <section className="py-10">
+          <EditorialStrip
+            eyebrow="Plataforma irmã"
             title="Quer viver a fé na prática, não só consultar?"
             description="No Santo Guardião você escolhe um santo de devoção e cumpre desafios e missões — orações, estudo e caridade — para crescer na fé em forma de jogo."
           >
@@ -331,24 +396,22 @@ export default async function HomePage() {
               href={SANTO_GUARDIAO_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="shrink-0 rounded-edge border border-border-strong bg-canvas px-5 py-2.5 text-label uppercase tracking-[0.09em] text-ink transition-colors hover:bg-surface"
+              className="btn-tertiary"
             >
-              Conhecer o Santo Guardião →
+              Conhecer o Santo Guardião <span aria-hidden="true">→</span>
             </a>
-          </PhotoBanner>
+          </EditorialStrip>
         </section>
-
         <section aria-labelledby="amostra" className="pb-16">
-          <div className="border-b-2 border-border-strong pb-2">
-            <h2 id="amostra" className="font-display text-title-md text-ink">
-              Descubra algo novo
-            </h2>
-            <p className="mt-2 max-w-measure text-meta text-ink-muted">
-              Uma seleção real do acervo para continuar sua leitura.
-            </p>
-          </div>
+          <h2 id="amostra" className="font-display text-title-md text-ink">
+            Descubra algo novo
+          </h2>
+          <p className="mt-2 max-w-measure text-meta text-ink-muted">
+            Uma seleção real do acervo para continuar sua leitura.
+          </p>
           <EntryGrid entries={data.sample} />
         </section>
+
       </div>
     </div>
   );
