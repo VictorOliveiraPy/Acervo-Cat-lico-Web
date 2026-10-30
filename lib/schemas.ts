@@ -88,6 +88,13 @@ const baseEntrySchema = z.object({
   imagem_credito: z.string().nullable().default(null),
   imagem_foco: z.string().nullable().default(null),
   fontes: z.array(z.string()).default([]),
+  // Seções opcionais do artigo: só aparecem na página quando têm conteúdo.
+  biografia: z.array(z.object({ titulo: z.string(), texto: z.string() })).default([]),
+  oracao: z.string().nullable().default(null),
+  frases: z.array(z.string()).default([]),
+  iconografia: z.string().nullable().default(null),
+  curiosidades: z.array(z.string()).default([]),
+  faq: z.array(z.object({ pergunta: z.string(), resposta: z.string() })).default([]),
 });
 
 const santoSchema = baseEntrySchema.extend({

@@ -14,12 +14,14 @@ import {
 import { EntryList } from "@/components/EntryList";
 import { EntryActions, EntryShare } from "@/components/EntryActions";
 import { EntryNeighbors } from "@/components/EntryNeighbors";
+import { EntrySections, EntrySectionsToc } from "@/components/EntrySections";
 import { OrnamentalDivider } from "@/components/OrnamentalDivider";
 import { ReadingSizeControl } from "@/components/ReadingSizeControl";
 import { lessonForEntry } from "@/lib/academia";
 import { ApiError } from "@/lib/api";
 import { CATEGORY_LABELS, categoryPath, entryPath } from "@/lib/categories";
 import { entryMetaFields, entryOrdinal, imagePosition, paragraphs } from "@/lib/entryDisplay";
+import { entrySectionLinks } from "@/lib/entrySections";
 import { articleJsonLd, safeJsonLd } from "@/lib/jsonLd";
 import { HREFLANG, formatEntryDate, languageAlternates } from "@/lib/i18n";
 import { neighborsOf } from "@/lib/neighbors";
@@ -188,6 +190,7 @@ export default async function EntryPage({ params }: { params: Params }) {
   const tocItems = [
     ...(fields.length > 0 ? [{ href: "#dados", label: "Dados" }] : []),
     { href: "#leitura", label: "Leitura" },
+    ...entrySectionLinks(entry),
     ...(entry.fontes.length > 0 ? [{ href: "#fontes", label: "Fontes" }] : []),
     ...(entry.tags.length > 0 ? [{ href: "#temas", label: "Temas relacionados" }] : []),
     ...(lesson ? [{ href: "#estudar", label: "Estudar este tema" }] : []),
@@ -317,6 +320,8 @@ export default async function EntryPage({ params }: { params: Params }) {
             </section>
           ) : null}
 
+          <EntrySectionsToc entry={entry} />
+
           <div id="leitura" className="mt-12 flex items-center justify-end gap-3">
             <p className="kicker">Tamanho do texto</p>
             <ReadingSizeControl />
@@ -342,6 +347,8 @@ export default async function EntryPage({ params }: { params: Params }) {
               </p>
             ))}
           </div>
+
+          <EntrySections entry={entry} />
 
           <OrnamentalDivider />
 
