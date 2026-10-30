@@ -11,9 +11,6 @@ import { SearchField } from "@/components/SearchField";
 import { DEFAULT_LOCALE, dictionaryFor, langFromPathname, localePath } from "@/lib/i18n";
 import { MAIN_NAV, activeNavItem } from "@/lib/navigation";
 
-/** Páginas que já têm a busca grande no conteúdo: repetir o campo aqui é a mesma busca duas vezes. */
-const PAGES_WITH_OWN_SEARCH = new Set(["/", "/busca"]);
-
 /**
  * Cabeçalho do Design System 1.0: marca, navegação superior e busca, sem
  * sidebar global. A busca continua no cabeçalho porque atravessar as categorias
@@ -27,14 +24,13 @@ export function SiteHeader() {
   const isPortuguese = lang === DEFAULT_LOCALE;
   const t = dictionaryFor(lang);
   const active = activeNavItem(pathname);
-  const showSearch = isPortuguese && !PAGES_WITH_OWN_SEARCH.has(pathname);
   const [brandName, ...brandRest] = t.homeHeading.split(" ");
 
   return (
     <>
       {/* Fora do `header` fixo: a frase do site continua em toda página, sem
           tomar altura da tela de leitura ao rolar. */}
-      <div className="bg-canvas">
+      <div className="hidden bg-canvas sm:block">
         <p className="kicker mx-auto max-w-shell px-4 pt-2 sm:px-6">{t.siteTagline}</p>
       </div>
       <header className="sticky top-0 z-30 border-b border-border bg-surface/95 backdrop-blur-md">
@@ -78,7 +74,7 @@ export function SiteHeader() {
           <div className="ml-auto flex items-center gap-4 md:min-w-0 md:flex-1 md:justify-end">
             <LanguageSwitcher />
           {isPortuguese ? <AccountMenu /> : null}
-            {showSearch ? (
+            {isPortuguese ? (
               <>
                 {/* Só a partir de `lg`: em tablet, marca e navegação espremiam o campo. */}
                 <div className="hidden w-full max-w-xs lg:block">

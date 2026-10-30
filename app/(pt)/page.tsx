@@ -1,23 +1,22 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 
 import { EntryGrid } from "@/components/EntryGrid";
 import { EditorialStrip, GothicWindow } from "@/components/HomeArt";
+import { HojeBlock } from "@/components/HojeBlock";
 import { LessonProgressLink } from "@/components/LessonProgressLink";
 import { OrnamentalDivider } from "@/components/OrnamentalDivider";
 import { SearchField } from "@/components/SearchField";
 import { LESSONS } from "@/lib/academia";
 import { ApiError } from "@/lib/api";
-import { CATEGORY_LABELS, categoryPath, entryPath } from "@/lib/categories";
+import { CATEGORY_LABELS, categoryPath } from "@/lib/categories";
 import { CATEGORY_GROUPS } from "@/lib/categoryGroups";
-import { formatEntryCount, imagePosition } from "@/lib/entryDisplay";
+import { formatEntryCount, roundRobin } from "@/lib/entryDisplay";
 import { languageAlternates } from "@/lib/i18n";
 import { safeJsonLd } from "@/lib/jsonLd";
 import { formatLiturgiaDate, todayInBrazil } from "@/lib/liturgia";
 import type { LiturgiaDiaria } from "@/lib/liturgiaSchemas";
-import { saintAssetFor } from "@/lib/saintAssets";
-import { formatDayMonth, saintOfDay, type SaintOfDay, type Santo } from "@/lib/santoDoDia";
+import { saintOfDay, type SaintOfDay, type Santo } from "@/lib/santoDoDia";
 import { CATEGORY_SLUGS, type CategoryInfo, type Entry } from "@/lib/schemas";
 import { fetchAllEntries, fetchCategories, fetchEntryPage } from "@/lib/services/acervoService";
 import { fetchLiturgiaDiaria } from "@/lib/services/liturgiaService";
@@ -137,7 +136,7 @@ async function loadHome(): Promise<HomeData> {
     ),
   );
 
-  return { categories, sample: pages.flatMap((page) => page.itens) };
+  return { categories, sample: roundRobin(pages.map((page) => page.itens)) };
 }
 
 /**
@@ -185,9 +184,7 @@ export default async function HomePage() {
   const totalEntries = categories.reduce((sum, info) => sum + info.total, 0);
   const categoryBySlug = new Map(categories.map((info) => [info.categoria, info]));
   const [liturgia, saintToday] = await Promise.all([liturgiaPromise, saintPromise]);
-  const saintImage = saintToday
-    ? (saintAssetFor(saintToday.saint)?.avatar ?? saintToday.saint.imagem)
-    : null;
+  const today = todayInBrazil();
   const [nextLesson] = LESSONS;
 
   return (
@@ -234,6 +231,12 @@ export default async function HomePage() {
           <GothicWindow className="mx-auto hidden w-full max-w-sm md:block" />
         </section>
 
+        <HojeBlock
+          dateLabel={formatLiturgiaDate(today)}
+          liturgia={liturgia && !liturgia.desatualizada && liturgia.data === today ? liturgia : null}
+          saint={saintToday}
+        />
+
         <section aria-labelledby="caminhos" className="border-t border-border py-10">
           <p className="eyebrow">Por onde começar</p>
           <h2 id="caminhos" className="mt-2 font-display text-title-lg text-ink">
@@ -270,39 +273,6 @@ export default async function HomePage() {
           </div>
 
           <div className="mt-4 grid gap-4 md:grid-cols-2">
-            {saintToday ? (
-              <EditorialStrip
-                eyebrow={
-                  saintToday.isToday
-                    ? "Santo do dia"
-                    : `Próxima festa: ${formatDayMonth(saintToday.date)}`
-                }
-                title={saintToday.saint.titulo}
-                description={saintToday.saint.resumo}
-                media={
-                  saintImage ? (
-                    <Image
-                      src={saintImage}
-                      alt=""
-                      width={96}
-                      height={96}
-                      className="h-20 w-20 shrink-0 rounded-full object-cover sm:h-24 sm:w-24"
-                      style={{ objectPosition: imagePosition(saintToday.saint) }}
-                    />
-                  ) : undefined
-                }
-              >
-                <div className="flex flex-wrap gap-x-5 gap-y-2">
-                  <Link href={entryPath("santos", saintToday.saint.slug)} className="btn-tertiary">
-                    Conhecer sua história <span aria-hidden="true">→</span>
-                  </Link>
-                  <Link href="/santo-do-dia" className="btn-tertiary">
-                    Festas da semana <span aria-hidden="true">→</span>
-                  </Link>
-                </div>
-              </EditorialStrip>
-            ) : null}
-
             {nextLesson ? (
               <EditorialStrip
                 eyebrow={`Academia da Fé · ${nextLesson.module}`}
@@ -310,18 +280,6 @@ export default async function HomePage() {
                 description={nextLesson.subtitle}
               >
                 <LessonProgressLink slug={nextLesson.slug} />
-              </EditorialStrip>
-            ) : null}
-
-            {liturgia ? (
-              <EditorialStrip
-                eyebrow={formatLiturgiaDate(liturgia.data)}
-                title={liturgia.celebracao || "Liturgia do dia"}
-                description={`${liturgia.cor_liturgica ? `${liturgia.cor_liturgica} · ` : ""}Evangelho: ${liturgia.evangelho.referencia} · 1ª leitura: ${liturgia.primeira_leitura.referencia}`}
-              >
-                <Link href="/liturgia-diaria" className="btn-tertiary">
-                  Ler a liturgia de hoje <span aria-hidden="true">→</span>
-                </Link>
               </EditorialStrip>
             ) : null}
 

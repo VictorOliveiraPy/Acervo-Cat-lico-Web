@@ -31,7 +31,7 @@ export async function SiteFooter() {
 
   return (
     <footer className="mt-section border-t border-border bg-surface">
-      <div className="mx-auto max-w-shell px-4 py-10 sm:px-6">
+      <div className="mx-auto max-w-shell px-4 pb-24 pt-10 sm:px-6 sm:pb-10">
         <div className="flex flex-col gap-8 md:flex-row md:justify-between">
           <div className="max-w-measure">
             <h2 className="font-display text-title-sm text-accent">

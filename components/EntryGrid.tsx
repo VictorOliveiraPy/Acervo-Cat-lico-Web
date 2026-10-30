@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { BrandMark } from "@/components/BrandMark";
 import { CATEGORY_LABELS, entryPath } from "@/lib/categories";
-import { imagePosition } from "@/lib/entryDisplay";
+import { imagePosition, readingMinutes } from "@/lib/entryDisplay";
 import { saintAssetFor } from "@/lib/saintAssets";
 import type { Entry } from "@/lib/schemas";
 
@@ -53,6 +53,7 @@ export function EntryGrid({ entries }: Props) {
                 <h3 className="mt-1 line-clamp-3 font-display text-title-sm leading-tight text-ink group-hover:text-accent">
                   {entry.titulo}
                 </h3>
+                <p className="mt-1 text-meta text-ink-muted">{readingMinutes(entry.corpo)} min de leitura</p>
               </div>
             </Link>
           </li>

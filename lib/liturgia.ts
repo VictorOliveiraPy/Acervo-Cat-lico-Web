@@ -99,3 +99,17 @@ export function liturgicalColorHex(cor: string | null): string | null {
   if (!cor) return null;
   return LITURGICAL_COLOR_HEX[cor.trim().toLowerCase()] ?? null;
 }
+
+/** Só o que a celebração escreve; dia de festa própria não diz o tempo e fica sem. */
+const LITURGICAL_SEASONS: ReadonlyArray<[RegExp, string]> = [
+  [/tempo comum/i, "Tempo Comum"],
+  [/advento/i, "Advento"],
+  [/quaresma/i, "Quaresma"],
+  [/semana santa/i, "Semana Santa"],
+  [/p[áa]scoa|tempo pascal/i, "Tempo Pascal"],
+  [/\bnatal\b/i, "Tempo do Natal"],
+];
+
+export function liturgicalSeason(celebracao: string | null): string | null {
+  return LITURGICAL_SEASONS.find(([pattern]) => pattern.test(celebracao ?? ""))?.[1] ?? null;
+}

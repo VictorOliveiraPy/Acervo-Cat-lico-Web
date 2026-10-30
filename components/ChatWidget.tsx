@@ -51,8 +51,11 @@ const WELCOME_MESSAGE: WidgetMessage = {
   time: "",
 };
 
+const SCROLL_THRESHOLD_PX = 8;
+
 export function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
+  const [hiddenByScroll, setHiddenByScroll] = useState(false);
   const [messages, setMessages] = useState<WidgetMessage[]>([WELCOME_MESSAGE]);
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
@@ -60,6 +63,20 @@ export function ChatWidget() {
   const threadRef = useRef<HTMLDivElement>(null);
   const inputId = useId();
   const titleId = useId();
+
+  // Até o tablet, o botão sai da frente ao descer a leitura e volta ao subir. O limiar
+  // ignora o tremor do dedo; com movimento reduzido, a troca só perde a animação.
+  useEffect(() => {
+    let lastY = window.scrollY;
+    function onScroll() {
+      const y = window.scrollY;
+      if (Math.abs(y - lastY) < SCROLL_THRESHOLD_PX) return;
+      setHiddenByScroll(y > lastY);
+      lastY = y;
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Rola pro fim a cada mensagem nova — sem isso, uma resposta longa some
   // fora da área visível e parece que nada aconteceu.
@@ -105,8 +122,11 @@ export function ChatWidget() {
         <button
           type="button"
           onClick={() => setIsOpen(true)}
+          onFocus={() => setHiddenByScroll(false)}
           aria-label="Abrir assistente do Compêndio Católico"
-          className="fixed bottom-5 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full border border-border bg-accent text-white shadow-soft transition-colors hover:bg-accent-hover"
+          className={`fixed bottom-4 right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-border bg-accent text-white shadow-soft transition duration-200 hover:bg-accent-hover motion-reduce:transition-none sm:bottom-5 sm:right-5 sm:h-14 sm:w-14 ${
+            hiddenByScroll ? "max-lg:pointer-events-none max-lg:translate-y-20 max-lg:opacity-0" : ""
+          }`}
         >
           <SeloCarlosAcutis size={30} className="text-surface" />
           <span className="absolute right-0.5 top-0.5 h-3 w-3 rounded-full border-2 border-accent bg-success" />

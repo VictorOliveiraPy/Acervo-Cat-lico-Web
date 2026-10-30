@@ -690,3 +690,23 @@ export function imagePosition(entry: Pick<Entry, "categoria" | "imagem_foco">): 
   if (entry.imagem_foco) return entry.imagem_foco;
   return PORTRAIT_CATEGORIES.has(entry.categoria) ? "center 25%" : "center";
 }
+
+const WORDS_PER_MINUTE = 200;
+
+/** Minutos de leitura estimados, com no mínimo um. */
+export function readingMinutes(text: string): number {
+  const words = text.trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.ceil(words / WORDS_PER_MINUTE));
+}
+
+/** Um item de cada grupo por vez, até acabarem todos. */
+export function roundRobin<T>(groups: readonly (readonly T[])[]): T[] {
+  const longest = Math.max(0, ...groups.map((group) => group.length));
+  return Array.from({ length: longest }, (_, index) =>
+    groups.flatMap((group) => (index < group.length ? [group[index] as T] : [])),
+  ).flat();
+}
+
+export function whatsappShareUrl(title: string, url: string): string {
+  return `https://wa.me/?text=${encodeURIComponent(`${title} ${url}`)}`;
+}

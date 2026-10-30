@@ -12,7 +12,7 @@ import {
   TagList,
 } from "@/components/Editorial";
 import { EntryList } from "@/components/EntryList";
-import { EntryActions } from "@/components/EntryActions";
+import { EntryActions, EntryShare } from "@/components/EntryActions";
 import { EntryNeighbors } from "@/components/EntryNeighbors";
 import { OrnamentalDivider } from "@/components/OrnamentalDivider";
 import { ReadingSizeControl } from "@/components/ReadingSizeControl";
@@ -386,6 +386,8 @@ export default async function EntryPage({ params }: { params: Params }) {
               </div>
             </section>
           ) : null}
+
+          <EntryShare titulo={entry.titulo} url={`${SITE_URL}${path}`} />
         </div>
 
         <aside className="hidden lg:block">

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { trackEvent } from "@/lib/analytics";
+import { whatsappShareUrl } from "@/lib/entryDisplay";
 
 const FAVORITES_KEY = "compendio:favorites";
 
@@ -14,6 +15,28 @@ type Props = {
 
 function favoriteKey(categoria: string, slug: string): string {
   return `${categoria}/${slug}`;
+}
+
+function useShare(titulo: string) {
+  const [shareMessage, setShareMessage] = useState("");
+
+  async function share() {
+    const url = window.location.href;
+    const nativeShareAvailable = typeof navigator.share === "function";
+    try {
+      if (nativeShareAvailable) {
+        await navigator.share({ title: titulo, text: `Leia: ${titulo}`, url });
+      } else {
+        await navigator.clipboard.writeText(url);
+        setShareMessage("Link copiado para a área de transferência.");
+      }
+      trackEvent("entry_shared", { method: nativeShareAvailable ? "native" : "clipboard" });
+    } catch {
+      setShareMessage("Compartilhamento cancelado.");
+    }
+  }
+
+  return { share, shareMessage };
 }
 
 export function EntryActions({ categoria, slug, titulo }: Props) {
@@ -46,21 +69,7 @@ export function EntryActions({ categoria, slug, titulo }: Props) {
     }
   }
 
-  async function shareEntry() {
-    const url = window.location.href;
-    const nativeShareAvailable = typeof navigator.share === "function";
-    try {
-      if (nativeShareAvailable) {
-        await navigator.share({ title: titulo, text: `Leia: ${titulo}`, url });
-      } else {
-        await navigator.clipboard.writeText(url);
-        setMessage("Link copiado para a área de transferência.");
-      }
-      trackEvent("entry_shared", { method: nativeShareAvailable ? "native" : "clipboard" });
-    } catch {
-      setMessage("Compartilhamento cancelado.");
-    }
-  }
+  const { share, shareMessage } = useShare(titulo);
 
   return (
     <div className="mt-6 flex flex-wrap items-center gap-3" aria-label="Ações da entrada">
@@ -74,14 +83,41 @@ export function EntryActions({ categoria, slug, titulo }: Props) {
       </button>
       <button
         type="button"
-        onClick={shareEntry}
+        onClick={share}
         className="btn btn-secondary"
       >
         Compartilhar
       </button>
-      {message ? (
+      {message || shareMessage ? (
         <span className="text-meta text-ink-muted" role="status" aria-live="polite">
-          {message}
+          {message || shareMessage}
+        </span>
+      ) : null}
+    </div>
+  );
+}
+
+/** Compartilhar no fim do artigo. `url` vem do servidor: o link já sai pronto no HTML. */
+export function EntryShare({ titulo, url }: { titulo: string; url: string }) {
+  const { share, shareMessage } = useShare(titulo);
+
+  return (
+    <div className="mt-8 flex flex-wrap items-center gap-3" aria-label="Compartilhar esta entrada">
+      <button type="button" onClick={share} className="btn btn-secondary">
+        Compartilhar
+      </button>
+      <a
+        href={whatsappShareUrl(titulo, url)}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={() => trackEvent("entry_shared", { method: "whatsapp" })}
+        className="btn btn-secondary"
+      >
+        Compartilhar no WhatsApp
+      </a>
+      {shareMessage ? (
+        <span className="text-meta text-ink-muted" role="status" aria-live="polite">
+          {shareMessage}
         </span>
       ) : null}
     </div>
