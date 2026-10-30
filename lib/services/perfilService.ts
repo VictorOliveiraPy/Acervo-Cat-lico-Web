@@ -6,6 +6,12 @@
 import { z } from "zod";
 
 import { ApiError, apiGet, getApiBaseUrl } from "@/lib/api";
+import {
+  favoriteSchema,
+  noteSchema,
+  type Favorite,
+  type Note,
+} from "@/lib/perfil";
 
 const profileSchema = z.object({
   nome: z.string(),
@@ -13,6 +19,7 @@ const profileSchema = z.object({
   no_ranking: z.boolean(),
   pontos: z.number(),
   licoes: z.array(z.string()),
+  padroeiro_id: z.string(),
 });
 
 export type Profile = z.output<typeof profileSchema>;
@@ -72,6 +79,46 @@ export async function completeLessons(subject: string, licoes: string[]): Promis
 
 export async function deleteProfile(subject: string): Promise<void> {
   await privateRequest("DELETE", "/perfil", subject);
+}
+
+export async function setPatron(subject: string, padroeiroId: string): Promise<Profile> {
+  return profileFrom(
+    await privateRequest("PUT", "/perfil/padroeiro", subject, { padroeiro_id: padroeiroId }),
+  );
+}
+
+export async function listFavorites(subject: string): Promise<Favorite[]> {
+  const response = await privateRequest("GET", "/perfil/favoritos", subject);
+  return z.array(favoriteSchema).parse(await response.json());
+}
+
+export async function addFavorite(
+  subject: string,
+  data: { tipo: string; texto: string; referencia: string; url_origem: string | null },
+): Promise<Favorite> {
+  const response = await privateRequest("POST", "/perfil/favoritos", subject, data);
+  return favoriteSchema.parse(await response.json());
+}
+
+export async function deleteFavorite(subject: string, id: number): Promise<void> {
+  await privateRequest("DELETE", `/perfil/favoritos/${id}`, subject);
+}
+
+export async function listNotes(subject: string): Promise<Note[]> {
+  const response = await privateRequest("GET", "/perfil/anotacoes", subject);
+  return z.array(noteSchema).parse(await response.json());
+}
+
+export async function addNote(
+  subject: string,
+  data: { categoria: string; texto: string; licao: string | null },
+): Promise<Note> {
+  const response = await privateRequest("POST", "/perfil/anotacoes", subject, data);
+  return noteSchema.parse(await response.json());
+}
+
+export async function deleteNote(subject: string, id: number): Promise<void> {
+  await privateRequest("DELETE", `/perfil/anotacoes/${id}`, subject);
 }
 
 export function fetchRanking(): Promise<RankingRow[]> {

@@ -22,6 +22,7 @@ const config: Config = {
       colors: {
         // Superfícies, do mais claro ao mais recuado.
         canvas: "#F3F4F1", // fundo editorial aprovado
+        gold: "#A8843A", // só filetes e ornamentos: 3,3:1 sobre o fundo não serve para texto
         surface: "#FBFCF9", // cards, campos, painéis
         raised: "#FFFFFF", // faixas elevadas e campos
 

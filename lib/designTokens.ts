@@ -38,6 +38,9 @@ export const COLORS = {
   /** Preenchimento lavado (seleção, realce de busca). */
   accentSoft: "#F5E9EB",
 
+  /** Dourado de ornamento. Só filete e detalhe: o contraste não serve para texto. */
+  gold: "#A8843A",
+
   /** Azul mineral institucional para fundos de alto contraste. */
   mineral: "#263E4D",
 

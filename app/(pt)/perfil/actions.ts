@@ -6,10 +6,24 @@ import { LESSONS, lessonBySlug } from "@/lib/academia";
 import { isCorrectAnswer } from "@/lib/academiaProgress";
 import { ApiError } from "@/lib/api";
 import { currentUser } from "@/lib/auth";
+import { isPatronId } from "@/lib/padroeiros";
+import {
+  favoriteInputSchema,
+  noteInputSchema,
+  type Favorite,
+  type FavoriteInput,
+  type Note,
+  type NoteInput,
+} from "@/lib/perfil";
 import { CATEGORY_SLUGS } from "@/lib/schemas";
 import {
+  addFavorite,
+  addNote,
   completeLessons,
+  deleteFavorite,
+  deleteNote,
   deleteProfile,
+  setPatron,
   syncProfile,
   updateProfile,
 } from "@/lib/services/perfilService";
@@ -85,6 +99,106 @@ export async function importLocalProgressAction(slugs: string[]): Promise<void> 
   } catch (error: unknown) {
     if (!(error instanceof ApiError)) throw error;
   }
+}
+
+export type SaveItemResult<T> =
+  | { status: "saved"; item: T }
+  | { status: "anonymous" }
+  | { status: "error"; message: string };
+
+export type DeleteItemResult = { status: "deleted" | "anonymous" | "error" };
+
+function saveFailure(error: ApiError): { status: "error"; message: string } {
+  const messages: Record<number, string> = {
+    409: "Você chegou ao limite de 500 itens nesta lista. Apague um para guardar outro.",
+    429: "Espere um instante antes de guardar de novo.",
+  };
+  return {
+    status: "error",
+    message: messages[error.status] ?? "Não foi possível salvar agora. Tente de novo em instantes.",
+  };
+}
+
+export async function setPatronAction(
+  padroeiroId: string,
+): Promise<{ status: "saved" | "anonymous" | "error" }> {
+  if (!isPatronId(padroeiroId)) return { status: "error" };
+  const user = await currentUser();
+  if (!user) return { status: "anonymous" };
+
+  try {
+    await setPatron(user.subject, padroeiroId);
+  } catch (error: unknown) {
+    if (error instanceof ApiError) return { status: "error" };
+    throw error;
+  }
+  revalidatePath("/perfil");
+  return { status: "saved" };
+}
+
+export async function addFavoriteAction(input: FavoriteInput): Promise<SaveItemResult<Favorite>> {
+  const parsed = favoriteInputSchema.safeParse(input);
+  if (!parsed.success) return { status: "error", message: "Confira o texto: ele pode ter até 2000 caracteres." };
+
+  const user = await currentUser();
+  if (!user) return { status: "anonymous" };
+
+  try {
+    // O botão "Guardar" pode ser o primeiro contato da pessoa com o perfil.
+    await syncProfile(user.subject, user.name);
+    const item = await addFavorite(user.subject, parsed.data);
+    revalidatePath("/perfil");
+    return { status: "saved", item };
+  } catch (error: unknown) {
+    if (error instanceof ApiError) return saveFailure(error);
+    throw error;
+  }
+}
+
+export async function deleteFavoriteAction(id: number): Promise<DeleteItemResult> {
+  const user = await currentUser();
+  if (!user) return { status: "anonymous" };
+
+  try {
+    await deleteFavorite(user.subject, id);
+  } catch (error: unknown) {
+    if (error instanceof ApiError) return { status: "error" };
+    throw error;
+  }
+  revalidatePath("/perfil");
+  return { status: "deleted" };
+}
+
+export async function addNoteAction(input: NoteInput): Promise<SaveItemResult<Note>> {
+  const parsed = noteInputSchema.safeParse(input);
+  if (!parsed.success) return { status: "error", message: "Confira o texto: ele pode ter até 2000 caracteres." };
+
+  const user = await currentUser();
+  if (!user) return { status: "anonymous" };
+
+  try {
+    await syncProfile(user.subject, user.name);
+    const item = await addNote(user.subject, parsed.data);
+    revalidatePath("/perfil");
+    return { status: "saved", item };
+  } catch (error: unknown) {
+    if (error instanceof ApiError) return saveFailure(error);
+    throw error;
+  }
+}
+
+export async function deleteNoteAction(id: number): Promise<DeleteItemResult> {
+  const user = await currentUser();
+  if (!user) return { status: "anonymous" };
+
+  try {
+    await deleteNote(user.subject, id);
+  } catch (error: unknown) {
+    if (error instanceof ApiError) return { status: "error" };
+    throw error;
+  }
+  revalidatePath("/perfil");
+  return { status: "deleted" };
 }
 
 export async function deleteAccountAction(): Promise<void> {
