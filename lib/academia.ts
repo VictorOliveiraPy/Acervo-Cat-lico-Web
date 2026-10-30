@@ -35,6 +35,13 @@ export type Lesson = {
    * publica como definitivo sem revisão humana.
    */
   review: "pending" | "reviewed";
+  /**
+   * `false` deixa a lição fora dos buscadores mesmo revisada. As lições do Compêndio
+   * são textos curtos quase iguais aos de vatican.va: indexá-las somaria páginas
+   * rasas e duplicadas a um site cujo problema é justamente esse. Continuam abertas
+   * a quem navega.
+   */
+  indexable?: false;
   concept: {
     title: string;
     paragraphs: readonly string[];
@@ -168,7 +175,11 @@ export function lessonForEntry(categoria: string, slug: string): Lesson | null {
 }
 
 /** Só o que já passou por revisão humana vai para buscadores. */
+export function isIndexable(lesson: Lesson): boolean {
+  return lesson.review === "reviewed" && lesson.indexable !== false;
+}
+
 export function indexableLessons(): Lesson[] {
-  return LESSONS.filter((lesson) => lesson.review === "reviewed");
+  return LESSONS.filter(isIndexable);
 }
 

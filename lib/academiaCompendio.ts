@@ -950,6 +950,7 @@ function build(entry: Entry, index: number): Lesson {
     title: entry.title,
     subtitle: entry.question,
     review: "reviewed",
+    indexable: false,
     concept: {
       title: entry.title,
       paragraphs: entry.text,

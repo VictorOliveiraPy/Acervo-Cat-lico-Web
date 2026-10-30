@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   LESSONS,
   indexableLessons,
+  isIndexable,
   lessonBySlug,
   lessonForEntry,
 } from "@/lib/academia";
@@ -81,6 +82,11 @@ describe("lições do Compêndio", () => {
   it("não deve deixar a alternativa certa sempre na mesma posição", () => {
     const positions = new Set(COMPENDIO_LESSONS.map(({ quiz }) => quiz.correctId));
     expect(positions).toEqual(new Set(["a", "b", "c"]));
+  });
+
+  it("deve deixar fora dos buscadores as lições curtas do Compêndio", () => {
+    expect(COMPENDIO_LESSONS.some(isIndexable)).toBe(false);
+    expect(indexableLessons().map(({ slug }) => slug)).toEqual(["santissima-trindade", "a-criacao"]);
   });
 
   it("deve publicar todas como revisadas e abrir a partir do artigo", () => {

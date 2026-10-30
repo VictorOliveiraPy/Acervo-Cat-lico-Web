@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 
 import { Breadcrumbs, EditorialNotice, SourceList } from "@/components/Editorial";
 import { LessonFlow } from "@/components/LessonFlow";
-import { LESSONS, lessonBySlug } from "@/lib/academia";
+import { LESSONS, isIndexable, lessonBySlug } from "@/lib/academia";
 import { entryPath } from "@/lib/categories";
 import { saintAssetFor } from "@/lib/saintAssets";
 
@@ -25,7 +25,7 @@ export function generateMetadata({ params }: { params: Params }): Metadata {
     title: `${lesson.title} · Academia da Fé`,
     description: lesson.subtitle,
     alternates: { canonical: `/academia/${lesson.slug}` },
-    robots: { index: lesson.review === "reviewed", follow: true },
+    robots: { index: isIndexable(lesson), follow: true },
   };
 }
 
