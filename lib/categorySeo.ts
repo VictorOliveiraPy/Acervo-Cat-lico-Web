@@ -13,7 +13,7 @@ export const CATEGORY_SEO_DESCRIPTION: Record<CategorySlug, string> = {
   "milagres-eucaristicos":
     "Leia sobre milagres eucarísticos com culto e documentação eclesiástica reconhecidos: onde ocorreram, quando e o que a Igreja registra sobre cada caso.",
   catecismo:
-    "Entenda as quatro partes do Catecismo da Igreja Católica e o que cada uma ensina. Consulte os temas em linguagem clara, com referência aos parágrafos.",
+    "Entenda as quatro partes do Catecismo da Igreja Católica e o que cada uma ensina. Consulte os temas de cada parte em linguagem clara e direta no acervo.",
   crisma:
     "Prepare-se para a Crisma com temas de fé organizados com base no Catecismo: sacramentos, Espírito Santo e vida cristã. Consulte cada assunto por entrada.",
   historia:
@@ -47,7 +47,7 @@ export const CATEGORY_SEO_DESCRIPTION: Record<CategorySlug, string> = {
   "calendario-liturgico":
     "Entenda o Ano Litúrgico da Igreja: tempos, cores, solenidades e datas móveis. Consulte o que cada período celebra e como ele se relaciona com os demais.",
   novissimos:
-    "Morte, juízo, céu, inferno e purgatório: consulte o que a Igreja ensina sobre os novíssimos do homem, com explicações claras e referências em cada entrada.",
+    "Morte, juízo, céu, inferno e purgatório: consulte o que a Igreja ensina sobre os novíssimos do homem, com uma explicação clara de cada tema no acervo.",
   "ordens-religiosas":
     "Conheça as principais ordens e congregações católicas: fundador, origem e carisma de cada uma. Consulte a história de franciscanos, beneditinos e outras.",
   "estrutura-igreja":
@@ -81,7 +81,7 @@ export const CATEGORY_SEO_DESCRIPTION: Record<CategorySlug, string> = {
   "anjos-demonios":
     "Conheça os arcanjos, os nove coros angélicos, o anjo da guarda e a doutrina sobre o demônio. Consulte o que a tradição católica ensina em cada entrada.",
   "doutrina-social":
-    "Entenda a Doutrina Social da Igreja: dignidade da pessoa, bem comum, subsidiariedade e os demais princípios. Consulte cada tema com fontes do Magistério.",
+    "Entenda a Doutrina Social da Igreja: dignidade da pessoa, bem comum, subsidiariedade e os demais princípios. Consulte o que ensina cada um deles no acervo.",
   "liturgia-das-horas":
     "Conheça a Liturgia das Horas: Laudes, Vésperas, Completas e as demais horas do Ofício Divino. Consulte o que é cada uma e quando é rezada ao longo do dia.",
   "ritos-orientais":
