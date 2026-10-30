@@ -30,7 +30,7 @@ export async function SiteFooter() {
   const health = await loadHealth();
 
   return (
-    <footer className="mt-section border-t-2 border-border-strong bg-raised">
+    <footer className="mt-section border-t border-border bg-surface">
       <div className="mx-auto max-w-shell px-4 py-10 sm:px-6">
         <div className="flex flex-col gap-8 md:flex-row md:justify-between">
           <div className="max-w-measure">
@@ -63,7 +63,7 @@ export async function SiteFooter() {
                 href={SANTO_GUARDIAO_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-accent underline-offset-4 hover:underline"
+                className="text-accent underline underline-offset-4"
               >
                 Santo Guardião
               </a>{" "}
@@ -109,6 +109,12 @@ export async function SiteFooter() {
 
         <div className="mt-8 flex flex-wrap items-center gap-4 border-t border-border pt-4 text-meta text-ink-muted">
           <Link
+            href="/academia"
+            className="underline-offset-4 hover:text-accent hover:underline"
+          >
+            Academia da Fé →
+          </Link>
+          <Link
             href="/liturgia-diaria"
             className="underline-offset-4 hover:text-accent hover:underline"
           >
@@ -148,9 +154,8 @@ export async function SiteFooter() {
             a frase flutuando sem fonte, o que o próprio catálogo cobra de
             qualquer citação. */}
         <div className="mt-8 border-t border-border pt-6 text-center">
-          {/* `text-ink-muted` sobre `raised` (fundo deste rodapé) mede
-              ~5,4:1 — passa em AA, mas o bordô é mais forte para a assinatura. `text-accent` (mesma
-              cor já usada nos títulos deste rodapé) passa em ~8,9:1. */}
+          {/* A assinatura usa o bordô aprovado; o par é coberto pelos testes
+              automatizados de contraste dos tokens. */}
           <p className="font-display text-label uppercase tracking-[0.2em] text-accent">
             Fides Quaerens Intellectvm
           </p>
@@ -165,7 +170,7 @@ export async function SiteFooter() {
             mascote do site — ver SeloCarlosAcutis. */}
         <div className="mt-6 flex flex-col items-center gap-2 border-t border-border pt-6 text-center">
           <SeloCarlosAcutis size={40} />
-          <p className="kicker text-accent">Sob a intercessão de São Carlos Acutis</p>
+          <p className="eyebrow">Sob a intercessão de São Carlos Acutis</p>
           <p className="text-meta text-ink-muted">
             Padroeiro da internet e dos cibernautas · 1991–2006
           </p>

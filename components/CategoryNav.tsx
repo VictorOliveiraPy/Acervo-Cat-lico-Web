@@ -33,10 +33,13 @@ function linkStyle(isActive: boolean): string {
  * Não aparece na home: "Comece por aqui" (`app/page.tsx`) já mostra esse
  * mesmo recorte de categorias, logo abaixo do herói — repetir a faixa ali
  * em cima seria a mesma lista duas vezes na primeira tela.
+ *
+ * No celular também não aparece: o cabeçalho fixo já tem a navegação principal,
+ * e o índice completo continua na home e no rodapé.
  */
 export function CategoryNav() {
   const pathname = usePathname();
-  if (pathname === "/") return null;
+  if (pathname === "/" || pathname.startsWith("/academia")) return null;
 
   function isActive(slug: CategorySlug): boolean {
     const href = categoryPath(slug);
@@ -46,7 +49,7 @@ export function CategoryNav() {
   return (
     <nav
       aria-label="Categorias de acesso direto"
-      className="border-t border-border bg-canvas"
+      className="hidden border-t border-border bg-canvas md:block"
     >
       <ul className="mx-auto flex max-w-shell items-stretch gap-6 overflow-x-auto px-4 sm:px-6">
         {PRIMARY_CATEGORY_SLUGS.map((slug) => (
