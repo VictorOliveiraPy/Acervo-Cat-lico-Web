@@ -21,12 +21,14 @@ export function GuardarTexto({
   texto,
   referencia = "",
   urlOrigem,
+  rotulo = "Guardar texto",
   className = "btn btn-secondary",
 }: {
   tipo: (typeof FAVORITE_KINDS)[number];
   texto: string;
   referencia?: string;
   urlOrigem?: string;
+  rotulo?: string;
   className?: string;
 }) {
   const pathname = usePathname();
@@ -71,7 +73,7 @@ export function GuardarTexto({
         disabled={state === "pending" || state === "saved"}
         className={`${className} disabled:opacity-60`}
       >
-        {state === "saved" ? "Guardado" : state === "pending" ? "Guardando…" : "Guardar"}
+        {state === "saved" ? "Guardado" : state === "pending" ? "Guardando…" : rotulo}
       </button>
       <span role="status" aria-live="polite" className="text-meta text-ink-muted">
         {error}

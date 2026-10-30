@@ -4,8 +4,10 @@ import { describe, expect, it } from "vitest";
 
 import { ATO_DE_CONTRICAO, EXAME } from "@/lib/confissao";
 import { PATRONS, isPatronId, patronById } from "@/lib/padroeiros";
+import type { Entry } from "@/lib/schemas";
 import {
   daysBetween,
+  favoriteFromEntry,
   favoriteInputSchema,
   formatTimeSince,
   levelFor,
@@ -133,5 +135,25 @@ describe("conteúdo da confissão", () => {
   it("deve cobrir os dez mandamentos", () => {
     const numbers = EXAME.flatMap(({ numero }) => numero.match(/\d+/g) ?? []).map(Number);
     expect(numbers.sort((a, b) => a - b)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  });
+});
+
+describe("favoriteFromEntry", () => {
+  const entry = (fields: object) => ({ resumo: "Resumo", ...fields }) as Entry;
+
+  it("deve guardar o texto da oração e o resumo do santo", () => {
+    expect(favoriteFromEntry(entry({ categoria: "oracoes", texto: "Pai nosso" }))).toMatchObject({
+      tipo: "Oração",
+      texto: "Pai nosso",
+    });
+    expect(favoriteFromEntry(entry({ categoria: "santos" }))).toMatchObject({
+      tipo: "Santos",
+      texto: "Resumo",
+    });
+  });
+
+  it("não deve oferecer o botão em outras categorias nem com texto longo demais", () => {
+    expect(favoriteFromEntry(entry({ categoria: "papas" }))).toBeNull();
+    expect(favoriteFromEntry(entry({ categoria: "oracoes", texto: "a".repeat(2001) }))).toBeNull();
   });
 });

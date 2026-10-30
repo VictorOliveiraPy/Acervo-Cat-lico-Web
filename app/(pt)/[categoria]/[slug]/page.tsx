@@ -14,6 +14,7 @@ import {
 import { EntryList } from "@/components/EntryList";
 import { EntryActions, EntryShare } from "@/components/EntryActions";
 import { EntryNeighbors } from "@/components/EntryNeighbors";
+import { GuardarTexto } from "@/components/GuardarTexto";
 import { EntrySections, EntrySectionsToc } from "@/components/EntrySections";
 import { OrnamentalDivider } from "@/components/OrnamentalDivider";
 import { ReadingSizeControl } from "@/components/ReadingSizeControl";
@@ -25,6 +26,7 @@ import { entrySectionLinks } from "@/lib/entrySections";
 import { articleJsonLd, safeJsonLd } from "@/lib/jsonLd";
 import { HREFLANG, formatEntryDate, languageAlternates } from "@/lib/i18n";
 import { neighborsOf } from "@/lib/neighbors";
+import { favoriteFromEntry } from "@/lib/perfil";
 import { saintAssetFor } from "@/lib/saintAssets";
 import { isCategorySlug, type CategorySlug, type Entry } from "@/lib/schemas";
 import {
@@ -187,6 +189,7 @@ export default async function EntryPage({ params }: { params: Params }) {
   const blocks = paragraphs(entry.corpo);
   const path = entryPath(categoria, params.slug);
   const lesson = lessonForEntry(categoria, params.slug);
+  const favorite = favoriteFromEntry(entry);
   const tocItems = [
     ...(fields.length > 0 ? [{ href: "#dados", label: "Dados" }] : []),
     { href: "#leitura", label: "Leitura" },
@@ -392,6 +395,17 @@ export default async function EntryPage({ params }: { params: Params }) {
                 <TagList themes={entry.temas} />
               </div>
             </section>
+          ) : null}
+
+          {favorite ? (
+            <div className="mt-8">
+              <GuardarTexto
+                tipo={favorite.tipo}
+                texto={favorite.texto}
+                referencia={entry.titulo}
+                rotulo={favorite.rotulo}
+              />
+            </div>
           ) : null}
 
           <EntryShare titulo={entry.titulo} url={`${SITE_URL}${path}`} />

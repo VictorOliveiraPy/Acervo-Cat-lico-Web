@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import type { Entry } from "@/lib/schemas";
+
 /** Níveis por pontos. Para mudar nomes ou faixas, basta editar esta lista. */
 export const LEVELS = [
   { nome: "Catecúmeno", minimo: 0 },
@@ -134,4 +136,19 @@ export function formatTimeSince(days: number): string {
   if (days < 1) return "hoje";
   if (days < 60) return `há ${days} ${days === 1 ? "dia" : "dias"}`;
   return `há ${Math.round(days / 30)} meses`;
+}
+
+/** O que o botão "Guardar texto" guarda de um verbete; `null` onde ele não aparece. */
+export function favoriteFromEntry(entry: Entry): {
+  tipo: (typeof FAVORITE_KINDS)[number];
+  texto: string;
+  rotulo: string;
+} | null {
+  const favorite =
+    entry.categoria === "oracoes"
+      ? { tipo: "Oração" as const, texto: entry.texto, rotulo: "Guardar esta oração" }
+      : entry.categoria === "santos"
+        ? { tipo: "Santos" as const, texto: entry.resumo, rotulo: "Guardar este resumo" }
+        : null;
+  return favorite && favorite.texto.trim() && favorite.texto.length <= MAX_TEXT_LENGTH ? favorite : null;
 }

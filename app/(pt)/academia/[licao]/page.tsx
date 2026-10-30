@@ -1,3 +1,4 @@
+import { GuardarTexto } from "@/components/GuardarTexto";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -74,6 +75,17 @@ export default function LessonPage({ params }: { params: Params }) {
           <div className="mt-8">
             <LessonFlow lesson={lesson} articleHref={articleHref} />
           </div>
+
+          {lesson.concept.paragraphs[0] ? (
+            <div className="mt-8">
+              <GuardarTexto
+                tipo="Catecismo"
+                texto={lesson.concept.paragraphs[0]}
+                referencia={lesson.title}
+                rotulo="Guardar este ensinamento"
+              />
+            </div>
+          ) : null}
 
           <div className="mt-10">
             <SourceList sources={lesson.sources} />
