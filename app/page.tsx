@@ -19,7 +19,7 @@ import { featuredSaint, type SaintAsset } from "@/lib/saintAssets";
 import { CATEGORY_SLUGS, type CategoryInfo, type Entry } from "@/lib/schemas";
 import { fetchCategories, fetchEntry, fetchEntryPage } from "@/lib/services/acervoService";
 import { fetchLiturgiaDiaria } from "@/lib/services/liturgiaService";
-import { INSTAGRAM_URL, SANTO_GUARDIAO_URL, SITE_NAME, SITE_URL } from "@/lib/site";
+import { INSTAGRAM_URL, SITE_NAME, SITE_URL } from "@/lib/site";
 
 // Regenera a home (com um sorteio novo pra "Do acervo") a cada 5 minutos —
 // o mesmo intervalo padrão de cache das leituras da API (`DEFAULT_REVALIDATE_
@@ -386,22 +386,6 @@ export default async function HomePage() {
 
         <OrnamentalDivider />
 
-        <section className="py-10">
-          <EditorialStrip
-            eyebrow="Plataforma irmã"
-            title="Quer viver a fé na prática, não só consultar?"
-            description="No Santo Guardião você escolhe um santo de devoção e cumpre desafios e missões — orações, estudo e caridade — para crescer na fé em forma de jogo."
-          >
-            <a
-              href={SANTO_GUARDIAO_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-tertiary"
-            >
-              Conhecer o Santo Guardião <span aria-hidden="true">→</span>
-            </a>
-          </EditorialStrip>
-        </section>
         <section aria-labelledby="amostra" className="pb-16">
           <h2 id="amostra" className="font-display text-title-md text-ink">
             Descubra algo novo

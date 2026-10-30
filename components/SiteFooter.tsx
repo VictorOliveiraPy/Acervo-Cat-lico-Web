@@ -6,7 +6,7 @@ import { ApiError } from "@/lib/api";
 import { HIMETRICA_SHARE_URL } from "@/lib/himetricaShareUrl";
 import { SeloCarlosAcutis } from "@/components/SeloCarlosAcutis";
 import { fetchHealth } from "@/lib/services/acervoService";
-import { INSTAGRAM_URL, MELHORPERFIL_URL, SANTO_GUARDIAO_URL } from "@/lib/site";
+import { INSTAGRAM_URL } from "@/lib/site";
 import type { HealthStatus } from "@/lib/schemas";
 
 /**
@@ -53,23 +53,6 @@ export async function SiteFooter() {
                 em cache continua disponível.
               </p>
             )}
-          </div>
-
-          <div className="max-w-measure md:w-72">
-            <h2 className="kicker">Plataforma irmã</h2>
-            <p className="mt-3 text-meta text-ink-muted">
-              Quer viver a fé em forma de jogo? No{" "}
-              <a
-                href={SANTO_GUARDIAO_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-accent underline underline-offset-4"
-              >
-                Santo Guardião
-              </a>{" "}
-              você escolhe um santo de devoção e cumpre desafios e missões
-              para crescer na fé.
-            </p>
           </div>
         </div>
 
@@ -127,14 +110,6 @@ export async function SiteFooter() {
             className="underline-offset-4 hover:text-accent hover:underline"
           >
             Instagram →
-          </a>
-          <a
-            href={MELHORPERFIL_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline-offset-4 hover:text-accent hover:underline"
-          >
-            melhorperfil →
           </a>
           {HIMETRICA_SHARE_URL ? (
             <a

@@ -18,20 +18,5 @@ export const SITE_NAME = "Compêndio Católico";
 export const SITE_DESCRIPTION =
   "Consulta rápida sobre o mundo católico: santos, papas, Catecismo, sacramentos, milagres, história da Igreja, orações e mais de 40 temas.";
 
-/**
- * Plataforma irmã: gamificação para viver a fé na prática (escolher um santo
- * de devoção e cumprir desafios e missões), complementar a este acervo de
- * consulta. Linkada no rodapé e na página inicial.
- */
-export const SANTO_GUARDIAO_URL = "https://www.santo-guardiao.com.br/";
-
 /** Perfil oficial no Instagram, linkado no rodapé. */
 export const INSTAGRAM_URL = "https://www.instagram.com/compendiocatolico/";
-
-/**
- * Outro projeto do mesmo autor: ranking público de perfis do Instagram.
- * Sem relação temática com o acervo — link de divulgação simples no
- * rodapé, não uma "plataforma irmã" (esse rótulo fica só pro Santo
- * Guardião, que de fato complementa o conteúdo católico).
- */
-export const MELHORPERFIL_URL = "https://www.melhorperfil.com.br/";
