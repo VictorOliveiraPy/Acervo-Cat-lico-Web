@@ -12,6 +12,7 @@ import { ApiError } from "@/lib/api";
 import { CATEGORY_LABELS, categoryPath, entryPath } from "@/lib/categories";
 import { CATEGORY_GROUPS } from "@/lib/categoryGroups";
 import { formatEntryCount } from "@/lib/entryDisplay";
+import { languageAlternates } from "@/lib/i18n";
 import { safeJsonLd } from "@/lib/jsonLd";
 import { formatLiturgiaDate } from "@/lib/liturgia";
 import type { LiturgiaDiaria } from "@/lib/liturgiaSchemas";
@@ -30,7 +31,7 @@ export const revalidate = 300;
 // Só a home é canônica de "/". No layout, esse valor era herdado por toda página
 // sem canonical própria, inclusive as 404, dizendo ao Google que eram cópias da home.
 export const metadata: Metadata = {
-  alternates: { canonical: "/" },
+  alternates: { canonical: "/", languages: languageAlternates("/") },
 };
 
 // WebSite + SearchAction: dado estruturado que habilita a caixa de busca do

@@ -4,7 +4,7 @@ import { getSession, signIn } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { importLocalProgressAction } from "@/app/perfil/actions";
+import { importLocalProgressAction } from "@/app/(pt)/perfil/actions";
 import { readProgress } from "@/lib/academiaProgress";
 import { LOGIN_ENABLED } from "@/lib/auth-public";
 

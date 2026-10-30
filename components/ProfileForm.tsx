@@ -7,7 +7,7 @@ import {
   deleteAccountAction,
   saveProfileAction,
   type SaveProfileState,
-} from "@/app/perfil/actions";
+} from "@/app/(pt)/perfil/actions";
 
 const INITIAL_STATE: SaveProfileState = { status: "idle" };
 

@@ -21,7 +21,7 @@ import { ApiError } from "@/lib/api";
 import { CATEGORY_LABELS, categoryPath, entryPath } from "@/lib/categories";
 import { entryMetaFields, entryOrdinal, paragraphs } from "@/lib/entryDisplay";
 import { safeJsonLd } from "@/lib/jsonLd";
-import { HREFLANG, localePath } from "@/lib/i18n";
+import { HREFLANG, languageAlternates } from "@/lib/i18n";
 import { neighborsOf } from "@/lib/neighbors";
 import { saintAssetFor } from "@/lib/saintAssets";
 import { isCategorySlug, type CategorySlug, type Entry } from "@/lib/schemas";
@@ -151,15 +151,7 @@ export async function generateMetadata({
       alternates: {
         canonical: path,
         // hreflang recíproco: só declara idiomas em que a tradução existe.
-        languages:
-          translations.length > 0
-            ? {
-                "pt-BR": path,
-                ...Object.fromEntries(
-                  translations.map((lang) => [HREFLANG[lang], localePath(lang, path)]),
-                ),
-              }
-            : undefined,
+        languages: translations.length > 0 ? languageAlternates(path) : undefined,
       },
       openGraph: {
         title: entry.titulo,

@@ -11,7 +11,7 @@ import { ReadingSizeControl } from "@/components/ReadingSizeControl";
 import { ApiError } from "@/lib/api";
 import { categoryPath, entryPath } from "@/lib/categories";
 import { paragraphs } from "@/lib/entryDisplay";
-import { HREFLANG, OG_LOCALE, dictionaryFor, isLocale, localePath, type Locale } from "@/lib/i18n";
+import { HREFLANG, languageAlternates, OG_LOCALE, dictionaryFor, isLocale, localePath, type Locale } from "@/lib/i18n";
 import { safeJsonLd } from "@/lib/jsonLd";
 import { neighborsOf } from "@/lib/neighbors";
 import { saintAssetFor } from "@/lib/saintAssets";
@@ -82,7 +82,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
       description: entry.resumo,
       alternates: {
         canonical: ownPath,
-        languages: { "pt-BR": base, [HREFLANG[lang]]: ownPath },
+        languages: languageAlternates(base),
       },
       openGraph: {
         title: entry.titulo,

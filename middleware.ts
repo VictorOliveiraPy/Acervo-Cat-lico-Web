@@ -22,10 +22,9 @@ export function middleware(request: NextRequest) {
   }
 
   if (verdict.kind === "not-found") {
-    // Reescreve para um caminho que nenhuma rota atende: o Next responde com o
-    // `not-found.tsx` do site e HTTP 404 de verdade (3 segmentos: não casa com
-    // `[categoria]/[slug]` nem com nenhuma rota fixa).
-    return NextResponse.rewrite(new URL("/__404/a/b", request.url));
+    // Reescreve para a rota que chama `notFound()`: o Next responde com o
+    // `not-found.tsx` do site e HTTP 404 de verdade.
+    return NextResponse.rewrite(new URL("/nao-encontrado/404", request.url));
   }
 
   return NextResponse.next();

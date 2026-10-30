@@ -6,7 +6,7 @@ import { EntryList } from "@/components/EntryList";
 import { Pagination } from "@/components/Pagination";
 import { ApiError, getErrorMessage } from "@/lib/api";
 import { categoryPath } from "@/lib/categories";
-import { HREFLANG, OG_LOCALE, dictionaryFor, isLocale, localePath, type Locale } from "@/lib/i18n";
+import { languageAlternates, OG_LOCALE, dictionaryFor, isLocale, localePath, type Locale } from "@/lib/i18n";
 import { computePagination, parseOffset } from "@/lib/pagination";
 import { isCategorySlug, type CategoryInfo, type CategorySlug, type EntryPage } from "@/lib/schemas";
 import { PAGE_SIZE, fetchCategories, fetchEntryPage } from "@/lib/services/acervoService";
@@ -43,7 +43,7 @@ export async function generateMetadata({
       alternates: {
         canonical,
         // O original em português sempre existe (a tradução nasce dele).
-        languages: pageOffset > 0 ? undefined : { "pt-BR": base, [HREFLANG[lang]]: ownPath },
+        languages: pageOffset > 0 ? undefined : languageAlternates(base),
       },
       openGraph: {
         title: info.nome,

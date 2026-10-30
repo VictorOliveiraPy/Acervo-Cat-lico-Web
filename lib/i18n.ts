@@ -45,6 +45,18 @@ export function stripLocale(pathname: string): string {
   return `/${segments.join("/")}`;
 }
 
+/**
+ * `hreflang` recíproco de uma página com tradução: os dois idiomas e `x-default`
+ * apontando para o português. Página sem tradução não deve chamar isto.
+ */
+export function languageAlternates(ptPath: string): Record<string, string> {
+  return {
+    "pt-BR": ptPath,
+    ...Object.fromEntries(ENABLED_LOCALES.map((lang) => [HREFLANG[lang], localePath(lang, ptPath)])),
+    "x-default": ptPath,
+  };
+}
+
 /** Código BCP 47 para `<html lang>`, `hreflang` e `inLanguage`. */
 export const HREFLANG: Record<SiteLang, string> = {
   pt: "pt-BR",

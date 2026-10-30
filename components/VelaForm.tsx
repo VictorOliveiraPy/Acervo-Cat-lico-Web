@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 
-import { acenderVelaAction, type AcenderVelaState } from "@/app/velas/actions";
+import { acenderVelaAction, type AcenderVelaState } from "@/app/(pt)/velas/actions";
 import { trackEvent } from "@/lib/analytics";
 import { DEFAULT_VELA_TIPO, VELA_TIPOS } from "@/lib/velas";
 import {

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-import { completeLessonAction, type CompleteLessonResult } from "@/app/perfil/actions";
+import { completeLessonAction, type CompleteLessonResult } from "@/app/(pt)/perfil/actions";
 import type { Lesson } from "@/lib/academia";
 import {
   LAST_STEP,

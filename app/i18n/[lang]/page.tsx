@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/Editorial";
 import { ApiError } from "@/lib/api";
 import { categoryPath } from "@/lib/categories";
-import { HREFLANG, OG_LOCALE, dictionaryFor, isLocale, localePath, type Locale } from "@/lib/i18n";
+import { OG_LOCALE, dictionaryFor, languageAlternates, isLocale, localePath, type Locale } from "@/lib/i18n";
 import { fetchCategories } from "@/lib/services/acervoService";
 import type { CategoryInfo } from "@/lib/schemas";
 
@@ -18,9 +18,10 @@ export function generateMetadata({ params }: { params: Params }): Metadata {
   const t = dictionaryFor(params.lang);
   const path = localePath(params.lang, "/");
   return {
-    title: t.homeHeading,
+    // Sem o template do layout: seria a marca duas vezes.
+    title: { absolute: t.homeHeading },
     description: t.siteDescription,
-    alternates: { canonical: path, languages: { "pt-BR": "/", [HREFLANG[params.lang]]: path } },
+    alternates: { canonical: path, languages: languageAlternates("/") },
     openGraph: {
       type: "website",
       locale: OG_LOCALE[params.lang],

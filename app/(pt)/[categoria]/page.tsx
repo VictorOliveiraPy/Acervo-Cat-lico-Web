@@ -14,6 +14,7 @@ import {
 import { ApiError } from "@/lib/api";
 import { CATEGORY_LABELS, categoryPath } from "@/lib/categories";
 import { formatEntryCount } from "@/lib/entryDisplay";
+import { languageAlternates } from "@/lib/i18n";
 import { computePagination, parseOffset } from "@/lib/pagination";
 import {
   CATEGORY_SLUGS,
@@ -41,13 +42,24 @@ export function generateStaticParams(): Params[] {
 // nunca chega a executar a página: cai em 404 real antes disso.
 export const dynamicParams = false;
 
-export function generateMetadata({
+/** A categoria tem par em espanhol? Sem API, não declara: hreflang errado é pior. */
+async function hasTranslation(categoria: CategorySlug): Promise<boolean> {
+  try {
+    const categories = await fetchCategories(undefined, "es");
+    return categories.some((info) => info.categoria === categoria);
+  } catch (error: unknown) {
+    if (error instanceof ApiError) return false;
+    throw error;
+  }
+}
+
+export async function generateMetadata({
   params,
   searchParams,
 }: {
   params: Params;
   searchParams: SearchParams;
-}): Metadata {
+}): Promise<Metadata> {
   if (!isCategorySlug(params.categoria)) return { title: "Categoria" };
   const label = CATEGORY_LABELS[params.categoria];
   const path = categoryPath(params.categoria);
@@ -64,7 +76,13 @@ export function generateMetadata({
   return {
     title: heading,
     description: label.tagline,
-    alternates: { canonical },
+    alternates: {
+      canonical,
+      languages:
+        pageOffset === 0 && (await hasTranslation(params.categoria))
+          ? languageAlternates(path)
+          : undefined,
+    },
     // `images` explícito: declarar `openGraph` aqui substitui por inteiro o
     // que a página raiz herdaria do `app/opengraph-image.tsx` (arquivo de
     // convenção só é herdado quando a página NÃO define seu próprio
