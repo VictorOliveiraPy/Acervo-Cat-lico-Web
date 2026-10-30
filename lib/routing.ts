@@ -46,6 +46,10 @@ const MAX_CATEGORY_SEGMENTS = 2;
 /** `/academia/[licao]` e `/liturgia-diaria/[data]`: o valor inválido é 404 na própria rota. */
 const MAX_ACADEMIA_SEGMENTS = 2;
 
+/** `/tema/[slug]` e `/tema/[slug]/[pagina]`. */
+const MIN_TEMA_SEGMENTS = 2;
+const MAX_TEMA_SEGMENTS = 3;
+
 const NOT_FOUND: PathVerdict = { kind: "not-found" };
 const OK: PathVerdict = { kind: "ok" };
 
@@ -81,6 +85,9 @@ export function classifyPath(pathname: string): PathVerdict {
 
   if (CATEGORIES.has(first)) return segments.length <= MAX_CATEGORY_SEGMENTS ? OK : NOT_FOUND;
   if (first === "liturgia-diaria") return segments.length <= MAX_ACADEMIA_SEGMENTS ? OK : NOT_FOUND;
+  if (first === "tema") {
+    return segments.length >= MIN_TEMA_SEGMENTS && segments.length <= MAX_TEMA_SEGMENTS ? OK : NOT_FOUND;
+  }
   if (first === "academia") return segments.length <= MAX_ACADEMIA_SEGMENTS ? OK : NOT_FOUND;
   if (first === "instagram") return segments.length <= MAX_INSTAGRAM_SEGMENTS ? OK : NOT_FOUND;
   if (SINGLE_SEGMENT_ROUTES.has(first)) return segments.length === 1 ? OK : NOT_FOUND;

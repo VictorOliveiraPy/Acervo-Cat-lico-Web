@@ -26,6 +26,10 @@ describe("classifyPath", () => {
     expect(classifyPath("/liturgia-diaria/2026-10-30/x")).toEqual({ kind: "not-found" });
     expect(classifyPath("/ranking")).toEqual({ kind: "ok" });
     expect(classifyPath("/santo-do-dia")).toEqual({ kind: "ok" });
+    expect(classifyPath("/tema/franciscanos")).toEqual({ kind: "ok" });
+    expect(classifyPath("/tema/franciscanos/2")).toEqual({ kind: "ok" });
+    expect(classifyPath("/tema")).toEqual({ kind: "not-found" });
+    expect(classifyPath("/tema/a/2/3")).toEqual({ kind: "not-found" });
   });
 
   it("dá 404 para primeiro segmento que não existe", () => {

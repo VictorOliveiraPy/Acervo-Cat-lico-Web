@@ -11,8 +11,9 @@ import {
 } from "@/lib/i18n";
 import { ApiError } from "@/lib/api";
 import { CATEGORY_SLUGS } from "@/lib/schemas";
-import { fetchCategories, fetchCategoryIndex } from "@/lib/services/acervoService";
+import { fetchCategories, fetchCategoryIndex, fetchThemes } from "@/lib/services/acervoService";
 import { SITE_URL } from "@/lib/site";
+import { THEME_MIN_ENTRIES, themePath } from "@/lib/temas";
 
 /** A data mais recente entre as informadas, ou nada se nenhuma veio. */
 function lastModifiedOf(dates: (string | null)[]): { lastModified?: string } {
@@ -42,6 +43,20 @@ function pair(path: string) {
     Object.entries(languageAlternates(path)).map(([lang, href]) => [lang, `${SITE_URL}${href}`]),
   );
   return { languages };
+}
+
+async function themePages(): Promise<MetadataRoute.Sitemap> {
+  try {
+    const themes = await fetchThemes(THEME_MIN_ENTRIES);
+    return themes.map(({ slug }) => ({
+      url: `${SITE_URL}${themePath(slug)}`,
+      changeFrequency: "weekly" as const,
+      priority: 0.5,
+    }));
+  } catch (error: unknown) {
+    if (error instanceof ApiError) return [];
+    throw error;
+  }
 }
 
 async function localizedPages(lang: Locale): Promise<MetadataRoute.Sitemap> {
@@ -156,6 +171,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...academyPages,
     ...categoryPages.map(withAlternates),
     ...entryPages.map(withAlternates),
+    ...(await themePages()),
     ...translated,
   ];
 }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import type { MetaField } from "@/lib/entryDisplay";
+import { themePath } from "@/lib/temas";
 
 /**
  * Primitivas editoriais reaproveitadas pelas páginas.
@@ -90,23 +91,21 @@ export function MetaList({ fields }: { fields: MetaField[] }) {
 }
 
 /**
- * Tags da entrada como atalho de busca.
- *
- * Cada tag leva à busca por aquele termo em todo o acervo — é o caminho mais
- * curto entre "isto me interessou aqui" e "onde mais isto aparece".
+ * Temas da entrada: cada um leva à página que reúne as entradas sobre ele em todo
+ * o acervo, o caminho mais curto entre "isto me interessou" e "onde mais aparece".
  */
-export function TagList({ tags }: { tags: string[] }) {
-  if (tags.length === 0) return null;
+export function TagList({ themes }: { themes: ReadonlyArray<{ slug: string; nome: string }> }) {
+  if (themes.length === 0) return null;
 
   return (
     <ul className="flex flex-wrap gap-2">
-      {tags.map((tag) => (
-        <li key={tag}>
+      {themes.map(({ slug, nome }) => (
+        <li key={slug}>
           <Link
-            href={`/busca?q=${encodeURIComponent(tag)}`}
+            href={themePath(slug)}
             className="inline-flex items-center rounded-edge border border-border bg-surface px-2.5 py-1 text-meta text-ink-muted transition-colors hover:border-accent hover:text-accent"
           >
-            {tag}
+            {nome}
           </Link>
         </li>
       ))}

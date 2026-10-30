@@ -70,6 +70,8 @@ export function isCategorySlug(value: unknown): value is CategorySlug {
   return categorySchema.safeParse(value).success;
 }
 
+const themeRefSchema = z.object({ slug: z.string(), nome: z.string() });
+
 const baseEntrySchema = z.object({
   id: z.string(),
   slug: z.string(),
@@ -81,6 +83,7 @@ const baseEntrySchema = z.object({
   atualizado_em: z.string().nullable().default(null),
   corpo: z.string(),
   tags: z.array(z.string()).default([]),
+  temas: z.array(themeRefSchema).default([]),
   imagem: z.string().nullable().default(null),
   imagem_credito: z.string().nullable().default(null),
   fontes: z.array(z.string()).default([]),
@@ -492,7 +495,19 @@ export const healthStatusSchema = z.object({
 export const categoryInfoListSchema = z.array(categoryInfoSchema);
 export const searchResultListSchema = z.array(searchResultSchema);
 
+const themeSummarySchema = themeRefSchema.extend({ total: z.number().int() });
+
+export const themeSummaryListSchema = z.array(themeSummarySchema);
+
+export const themePageSchema = themeSummarySchema.extend({
+  limit: z.number().int(),
+  offset: z.number().int(),
+  itens: z.array(entrySchema),
+});
+
 export type Entry = z.infer<typeof entrySchema>;
+export type ThemeSummary = z.infer<typeof themeSummarySchema>;
+export type ThemePage = z.infer<typeof themePageSchema>;
 export type CategoryInfo = z.infer<typeof categoryInfoSchema>;
 export type SearchResult = z.infer<typeof searchResultSchema>;
 export type EntryPage = z.infer<typeof entryPageSchema>;

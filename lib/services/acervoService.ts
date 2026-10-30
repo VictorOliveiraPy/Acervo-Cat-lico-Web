@@ -13,12 +13,16 @@ import {
   entrySchema,
   healthStatusSchema,
   searchResultListSchema,
+  themePageSchema,
+  themeSummaryListSchema,
   type CategoryInfo,
   type CategorySlug,
   type Entry,
   type EntryPage,
   type HealthStatus,
   type SearchResult,
+  type ThemePage,
+  type ThemeSummary,
 } from "@/lib/schemas";
 
 /**
@@ -103,6 +107,21 @@ export async function fetchCategoryIndex(
 ): Promise<CategoryIndexItem[]> {
   const items = await fetchAllEntries(categoria, lang);
   return items.map(({ slug, titulo, atualizado_em }) => ({ slug, titulo, atualizado_em }));
+}
+
+/** Temas com pelo menos `minTotal` entradas. */
+export function fetchThemes(minTotal = 1): Promise<ThemeSummary[]> {
+  return apiGet("/temas", themeSummaryListSchema, { query: { min_total: minTotal } });
+}
+
+/** Página de entradas de um tema, com as de cada categoria em sequência. */
+export function fetchThemePage(
+  slug: string,
+  { limit, offset }: { limit: number; offset: number },
+): Promise<ThemePage> {
+  return apiGet(`/temas/${encodeURIComponent(slug)}`, themePageSchema, {
+    query: { limit, offset },
+  });
 }
 
 /** Entrada completa de uma categoria (corpo, campos próprios e fontes). */

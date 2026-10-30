@@ -378,10 +378,10 @@ export default async function EntryPage({ params }: { params: Params }) {
                 Temas relacionados
               </h2>
               <p className="mt-2 max-w-measure text-meta text-ink-muted">
-                Cada tema abre a busca por ele em todas as categorias do acervo.
+                Cada tema reúne as entradas sobre ele em todas as categorias do acervo.
               </p>
               <div className="mt-3">
-                <TagList tags={entry.tags} />
+                <TagList themes={entry.temas} />
               </div>
             </section>
           ) : null}
