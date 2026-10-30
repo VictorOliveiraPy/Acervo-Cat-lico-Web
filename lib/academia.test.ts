@@ -53,6 +53,15 @@ describe("lições da Academia", () => {
   });
 });
 
+describe("lição da criação", () => {
+  it("deve ficar fora dos buscadores até a revisão e abrir a partir do artigo", () => {
+    const criacao = lessonBySlug("a-criacao");
+    expect(criacao?.review).toBe("pending");
+    expect(indexableLessons()).not.toContain(criacao);
+    expect(lessonForEntry("catecismo", "a-criacao")).toBe(criacao);
+  });
+});
+
 describe("progresso das lições", () => {
   it("deve valer como vazio quando o conteúdo salvo não é válido", () => {
     expect(parseProgress(null)).toEqual({});
