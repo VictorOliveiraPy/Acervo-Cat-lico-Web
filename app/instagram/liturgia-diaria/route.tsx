@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { ImageResponse } from "next/og";
 
+import { COLORS } from "@/lib/designTokens";
 import { ApiError } from "@/lib/api";
 import { EB_GARAMOND_FONT_FAMILY, loadCardFonts } from "@/lib/instagramFonts";
 import { formatLiturgiaDate } from "@/lib/liturgia";
@@ -16,12 +17,12 @@ const HEIGHT = 1350;
 // `tailwind.config.ts` — Satori não lê classes Tailwind. As duas rotas têm
 // que ficar 100% no mesmo padrão visual — qualquer ajuste de cor/moldura
 // aqui também vale lá, e vice-versa.
-const BORDEAUX = "#6B1F2A";
-const BORDEAUX_DEEP = "#4E1620";
-const GOLD = "#B8912F";
-const GOLD_BRIGHT = "#D9B673";
-const GOLD_WASH = "#E8DCBA";
-const canvas_MUTED = "#D6C6A8";
+const MINERAL = COLORS.mineral;
+const MINERAL_DEEP = COLORS.ink;
+const LINE = COLORS.borderStrong;
+const LINE_BRIGHT = COLORS.border;
+const TEXT_LIGHT = COLORS.surface;
+const TEXT_MUTED = COLORS.border;
 
 const OUTER_MARGIN = 40;
 const FRAME_GAP = 10;
@@ -46,7 +47,7 @@ function excerpt(texto: string, max: number): string {
 /**
  * Gera o cartão diário do "Evangelho do Dia" pro Instagram (1080×1350),
  * puxando a liturgia de hoje de `/api/liturgia-diaria` — mesma moldura
- * dourada sobre bordô do cartão de verbetes
+ * clara sobre azul-mineral do cartão de verbetes
  * (`app/instagram/[categoria]/[slug]/route.tsx`).
  *
  * A liturgia não vem com imagem própria (é só texto): sem `?imagem=`, o
@@ -82,11 +83,11 @@ export async function GET(request: Request) {
           height: "100%",
           display: "flex",
           padding: OUTER_MARGIN,
-          backgroundColor: BORDEAUX,
-          backgroundImage: `linear-gradient(160deg, ${BORDEAUX} 0%, ${BORDEAUX_DEEP} 100%)`,
+          backgroundColor: MINERAL,
+          backgroundImage: `linear-gradient(160deg, ${MINERAL} 0%, ${MINERAL_DEEP} 100%)`,
         }}
       >
-        <div style={{ flex: 1, display: "flex", border: `1.5px solid ${GOLD}`, padding: FRAME_GAP }}>
+        <div style={{ flex: 1, display: "flex", border: `1.5px solid ${LINE}`, padding: FRAME_GAP }}>
           <div
             style={{
               flex: 1,
@@ -94,7 +95,7 @@ export async function GET(request: Request) {
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              border: `1.5px solid ${GOLD}`,
+              border: `1.5px solid ${LINE}`,
               padding: INNER_PADDING,
             }}
           >
@@ -105,8 +106,8 @@ export async function GET(request: Request) {
                 justifyContent: "center",
                 width: contentWidth,
                 height: PHOTO_HEIGHT,
-                backgroundColor: BORDEAUX_DEEP,
-                border: `2px solid ${GOLD}`,
+                backgroundColor: MINERAL_DEEP,
+                border: `2px solid ${LINE}`,
               }}
             >
               {imagemParam ? (
@@ -127,7 +128,7 @@ export async function GET(request: Request) {
                     fontFamily: EB_GARAMOND_FONT_FAMILY,
                     fontStyle: "italic",
                     fontSize: 160,
-                    color: GOLD_WASH,
+                    color: TEXT_LIGHT,
                   }}
                 >
                   C
@@ -141,9 +142,9 @@ export async function GET(request: Request) {
                   fontFamily: EB_GARAMOND_FONT_FAMILY,
                   fontSize: 22,
                   letterSpacing: 4,
-                  // `GOLD` puro sobre bordô fica ~3,85:1 — abaixo do mínimo
-                  // de 4,5:1 pra texto corrido. `GOLD_BRIGHT` passa em ~5,9:1.
-                  color: GOLD_BRIGHT,
+                  // `LINE` puro sobre azul-mineral fica ~3,85:1 — abaixo do mínimo
+                  // de 4,5:1 pra texto corrido. `LINE_BRIGHT` passa em ~5,9:1.
+                  color: LINE_BRIGHT,
                   fontWeight: 700,
                   textAlign: "center",
                 }}
@@ -158,13 +159,13 @@ export async function GET(request: Request) {
                   fontWeight: 700,
                   fontSize: 56,
                   lineHeight: 1.15,
-                  color: GOLD_WASH,
+                  color: TEXT_LIGHT,
                 }}
               >
                 Evangelho do Dia
               </span>
 
-              <div style={{ display: "flex", width: 90, height: 2, backgroundColor: GOLD, marginTop: 24 }} />
+              <div style={{ display: "flex", width: 90, height: 2, backgroundColor: LINE, marginTop: 24 }} />
 
               <span
                 style={{
@@ -175,7 +176,7 @@ export async function GET(request: Request) {
                   fontStyle: "italic",
                   fontSize: 29,
                   lineHeight: 1.5,
-                  color: canvas_MUTED,
+                  color: TEXT_MUTED,
                   textAlign: "center",
                   justifyContent: "center",
                 }}
@@ -187,7 +188,7 @@ export async function GET(request: Request) {
                   fontFamily: EB_GARAMOND_FONT_FAMILY,
                   marginTop: 14,
                   fontSize: 23,
-                  color: GOLD_BRIGHT,
+                  color: LINE_BRIGHT,
                   fontWeight: 700,
                   textAlign: "center",
                 }}
@@ -195,7 +196,7 @@ export async function GET(request: Request) {
                 {liturgia.evangelho.referencia}
               </span>
 
-              <div style={{ display: "flex", width: 90, height: 2, backgroundColor: GOLD, marginTop: 26 }} />
+              <div style={{ display: "flex", width: 90, height: 2, backgroundColor: LINE, marginTop: 26 }} />
 
               <span
                 style={{
@@ -204,7 +205,7 @@ export async function GET(request: Request) {
                   fontSize: 26,
                   fontWeight: 700,
                   letterSpacing: 1,
-                  color: GOLD_BRIGHT,
+                  color: LINE_BRIGHT,
                 }}
               >
                 @compendiocatolico

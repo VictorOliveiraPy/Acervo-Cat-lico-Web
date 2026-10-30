@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { ImageResponse } from "next/og";
 
+import { COLORS } from "@/lib/designTokens";
 import { CATEGORY_LABELS } from "@/lib/categories";
 import { ApiError } from "@/lib/api";
 import { isCategorySlug, type CategorySlug } from "@/lib/schemas";
@@ -18,16 +19,16 @@ const HEIGHT = 1350;
 // Mesmos hex de `tailwind.config.ts` — o `ImageResponse` (Satori) não lê
 // classes Tailwind, então as cores da marca são repetidas aqui em literal,
 // igual já acontece em `app/icon.tsx` e `app/opengraph-image.tsx`.
-const BORDEAUX = "#6B1F2A";
-const BORDEAUX_DEEP = "#4E1620";
-const GOLD = "#B8912F";
-const GOLD_BRIGHT = "#D9B673";
-const GOLD_WASH = "#E8DCBA";
-// Texto secundário sobre o bordô do cartão (a "letra miúda"): um bege
-// dessaturado que segura leitura sem competir com o título em `GOLD_WASH`.
-const CARD_MUTED = "#D6C6A8";
+const MINERAL = COLORS.mineral;
+const MINERAL_DEEP = COLORS.ink;
+const LINE = COLORS.borderStrong;
+const LINE_BRIGHT = COLORS.border;
+const TEXT_LIGHT = COLORS.surface;
+// Texto secundário sobre o azul-mineral do cartão (a "letra miúda"): um cinza
+// claro que segura leitura sem competir com o título em `TEXT_LIGHT`.
+const TEXT_MUTED = COLORS.border;
 
-// Moldura de dupla linha dourada sobre fundo bordô — mesma linguagem visual
+// Moldura de dupla linha clara sobre fundo azul-mineral — mesma linguagem visual
 // do cartão de compartilhamento de "Acender uma vela" (ver `post-velas.png`),
 // em vez do painel claro que esta rota usava antes: a foto do verbete vira
 // uma obra emoldurada, não uma miniatura de catálogo.
@@ -52,7 +53,7 @@ function excerpt(texto: string, max: number): string {
 
 /**
  * Gera o cartão de post do Instagram (1080×1350, proporção 4:5) de um
- * verbete — moldura dourada sobre fundo bordô, foto emoldurada em cima,
+ * verbete — moldura clara sobre fundo azul-mineral, foto emoldurada em cima,
  * título e resumo centralizados embaixo.
  *
  * Rota interna, não pensada pra navegação humana: existe pra alimentar o
@@ -89,12 +90,12 @@ export async function GET(request: Request, { params }: { params: Params }) {
           height: "100%",
           display: "flex",
           padding: OUTER_MARGIN,
-          backgroundColor: BORDEAUX,
-          backgroundImage: `linear-gradient(160deg, ${BORDEAUX} 0%, ${BORDEAUX_DEEP} 100%)`,
+          backgroundColor: MINERAL,
+          backgroundImage: `linear-gradient(160deg, ${MINERAL} 0%, ${MINERAL_DEEP} 100%)`,
         }}
       >
         {/* Linha externa da moldura dupla */}
-        <div style={{ flex: 1, display: "flex", border: `1.5px solid ${GOLD}`, padding: FRAME_GAP }}>
+        <div style={{ flex: 1, display: "flex", border: `1.5px solid ${LINE}`, padding: FRAME_GAP }}>
           {/* Linha interna da moldura dupla */}
           <div
             style={{
@@ -103,7 +104,7 @@ export async function GET(request: Request, { params }: { params: Params }) {
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              border: `1.5px solid ${GOLD}`,
+              border: `1.5px solid ${LINE}`,
               padding: INNER_PADDING,
             }}
           >
@@ -120,8 +121,8 @@ export async function GET(request: Request, { params }: { params: Params }) {
                   justifyContent: "center",
                   width: contentWidth,
                   height: PHOTO_HEIGHT,
-                  backgroundColor: BORDEAUX_DEEP,
-                  border: `2px solid ${GOLD}`,
+                  backgroundColor: MINERAL_DEEP,
+                  border: `2px solid ${LINE}`,
                 }}
               >
                 {/* Satori (o renderizador do ImageResponse) não roda no
@@ -151,9 +152,9 @@ export async function GET(request: Request, { params }: { params: Params }) {
                   fontFamily: EB_GARAMOND_FONT_FAMILY,
                   fontSize: 24,
                   letterSpacing: 5,
-                  // `GOLD` puro sobre bordô fica ~3,85:1 — abaixo do mínimo
-                  // de 4,5:1 pra texto corrido. `GOLD_BRIGHT` passa em ~5,9:1.
-                  color: GOLD_BRIGHT,
+                  // `LINE` puro sobre azul-mineral fica ~3,85:1 — abaixo do mínimo
+                  // de 4,5:1 pra texto corrido. `LINE_BRIGHT` passa em ~5,9:1.
+                  color: LINE_BRIGHT,
                   fontWeight: 700,
                 }}
               >
@@ -168,7 +169,7 @@ export async function GET(request: Request, { params }: { params: Params }) {
                   fontWeight: 700,
                   fontSize: entry.titulo.length > 40 ? 50 : 62,
                   lineHeight: 1.15,
-                  color: GOLD_WASH,
+                  color: TEXT_LIGHT,
                   textAlign: "center",
                   justifyContent: "center",
                 }}
@@ -176,7 +177,7 @@ export async function GET(request: Request, { params }: { params: Params }) {
                 {entry.titulo}
               </span>
 
-              <div style={{ display: "flex", width: 90, height: 2, backgroundColor: GOLD, marginTop: 28 }} />
+              <div style={{ display: "flex", width: 90, height: 2, backgroundColor: LINE, marginTop: 28 }} />
 
               <span
                 style={{
@@ -186,7 +187,7 @@ export async function GET(request: Request, { params }: { params: Params }) {
                   fontFamily: EB_GARAMOND_FONT_FAMILY,
                   fontSize: 30,
                   lineHeight: 1.5,
-                  color: CARD_MUTED,
+                  color: TEXT_MUTED,
                   textAlign: "center",
                   justifyContent: "center",
                 }}
@@ -194,7 +195,7 @@ export async function GET(request: Request, { params }: { params: Params }) {
                 {excerpt(entry.resumo, RESUMO_MAX_CHARS)}
               </span>
 
-              <div style={{ display: "flex", width: 90, height: 2, backgroundColor: GOLD, marginTop: 32 }} />
+              <div style={{ display: "flex", width: 90, height: 2, backgroundColor: LINE, marginTop: 32 }} />
 
               <span
                 style={{
@@ -203,7 +204,7 @@ export async function GET(request: Request, { params }: { params: Params }) {
                   fontSize: 26,
                   fontWeight: 700,
                   letterSpacing: 1,
-                  color: GOLD_BRIGHT,
+                  color: LINE_BRIGHT,
                 }}
               >
                 compendio-catolico.com

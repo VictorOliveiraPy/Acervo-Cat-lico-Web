@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { ImageResponse } from "next/og";
 
+import { COLORS } from "@/lib/designTokens";
 import { resolveCardImageSrc } from "@/lib/wikimedia";
 
 export const runtime = "edge";
@@ -27,7 +28,7 @@ async function loadHeadlineFonts(origin: string) {
  * quadro inteiro, sem moldura, com uma frase grande em caixa alta por
  * cima — formato de card que para o scroll, não de placa de museu.
  *
- * Substitui a primeira versão desta rota (moldura bordô/dourada com bloco
+ * Substitui a primeira versão desta rota (moldura azul-mineral/clara com bloco
  * de texto embaixo, igual às outras duas rotas de Instagram): aquele
  * formato é o certo pro cartão de verbete/liturgia, que quer parecer
  * "arquivo do site", mas é fraco pra gerar engajamento — ninguém para de
@@ -95,7 +96,7 @@ export async function GET(request: Request) {
                 fontFamily: MONTSERRAT_EXTRABOLD,
                 fontSize: 26,
                 letterSpacing: 3,
-                color: "#D9B673",
+                color: COLORS.border,
                 marginBottom: 20,
               }}
             >
@@ -108,7 +109,7 @@ export async function GET(request: Request) {
               fontFamily: MONTSERRAT_BLACK,
               fontSize: 66,
               lineHeight: 1.12,
-              color: "#FFFFFF",
+              color: COLORS.onAccent,
               textShadow: "0 2px 18px rgba(0,0,0,0.5)",
               textTransform: "uppercase",
             }}
@@ -120,7 +121,7 @@ export async function GET(request: Request) {
               display: "flex",
               fontFamily: MONTSERRAT_EXTRABOLD,
               fontSize: 24,
-              color: "#D9B673",
+              color: COLORS.border,
               marginTop: 28,
             }}
           >
