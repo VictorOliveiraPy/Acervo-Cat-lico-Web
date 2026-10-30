@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { CategoryBanner } from "@/components/CategoryBanner";
 import { EntryList } from "@/components/EntryList";
 import { Pagination } from "@/components/Pagination";
+import { SaintGallery } from "@/components/SaintGallery";
 import { SearchField } from "@/components/SearchField";
 import {
   Breadcrumbs,
@@ -13,7 +13,6 @@ import {
 } from "@/components/Editorial";
 import { ApiError, getErrorMessage } from "@/lib/api";
 import { CATEGORY_LABELS, categoryPath } from "@/lib/categories";
-import { CATEGORY_BACKGROUNDS } from "@/lib/categoryBackgrounds";
 import { formatEntryCount } from "@/lib/entryDisplay";
 import { computePagination, parseOffset } from "@/lib/pagination";
 import {
@@ -132,7 +131,6 @@ export default async function CategoryPage({
   const title = info?.nome ?? label.heading;
   const description = info?.descricao ?? label.tagline;
   const meta = `${formatEntryCount(page.total)} · ${pagination.rangeLabel || "nada publicado ainda"}`;
-  const background = CATEGORY_BACKGROUNDS[categoria];
 
   return (
     <>
@@ -142,25 +140,11 @@ export default async function CategoryPage({
         />
       </div>
 
-      {/* Banner com foto de fundo só pra categorias curadas em
-          `CATEGORY_BACKGROUNDS` (hoje só "Papas") — as demais continuam no
-          `PageHeader` de sempre, sem foto, até ganharem uma. */}
-      {background ? (
+      <div className="mx-auto max-w-shell px-4 sm:px-6">
         <div className="mt-6">
-          <CategoryBanner
-            background={background}
-            title={title}
-            description={description}
-            meta={meta}
-          />
+          <PageHeader kicker="Categoria" title={title} description={description} meta={meta} />
         </div>
-      ) : (
-        <div className="mx-auto max-w-shell px-4 sm:px-6">
-          <div className="mt-6">
-            <PageHeader kicker="Categoria" title={title} description={description} meta={meta} />
-          </div>
-        </div>
-      )}
+      </div>
 
       <div className="mx-auto max-w-shell px-4 pb-10 sm:px-6">
         {info ? (
@@ -173,8 +157,15 @@ export default async function CategoryPage({
           <SearchField
             category={categoria}
             label={`Buscar em ${label.nav}`}
+            placeholder={`Buscar em ${label.nav}…`}
           />
         </div>
+
+        {categoria === "santos" && offset === 0 ? (
+          <div className="mt-10">
+            <SaintGallery />
+          </div>
+        ) : null}
 
         <div className="mt-10">
           {page.itens.length > 0 ? (
