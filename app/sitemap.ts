@@ -90,6 +90,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // app/liturgia-diaria/page.tsx) — troca de conteúdo todo dia, daí
     // `changeFrequency: "daily"` em vez de "weekly".
     { url: `${SITE_URL}/liturgia-diaria`, changeFrequency: "daily", priority: 0.9 },
+    { url: `${SITE_URL}/santo-do-dia`, changeFrequency: "daily", priority: 0.8 },
+    // Só a página principal: vela nenhuma e nenhuma página do mural entra aqui.
+    { url: `${SITE_URL}/velas`, changeFrequency: "weekly", priority: 0.5 },
   ];
 
   // Lição só entra depois da revisão humana (`review` em `lib/academia.ts`).

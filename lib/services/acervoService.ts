@@ -78,31 +78,31 @@ export type CategoryIndexItem = {
 /** Teto de itens por página que o backend aceita. */
 const INDEX_PAGE_SIZE = 100;
 
-/**
- * Todas as entradas de uma categoria, na ordem curada pelo acervo, só com o que
- * o sitemap e os links de anterior/próximo usam. Pagina até cobrir o total.
- */
-export async function fetchCategoryIndex(
+/** Todas as entradas de uma categoria, na ordem curada. Pagina até cobrir o total. */
+export async function fetchAllEntries(
   categoria: CategorySlug,
   lang: SiteLang = DEFAULT_LOCALE,
-): Promise<CategoryIndexItem[]> {
-  const items: CategoryIndexItem[] = [];
+): Promise<Entry[]> {
+  const items: Entry[] = [];
   let offset = 0;
 
   while (true) {
     const page = await fetchEntryPage(categoria, { limit: INDEX_PAGE_SIZE, offset }, lang);
-    items.push(
-      ...page.itens.map((entry) => ({
-        slug: entry.slug,
-        titulo: entry.titulo,
-        atualizado_em: entry.atualizado_em,
-      })),
-    );
+    items.push(...page.itens);
     offset += page.itens.length;
     if (page.itens.length === 0 || offset >= page.total) break;
   }
 
   return items;
+}
+
+/** Só o que o sitemap e os links de anterior/próximo usam de cada entrada. */
+export async function fetchCategoryIndex(
+  categoria: CategorySlug,
+  lang: SiteLang = DEFAULT_LOCALE,
+): Promise<CategoryIndexItem[]> {
+  const items = await fetchAllEntries(categoria, lang);
+  return items.map(({ slug, titulo, atualizado_em }) => ({ slug, titulo, atualizado_em }));
 }
 
 /** Entrada completa de uma categoria (corpo, campos próprios e fontes). */

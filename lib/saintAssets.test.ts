@@ -3,7 +3,6 @@ import { describe, expect, it } from "vitest";
 import {
   SAINT_ASSETS,
   SAINT_CATALOG,
-  featuredSaint,
   normalizeSaintSlug,
   saintAssetFor,
 } from "@/lib/saintAssets";
@@ -53,16 +52,6 @@ describe("catálogo de imagens individuais dos santos", () => {
       "patricio-da-irlanda",
     ]);
     expect(saintAssetFor({ categoria: "santos", slug: "santa-cecilia" })).toBeNull();
-  });
-
-  it("reveza o santo em destaque por dia, sem sair dos revisados", () => {
-    const today = new Date("2026-10-30T12:00:00Z");
-    const sameDay = new Date("2026-10-30T23:00:00Z");
-    const tomorrow = new Date("2026-10-31T12:00:00Z");
-
-    expect(featuredSaint(sameDay)).toBe(featuredSaint(today));
-    expect(featuredSaint(tomorrow)).not.toBe(featuredSaint(today));
-    expect(SAINT_ASSETS).toContain(featuredSaint(today));
   });
 
   it("consolida São Pedro uma vez e registra seus dois lotes de origem", () => {

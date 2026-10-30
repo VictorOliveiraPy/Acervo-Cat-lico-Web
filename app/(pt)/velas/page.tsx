@@ -14,23 +14,26 @@ const KICKER = "Vamos seguir juntos na mesma oração";
 const DESCRIPTION =
   "Acender uma vela virtual é um jeito de manter acesa a chama da fé — por quem você ama, por uma causa difícil, ou para agradecer uma graça recebida. Escolha uma vela, escreva seu nome e, se quiser, uma intenção: ela entra para o mural de quem já passou por aqui rezando.";
 
-export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
-  alternates: { canonical: "/velas" },
-  // `images` explícito: declarar `openGraph` aqui substitui por inteiro o
-  // que a página herdaria do `app/opengraph-image.tsx` — sem isto, a página
-  // compartilhada no WhatsApp/redes saía sem nenhuma prévia de imagem.
-  openGraph: {
+type SearchParams = { [key: string]: string | string[] | undefined };
+
+export function generateMetadata({ searchParams }: { searchParams: SearchParams }): Metadata {
+  return {
     title: TITLE,
     description: DESCRIPTION,
-    url: "/velas",
-    images: ["/opengraph-image"],
-  },
-  robots: { index: false, follow: true },
-};
-
-type SearchParams = { [key: string]: string | string[] | undefined };
+    alternates: { canonical: "/velas" },
+    // `images` explícito: declarar `openGraph` aqui substitui por inteiro o
+    // que a página herdaria do `app/opengraph-image.tsx` — sem isto, a página
+    // compartilhada no WhatsApp/redes saía sem nenhuma prévia de imagem.
+    openGraph: {
+      title: TITLE,
+      description: DESCRIPTION,
+      url: "/velas",
+      images: ["/opengraph-image"],
+    },
+    // Só a primeira página é indexável: as seguintes são apenas mural de visitantes.
+    robots: { index: parseOffset(searchParams.offset) === 0, follow: true },
+  };
+}
 
 export default async function VelasPage({
   searchParams,

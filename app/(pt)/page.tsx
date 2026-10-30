@@ -14,11 +14,12 @@ import { CATEGORY_GROUPS } from "@/lib/categoryGroups";
 import { formatEntryCount } from "@/lib/entryDisplay";
 import { languageAlternates } from "@/lib/i18n";
 import { safeJsonLd } from "@/lib/jsonLd";
-import { formatLiturgiaDate } from "@/lib/liturgia";
+import { formatLiturgiaDate, todayInBrazil } from "@/lib/liturgia";
 import type { LiturgiaDiaria } from "@/lib/liturgiaSchemas";
-import { featuredSaint, type SaintAsset } from "@/lib/saintAssets";
+import { saintAssetFor } from "@/lib/saintAssets";
+import { formatDayMonth, saintOfDay, type SaintOfDay, type Santo } from "@/lib/santoDoDia";
 import { CATEGORY_SLUGS, type CategoryInfo, type Entry } from "@/lib/schemas";
-import { fetchCategories, fetchEntry, fetchEntryPage } from "@/lib/services/acervoService";
+import { fetchAllEntries, fetchCategories, fetchEntryPage } from "@/lib/services/acervoService";
 import { fetchLiturgiaDiaria } from "@/lib/services/liturgiaService";
 import { INSTAGRAM_URL, SITE_NAME, SITE_URL } from "@/lib/site";
 
@@ -155,15 +156,11 @@ async function loadLiturgia(): Promise<LiturgiaDiaria | null> {
 }
 
 /**
- * O destaque só aparece com o verbete confirmado pela API: um link quebrado na
- * home é pior que uma faixa a menos. Como a liturgia, a falha aqui não derruba
- * a página.
+ * O santo do dia, como a liturgia, é complementar: a falha aqui não derruba a página.
  */
-async function loadFeaturedSaint(): Promise<{ saint: SaintAsset; resumo: string } | null> {
-  const saint = featuredSaint(new Date());
+async function loadSaintOfDay(): Promise<SaintOfDay | null> {
   try {
-    const entry = await fetchEntry("santos", saint.slug);
-    return { saint, resumo: entry.resumo };
+    return saintOfDay((await fetchAllEntries("santos")) as Santo[], todayInBrazil());
   } catch (error: unknown) {
     if (error instanceof ApiError) return null;
     throw error;
@@ -179,7 +176,7 @@ function sortByNavOrder(categories: CategoryInfo[]): CategoryInfo[] {
 
 export default async function HomePage() {
   const liturgiaPromise = loadLiturgia();
-  const featuredPromise = loadFeaturedSaint();
+  const saintPromise = loadSaintOfDay();
   // Falha da API sobe para `error.tsx`: com cache, a última home boa continua no
   // ar, em vez de uma mensagem de erro guardada e servida como 200.
   const data = await loadHome();
@@ -187,7 +184,10 @@ export default async function HomePage() {
   const categories = sortByNavOrder(data.categories);
   const totalEntries = categories.reduce((sum, info) => sum + info.total, 0);
   const categoryBySlug = new Map(categories.map((info) => [info.categoria, info]));
-  const [liturgia, featured] = await Promise.all([liturgiaPromise, featuredPromise]);
+  const [liturgia, saintToday] = await Promise.all([liturgiaPromise, saintPromise]);
+  const saintImage = saintToday
+    ? (saintAssetFor(saintToday.saint)?.avatar ?? saintToday.saint.imagem)
+    : null;
   const [nextLesson] = LESSONS;
 
   return (
@@ -270,24 +270,35 @@ export default async function HomePage() {
           </div>
 
           <div className="mt-4 grid gap-4 md:grid-cols-2">
-            {featured ? (
+            {saintToday ? (
               <EditorialStrip
-                eyebrow="Santo em destaque"
-                title={featured.saint.name}
-                description={featured.resumo}
+                eyebrow={
+                  saintToday.isToday
+                    ? "Santo do dia"
+                    : `Próxima festa: ${formatDayMonth(saintToday.date)}`
+                }
+                title={saintToday.saint.titulo}
+                description={saintToday.saint.resumo}
                 media={
-                  <Image
-                    src={featured.saint.avatar}
-                    alt=""
-                    width={96}
-                    height={96}
-                    className="h-20 w-20 shrink-0 rounded-full object-cover sm:h-24 sm:w-24"
-                  />
+                  saintImage ? (
+                    <Image
+                      src={saintImage}
+                      alt=""
+                      width={96}
+                      height={96}
+                      className="h-20 w-20 shrink-0 rounded-full object-cover sm:h-24 sm:w-24"
+                    />
+                  ) : undefined
                 }
               >
-                <Link href={entryPath("santos", featured.saint.slug)} className="btn-tertiary">
-                  Conhecer sua história <span aria-hidden="true">→</span>
-                </Link>
+                <div className="flex flex-wrap gap-x-5 gap-y-2">
+                  <Link href={entryPath("santos", saintToday.saint.slug)} className="btn-tertiary">
+                    Conhecer sua história <span aria-hidden="true">→</span>
+                  </Link>
+                  <Link href="/santo-do-dia" className="btn-tertiary">
+                    Festas da semana <span aria-hidden="true">→</span>
+                  </Link>
+                </div>
               </EditorialStrip>
             ) : null}
 

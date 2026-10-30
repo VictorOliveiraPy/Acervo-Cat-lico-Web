@@ -141,16 +141,3 @@ export function saintAssetFor(
   if (entry.categoria !== "santos") return null;
   return ASSET_BY_SLUG.get(normalizeSaintSlug(entry.slug)) ?? null;
 }
-
-const DAY_MS = 24 * 60 * 60 * 1000;
-
-/**
- * Santo em destaque na home: revezamento diário entre os revisados.
- *
- * É "destaque" e não "santo do dia" de propósito: a escolha não segue o
- * calendário litúrgico, e chamá-la assim afirmaria uma festa que não é a de hoje.
- */
-export function featuredSaint(now: Date): SaintAsset {
-  const day = Math.floor(now.getTime() / DAY_MS);
-  return SAINT_ASSETS[day % SAINT_ASSETS.length] as SaintAsset;
-}
