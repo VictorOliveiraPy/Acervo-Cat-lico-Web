@@ -29,6 +29,8 @@ const SINGLE_SEGMENT_ROUTES = new Set([
   "busca",
   "liturgia-diaria",
   "velas",
+  "perfil",
+  "ranking",
   "icon",
   "apple-icon",
   "opengraph-image",

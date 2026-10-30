@@ -32,6 +32,8 @@ const CONTENT_SECURITY_POLICY = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // O botão de entrar só aparece com o login configurado na Vercel.
+  env: { NEXT_PUBLIC_LOGIN_ENABLED: process.env.AUTH_GOOGLE_ID ? "1" : "" },
   poweredByHeader: false,
   experimental: {
     serverActions: {

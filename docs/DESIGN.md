@@ -82,8 +82,8 @@ conhecem.
 
 Lições em `lib/academia.ts`; progresso só no `localStorage`
 (`lib/academiaProgress.ts`), porque não há contas nem backend de aulas. Regras
-fixas: artigos nunca dependem de lição, sem cadastro, sem pontos ou XP, oração
-fora da progressão. Lição com `review: "pending"` fica com `noindex`, fora do
+fixas: artigos nunca dependem de lição, login opcional, pontos só por exercício
+(no perfil e no ranking público, por opção da pessoa), oração fora da progressão. Lição com `review: "pending"` fica com `noindex`, fora do
 sitemap e com aviso visível até a revisão humana.
 
 ## Espaçamento

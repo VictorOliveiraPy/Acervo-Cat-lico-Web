@@ -21,6 +21,8 @@ describe("classifyPath", () => {
     expect(classifyPath("/academia")).toEqual({ kind: "ok" });
     expect(classifyPath("/academia/santissima-trindade")).toEqual({ kind: "ok" });
     expect(classifyPath("/academia/santissima-trindade/extra")).toEqual({ kind: "not-found" });
+    expect(classifyPath("/perfil")).toEqual({ kind: "ok" });
+    expect(classifyPath("/ranking")).toEqual({ kind: "ok" });
   });
 
   it("dá 404 para primeiro segmento que não existe", () => {

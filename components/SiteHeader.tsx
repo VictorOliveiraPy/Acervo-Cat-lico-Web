@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { AccountMenu } from "@/components/AccountMenu";
 import { BrandMark } from "@/components/BrandMark";
 import { CategoryNav } from "@/components/CategoryNav";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -76,6 +77,7 @@ export function SiteHeader() {
 
           <div className="ml-auto flex items-center gap-4 md:min-w-0 md:flex-1 md:justify-end">
             <LanguageSwitcher />
+          {isPortuguese ? <AccountMenu /> : null}
             {showSearch ? (
               <>
                 {/* Só a partir de `lg`: em tablet, marca e navegação espremiam o campo. */}

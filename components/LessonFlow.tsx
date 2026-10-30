@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+import { completeLessonAction, type CompleteLessonResult } from "@/app/perfil/actions";
 import type { Lesson } from "@/lib/academia";
 import {
   LAST_STEP,
@@ -13,6 +14,7 @@ import {
   withStep,
 } from "@/lib/academiaProgress";
 import { trackEvent } from "@/lib/analytics";
+import { LOGIN_ENABLED } from "@/lib/auth-public";
 
 type Feedback = { tone: "success" | "error" | "hint"; title: string; text: string };
 
@@ -33,6 +35,7 @@ export function LessonFlow({ lesson, articleHref }: { lesson: Lesson; articleHre
   const [step, setStep] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
+  const [result, setResult] = useState<CompleteLessonResult | null>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   // Mover o foco só depois de uma ação da pessoa, nunca ao abrir a página.
   const shouldFocus = useRef(false);
@@ -80,6 +83,10 @@ export function LessonFlow({ lesson, articleHref }: { lesson: Lesson; articleHre
 
   function finish() {
     trackEvent("lesson_completed", { lesson: lesson.slug });
+    // A lição conclui mesmo sem login ou sem API: os pontos são um extra.
+    if (LOGIN_ENABLED && selected) {
+      void completeLessonAction(lesson.slug, selected).then(setResult, () => undefined);
+    }
     goTo(LAST_STEP);
   }
 
@@ -244,6 +251,16 @@ export function LessonFlow({ lesson, articleHref }: { lesson: Lesson; articleHre
             <p className="mt-4 text-meta text-success">
               <span aria-hidden="true">✓ </span>Exercício de compreensão concluído
             </p>
+            {result?.status === "saved" ? (
+              <p role="status" className="mt-1 text-meta text-ink-muted">
+                Salvo no seu perfil. Você tem {result.points} pontos.
+              </p>
+            ) : null}
+            {result?.status === "anonymous" ? (
+              <p role="status" className="mt-1 text-meta text-ink-muted">
+                Entre com o Google para somar pontos no seu perfil.
+              </p>
+            ) : null}
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Link href={articleHref} className="btn btn-primary">
                 Voltar ao artigo <span aria-hidden="true">→</span>
@@ -257,7 +274,9 @@ export function LessonFlow({ lesson, articleHref }: { lesson: Lesson; articleHre
       </section>
 
       <p className="mt-3 text-meta text-ink-muted">
-        Sem cadastro: o progresso fica guardado só neste navegador.
+        {LOGIN_ENABLED
+          ? "Sem login, o progresso fica só neste navegador. Com login, vai para o seu perfil."
+          : "Sem cadastro: o progresso fica guardado só neste navegador."}
       </p>
     </div>
   );
