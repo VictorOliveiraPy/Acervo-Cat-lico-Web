@@ -3,12 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { Breadcrumbs, PageToc, PrayerText, SourceList, StatusMessage } from "@/components/Editorial";
+import { Breadcrumbs, PageToc, PrayerText, SourceList } from "@/components/Editorial";
 import { EntryList } from "@/components/EntryList";
 import { EntryNeighbors } from "@/components/EntryNeighbors";
 import { OrnamentalDivider } from "@/components/OrnamentalDivider";
 import { ReadingSizeControl } from "@/components/ReadingSizeControl";
-import { ApiError, getErrorMessage } from "@/lib/api";
+import { ApiError } from "@/lib/api";
 import { categoryPath, entryPath } from "@/lib/categories";
 import { paragraphs } from "@/lib/entryDisplay";
 import { HREFLANG, OG_LOCALE, dictionaryFor, isLocale, localePath, type Locale } from "@/lib/i18n";
@@ -105,20 +105,7 @@ export default async function LocaleEntryPage({ params }: { params: Params }) {
   const categoria = params.categoria;
   const t = dictionaryFor(lang);
 
-  let entry: Entry;
-  try {
-    entry = await loadEntry(categoria, params.slug, lang);
-  } catch (error: unknown) {
-    if (!(error instanceof ApiError)) throw error;
-    return (
-      <div className="mx-auto max-w-shell px-4 py-12 sm:px-6">
-        <StatusMessage title={t.loadError} tone="error">
-          <p>{getErrorMessage(error)}</p>
-          <p className="mt-3">{t.reloadHint}</p>
-        </StatusMessage>
-      </div>
-    );
-  }
+  const entry = await loadEntry(categoria, params.slug, lang);
 
   const blocks = paragraphs(entry.corpo);
   const saintAsset = saintAssetFor(entry);

@@ -9,7 +9,6 @@ import {
   PageToc,
   PrayerText,
   SourceList,
-  StatusMessage,
   TagList,
 } from "@/components/Editorial";
 import { EntryList } from "@/components/EntryList";
@@ -18,7 +17,7 @@ import { EntryNeighbors } from "@/components/EntryNeighbors";
 import { OrnamentalDivider } from "@/components/OrnamentalDivider";
 import { ReadingSizeControl } from "@/components/ReadingSizeControl";
 import { lessonForEntry } from "@/lib/academia";
-import { ApiError, getErrorMessage } from "@/lib/api";
+import { ApiError } from "@/lib/api";
 import { CATEGORY_LABELS, categoryPath, entryPath } from "@/lib/categories";
 import { entryMetaFields, entryOrdinal, paragraphs } from "@/lib/entryDisplay";
 import { safeJsonLd } from "@/lib/jsonLd";
@@ -58,7 +57,9 @@ async function loadRelated(
 
   try {
     const taggedResults = await Promise.all(
-      terms.map((term) => searchAcervo({ q: term, limit: RELATED_COUNT + 2 })),
+      terms.map((term) =>
+        searchAcervo({ q: term, limit: RELATED_COUNT + 2, revalidateSeconds: revalidate }),
+      ),
     );
     const candidates = new Map<string, { categoria: CategorySlug; slug: string }>();
     for (const results of taggedResults) {
@@ -122,6 +123,17 @@ async function loadEntry(categoria: CategorySlug, slug: string): Promise<Entry> 
   }
 }
 
+/**
+ * Verbete pré-renderizado sob demanda e guardado em cache. Sem isto a rota é
+ * dinâmica: cada visita do Googlebot refaz a página e as chamadas à API (~0,65 s),
+ * e resposta lenta reduz quanto o Google se dispõe a rastrear.
+ */
+export const revalidate = 3600;
+
+export function generateStaticParams(): Params[] {
+  return [];
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -171,29 +183,9 @@ export default async function EntryPage({ params }: { params: Params }) {
   const categoria: CategorySlug = params.categoria;
   const label = CATEGORY_LABELS[categoria];
 
-  let entry: Entry;
-  try {
-    entry = await loadEntry(categoria, params.slug);
-  } catch (error: unknown) {
-    if (!(error instanceof ApiError)) throw error;
-    return (
-      <div className="mx-auto max-w-shell px-4 py-12 sm:px-6">
-        <StatusMessage title="Não foi possível abrir esta entrada" tone="error">
-          <p>{getErrorMessage(error)}</p>
-          <p className="mt-3">
-            Volte para{" "}
-            <Link
-              href={categoryPath(categoria)}
-              className="text-accent underline underline-offset-4"
-            >
-              {label.nav}
-            </Link>{" "}
-            e tente novamente.
-          </p>
-        </StatusMessage>
-      </div>
-    );
-  }
+  // Falha da API sobe para `error.tsx` e responde 500, em vez de um 200 com
+  // mensagem de erro: o Google tenta de novo, e o cache mantém a última versão boa.
+  const entry = await loadEntry(categoria, params.slug);
 
   const ordinal = entryOrdinal(entry);
   const saintAsset = saintAssetFor(entry);

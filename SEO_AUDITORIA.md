@@ -205,3 +205,41 @@ Data da revisao: 2026-09-16
 ### Publicacao
 
 - [ ] Commit e push da auditoria visual.
+
+---
+
+# Revisão de 2026-10-30
+
+Base: export do Search Console (`console-seo/`, dados até 2026-10-22) e medição em produção.
+
+## Situação
+
+- Não indexadas: 1.819; indexadas: 361. "Detectada, mas não indexada": 1.764.
+- Impressões por semana: 406, 252, 263 e, a partir de 2026-10-02, 15, 4 e 6. Nenhum commit daquela
+  semana explica a queda; falta olhar Desempenho e Ações manuais no Search Console.
+- Os grupos "alternativa com canônica", "redirecionamento" e "noindex" são esperados.
+- O export traz só totais. Para investigar "cópia sem canônica" (23) é preciso a lista de URLs.
+
+## Corrigido
+
+- [x] Verbetes em cache (antes refeitos a cada visita, ~0,65 s).
+- [x] Falha da API responde erro real (antes 200 com mensagem de erro).
+- [x] Páginas além do fim da listagem respondem 404 (antes 200 indexável).
+- [x] Canonical da home saiu do layout (antes herdado pelas páginas 404).
+- [x] Lições do Compêndio com `noindex` e fora do sitemap.
+
+## Causa principal, ainda aberta: conteúdo raso em escala
+
+Corpo mediano de 142 palavras; 36% dos 1.776 verbetes têm menos de 100 e 52% menos de 150. Piores
+categorias (mediana): biblia 58, glossario 62, parabolas 64, virtudes 68, mandamentos 68,
+jesus-cristo 72, milagres-de-jesus 78, papas 81, ordens-religiosas 86, santos 91. As categorias
+longas (cardeais, ciencia-fe, historia, apologetica) têm mediana acima de 640.
+
+Duplicação: 77 títulos repetidos em 166 URLs (santos, doutores-igreja e padres-da-igreja) e 14 pares
+com 30% ou mais de texto igual (concilios/* e historia/*-contexto; alguns milagres-eucaristicos).
+
+## Próximos passos
+
+- [ ] Reenviar o sitemap e clicar em "Validar correção" no Search Console.
+- [ ] Decidir sobre tirar os verbetes rasos do sitemap ou aprofundá-los primeiro.
+- [ ] Unificar os duplicados de concilios/historia.

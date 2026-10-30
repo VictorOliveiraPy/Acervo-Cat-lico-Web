@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -6,9 +7,8 @@ import { EditorialStrip, GothicWindow } from "@/components/HomeArt";
 import { LessonProgressLink } from "@/components/LessonProgressLink";
 import { OrnamentalDivider } from "@/components/OrnamentalDivider";
 import { SearchField } from "@/components/SearchField";
-import { StatusMessage } from "@/components/Editorial";
 import { LESSONS } from "@/lib/academia";
-import { ApiError, getApiBaseUrl, getErrorMessage } from "@/lib/api";
+import { ApiError } from "@/lib/api";
 import { CATEGORY_LABELS, categoryPath, entryPath } from "@/lib/categories";
 import { CATEGORY_GROUPS } from "@/lib/categoryGroups";
 import { formatEntryCount } from "@/lib/entryDisplay";
@@ -26,6 +26,12 @@ import { INSTAGRAM_URL, SITE_NAME, SITE_URL } from "@/lib/site";
 // SECONDS` em `lib/api.ts`), pra não ficar pedindo dado novo mais rápido do
 // que o resto do site já considera "atual".
 export const revalidate = 300;
+
+// Só a home é canônica de "/". No layout, esse valor era herdado por toda página
+// sem canonical própria, inclusive as 404, dizendo ao Google que eram cópias da home.
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 // WebSite + SearchAction: dado estruturado que habilita a caixa de busca do
 // Google embaixo do resultado do site (sitelinks search box). Só faz sentido
@@ -170,26 +176,11 @@ function sortByNavOrder(categories: CategoryInfo[]): CategoryInfo[] {
 }
 
 export default async function HomePage() {
-  let data: HomeData;
   const liturgiaPromise = LITURGIA_ATIVA ? loadLiturgia() : Promise.resolve(null);
   const featuredPromise = loadFeaturedSaint();
-  try {
-    data = await loadHome();
-  } catch (error: unknown) {
-    if (!(error instanceof ApiError)) throw error;
-    return (
-      <div className="mx-auto max-w-shell px-4 py-12 sm:px-6">
-        <StatusMessage title="O acervo não respondeu" tone="error">
-          <p>{getErrorMessage(error)}</p>
-          <p className="mt-3">
-            Confira se a API está no ar em{" "}
-            <code className="text-ink">{getApiBaseUrl()}</code> e
-            recarregue a página.
-          </p>
-        </StatusMessage>
-      </div>
-    );
-  }
+  // Falha da API sobe para `error.tsx`: com cache, a última home boa continua no
+  // ar, em vez de uma mensagem de erro guardada e servida como 200.
+  const data = await loadHome();
 
   const categories = sortByNavOrder(data.categories);
   const totalEntries = categories.reduce((sum, info) => sum + info.total, 0);

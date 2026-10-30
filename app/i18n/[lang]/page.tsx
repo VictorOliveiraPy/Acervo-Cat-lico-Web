@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { PageHeader, StatusMessage } from "@/components/Editorial";
-import { ApiError, getErrorMessage } from "@/lib/api";
+import { PageHeader } from "@/components/Editorial";
+import { ApiError } from "@/lib/api";
 import { categoryPath } from "@/lib/categories";
 import { HREFLANG, OG_LOCALE, dictionaryFor, isLocale, localePath, type Locale } from "@/lib/i18n";
 import { fetchCategories } from "@/lib/services/acervoService";
@@ -46,20 +46,7 @@ export default async function LocaleHome({ params }: { params: Params }) {
   const lang = params.lang;
   const t = dictionaryFor(lang);
 
-  let categories: CategoryInfo[];
-  try {
-    categories = await loadCategories(lang);
-  } catch (error: unknown) {
-    if (!(error instanceof ApiError)) throw error;
-    return (
-      <div className="mx-auto max-w-shell px-4 py-12 sm:px-6">
-        <StatusMessage title={t.loadError} tone="error">
-          <p>{getErrorMessage(error)}</p>
-          <p className="mt-3">{t.reloadHint}</p>
-        </StatusMessage>
-      </div>
-    );
-  }
+  const categories = await loadCategories(lang);
 
   return (
     <div className="mx-auto max-w-shell px-4 py-10 sm:px-6">

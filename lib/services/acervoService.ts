@@ -125,25 +125,30 @@ export async function searchAcervo({
   q,
   categoria,
   limit = SEARCH_LIMIT,
+  revalidateSeconds = 0,
 }: {
   q: string;
   categoria?: CategorySlug;
   limit?: number;
+  /** Página em cache não pode depender de busca sem cache: o Next a recusaria. */
+  revalidateSeconds?: number;
 }): Promise<SearchResult[]> {
   const term = q.trim();
   if (term.length < MIN_SEARCH_LENGTH) return [];
 
   return apiGet("/search", searchResultListSchema, {
     query: { q: term, categoria, limit },
-    // Busca não é cacheada por tempo: o termo já é a chave da URL, e uma
-    // janela de revalidação aqui só criaria resultado velho por engano.
-    revalidateSeconds: 0,
+    // Por padrão a busca não é cacheada por tempo: o termo já é a chave da URL, e
+    // uma janela de revalidação aqui só criaria resultado velho por engano.
+    revalidateSeconds,
   });
 }
 
 /** Status da API e tamanho do acervo carregado. */
 export function fetchHealth(): Promise<HealthStatus> {
-  return apiGet("/health", healthStatusSchema, { revalidateSeconds: 30 });
+  // Está no rodapé de toda página, então o menor intervalo daqui manda no cache de
+  // todas: com 30 s, os verbetes seriam refeitos o tempo todo por causa de um número.
+  return apiGet("/health", healthStatusSchema);
 }
 
 /**

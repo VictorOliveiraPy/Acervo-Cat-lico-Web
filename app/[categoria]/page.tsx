@@ -11,7 +11,7 @@ import {
   PageHeader,
   StatusMessage,
 } from "@/components/Editorial";
-import { ApiError, getErrorMessage } from "@/lib/api";
+import { ApiError } from "@/lib/api";
 import { CATEGORY_LABELS, categoryPath } from "@/lib/categories";
 import { formatEntryCount } from "@/lib/entryDisplay";
 import { computePagination, parseOffset } from "@/lib/pagination";
@@ -109,18 +109,13 @@ export default async function CategoryPage({
       fetchEntryPage(categoria, { limit: PAGE_SIZE, offset }),
     ]);
   } catch (error: unknown) {
-    if (!(error instanceof ApiError)) throw error;
-    if (error.isNotFound) notFound();
-
-    return (
-      <div className="mx-auto max-w-shell px-4 py-12 sm:px-6">
-        <StatusMessage title={`Não foi possível carregar ${label.nav}`} tone="error">
-          <p>{getErrorMessage(error)}</p>
-          <p className="mt-3">Recarregue a página em alguns instantes.</p>
-        </StatusMessage>
-      </div>
-    );
+    if (error instanceof ApiError && error.isNotFound) notFound();
+    throw error;
   }
+
+  // Página além do fim da lista (`?offset=999999`): 404 de verdade, e não uma
+  // página vazia respondendo 200 e pedindo para ser indexada.
+  if (page.itens.length === 0 && page.total > 0) notFound();
 
   const pagination = computePagination({
     total: page.total,

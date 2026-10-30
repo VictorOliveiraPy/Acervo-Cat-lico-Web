@@ -81,20 +81,12 @@ export default async function LocaleCategoryPage({
       fetchEntryPage(categoria, { limit: PAGE_SIZE, offset }, lang),
     ]);
   } catch (error: unknown) {
-    if (!(error instanceof ApiError)) throw error;
-    if (error.isNotFound) notFound();
-    return (
-      <div className="mx-auto max-w-shell px-4 py-12 sm:px-6">
-        <StatusMessage title={t.loadError} tone="error">
-          <p>{getErrorMessage(error)}</p>
-          <p className="mt-3">{t.reloadHint}</p>
-        </StatusMessage>
-      </div>
-    );
+    if (error instanceof ApiError && error.isNotFound) notFound();
+    throw error;
   }
 
-  // Categoria sem tradução ainda: 404 de verdade em vez de uma lista vazia indexável.
-  if (!info || page.total === 0) notFound();
+  // Sem tradução ou além do fim da lista: 404 de verdade em vez de uma lista vazia indexável.
+  if (!info || page.itens.length === 0) notFound();
 
   const pagination = computePagination({
     total: page.total,
