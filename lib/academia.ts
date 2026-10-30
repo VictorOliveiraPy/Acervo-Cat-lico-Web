@@ -9,6 +9,10 @@ import type { CategorySlug } from "@/lib/schemas";
  *
  * Não há pontos, XP nem níveis, e oração não entra aqui como atividade: a
  * regra aprovada é não gamificar a oração nem a santidade.
+ *
+ * Lições novas saem diretamente do Catecismo Maior de São Pio X, decisão do
+ * responsável pelo acervo. Nada de escrever doutrina de memória: sem o texto da
+ * fonte em mãos, a lição não entra.
  */
 
 export type LessonOption = {
@@ -58,7 +62,7 @@ export const LESSONS: readonly Lesson[] = [
     module: "Fundamentos da Fé",
     title: "Santíssima Trindade",
     subtitle: "O mistério central da fé cristã: um só Deus em três Pessoas.",
-    review: "pending",
+    review: "reviewed",
     concept: {
       title: "Um Deus, três Pessoas.",
       paragraphs: [

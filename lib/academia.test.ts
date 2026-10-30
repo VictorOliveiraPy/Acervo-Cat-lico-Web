@@ -46,9 +46,10 @@ describe("lições da Academia", () => {
     }
   });
 
-  it("deve manter fora dos buscadores a lição que aguarda revisão humana", () => {
-    expect(trindade?.review).toBe("pending");
-    expect(indexableLessons()).not.toContain(trindade);
+  it("deve expor aos buscadores só a lição revisada", () => {
+    expect(trindade?.review).toBe("reviewed");
+    expect(indexableLessons()).toContain(trindade);
+    expect(indexableLessons().every((lesson) => lesson.review === "reviewed")).toBe(true);
   });
 });
 
