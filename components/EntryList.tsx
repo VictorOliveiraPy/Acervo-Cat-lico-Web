@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { BrandMark } from "@/components/BrandMark";
 import { CATEGORY_LABELS, entryPath } from "@/lib/categories";
-import { entryHighlight, entryOrdinal } from "@/lib/entryDisplay";
+import { entryHighlight, entryOrdinal, imagePosition } from "@/lib/entryDisplay";
 import { DEFAULT_LOCALE, localePath, type SiteLang } from "@/lib/i18n";
 import { saintAssetFor } from "@/lib/saintAssets";
 import type { Entry } from "@/lib/schemas";
@@ -68,6 +68,7 @@ export function EntryList({ entries, showCategory = false, lang = DEFAULT_LOCALE
                   width={160}
                   height={112}
                   className="h-28 w-full shrink-0 rounded-edge border border-border object-cover sm:h-24 sm:w-32"
+                  style={{ objectPosition: imagePosition(entry) }}
                 />
               ) : (
                 <div

@@ -86,6 +86,7 @@ const baseEntrySchema = z.object({
   temas: z.array(themeRefSchema).default([]),
   imagem: z.string().nullable().default(null),
   imagem_credito: z.string().nullable().default(null),
+  imagem_foco: z.string().nullable().default(null),
   fontes: z.array(z.string()).default([]),
 });
 

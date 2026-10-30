@@ -8,7 +8,7 @@
  */
 
 import { CATEGORY_LABELS } from "@/lib/categories";
-import type { Entry, EntryOf } from "@/lib/schemas";
+import type { CategorySlug, Entry, EntryOf } from "@/lib/schemas";
 
 /** Par rótulo/valor exibido na ficha de uma entrada. */
 export type MetaField = {
@@ -672,4 +672,21 @@ export function formatEntryCount(total: number): string {
 /** Título da página de listagem de uma categoria. */
 export function categoryHeading(entry: Entry): string {
   return CATEGORY_LABELS[entry.categoria].heading;
+}
+
+/** Categorias cujas fotos costumam ser retratos, com o rosto acima do centro. */
+const PORTRAIT_CATEGORIES: ReadonlySet<CategorySlug> = new Set<CategorySlug>([
+  "santos",
+  "papas",
+  "doutores-igreja",
+  "padres-da-igreja",
+  "cardeais",
+  "personagens-biblicos",
+  "beatos-canonizacao",
+]);
+
+/** `object-position` da foto da entrada: `imagem_foco`, ou o padrão da categoria. */
+export function imagePosition(entry: Pick<Entry, "categoria" | "imagem_foco">): string {
+  if (entry.imagem_foco) return entry.imagem_foco;
+  return PORTRAIT_CATEGORIES.has(entry.categoria) ? "center 25%" : "center";
 }

@@ -19,7 +19,7 @@ import { ReadingSizeControl } from "@/components/ReadingSizeControl";
 import { lessonForEntry } from "@/lib/academia";
 import { ApiError } from "@/lib/api";
 import { CATEGORY_LABELS, categoryPath, entryPath } from "@/lib/categories";
-import { entryMetaFields, entryOrdinal, paragraphs } from "@/lib/entryDisplay";
+import { entryMetaFields, entryOrdinal, imagePosition, paragraphs } from "@/lib/entryDisplay";
 import { articleJsonLd, safeJsonLd } from "@/lib/jsonLd";
 import { HREFLANG, formatEntryDate, languageAlternates } from "@/lib/i18n";
 import { neighborsOf } from "@/lib/neighbors";
@@ -299,6 +299,7 @@ export default async function EntryPage({ params }: { params: Params }) {
                   fill
                   sizes="(min-width: 1024px) 68ch, 100vw"
                   className="object-cover"
+                  style={{ objectPosition: imagePosition(entry) }}
                   priority
                 />
               </div>

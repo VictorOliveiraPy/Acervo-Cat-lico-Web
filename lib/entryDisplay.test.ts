@@ -25,6 +25,7 @@ function baseFields(slug: string) {
     imagem_credito: null,
     fontes: [],
     temas: [],
+    imagem_foco: null,
     publicado_em: null,
     atualizado_em: null,
   };

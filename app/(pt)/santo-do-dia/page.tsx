@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { Breadcrumbs } from "@/components/Editorial";
 import { entryPath } from "@/lib/categories";
+import { imagePosition } from "@/lib/entryDisplay";
 import { safeJsonLd } from "@/lib/jsonLd";
 import { todayInBrazil } from "@/lib/liturgia";
 import { saintAssetFor } from "@/lib/saintAssets";
@@ -85,7 +86,8 @@ export default async function SantoDoDiaPage() {
                 alt={asset?.alt ?? current.saint.titulo}
                 fill
                 sizes="10rem"
-                className="object-cover object-top"
+                className="object-cover"
+                style={{ objectPosition: asset ? "top" : imagePosition(current.saint) }}
                 priority
               />
             </div>

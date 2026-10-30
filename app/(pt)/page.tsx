@@ -11,7 +11,7 @@ import { LESSONS } from "@/lib/academia";
 import { ApiError } from "@/lib/api";
 import { CATEGORY_LABELS, categoryPath, entryPath } from "@/lib/categories";
 import { CATEGORY_GROUPS } from "@/lib/categoryGroups";
-import { formatEntryCount } from "@/lib/entryDisplay";
+import { formatEntryCount, imagePosition } from "@/lib/entryDisplay";
 import { languageAlternates } from "@/lib/i18n";
 import { safeJsonLd } from "@/lib/jsonLd";
 import { formatLiturgiaDate, todayInBrazil } from "@/lib/liturgia";
@@ -287,6 +287,7 @@ export default async function HomePage() {
                       width={96}
                       height={96}
                       className="h-20 w-20 shrink-0 rounded-full object-cover sm:h-24 sm:w-24"
+                      style={{ objectPosition: imagePosition(saintToday.saint) }}
                     />
                   ) : undefined
                 }

@@ -9,16 +9,29 @@
  * `fetch` em client component.
  */
 
+// Domínio das imagens do acervo. As URLs vêm prontas da API (`IMAGE_CDN_BASE_URL` no
+// backend); aqui só se libera o host. O R2 e o domínio próprio valem ao mesmo tempo
+// para a troca não quebrar imagem nenhuma, nem as de páginas ainda em cache.
+const IMAGE_HOSTS = [
+  ...new Set(
+    [
+      "pub-78c1274756844d269b56dd7c167c420d.r2.dev",
+      "img.compendio-catolico.com",
+      process.env.NEXT_PUBLIC_IMG_BASE_URL && new URL(process.env.NEXT_PUBLIC_IMG_BASE_URL).hostname,
+    ].filter(Boolean),
+  ),
+];
+
 // CSP com 'unsafe-inline' em script/style: os blocos JSON-LD (dado
 // estruturado) e a hidratação do Next/React são scripts inline legítimos, e
 // não há nenhum script de terceiro no site — não precisa ser mais restrito
 // que isto pra cobrir o que existe hoje. `img-src` libera a Wikimedia (fonte
 // editorial original, ainda usada como fallback) e o bucket R2 que serve as
-// cópias WebP pré-processadas (ver `docs/imagens/` no backend) — mesmos dois
+// cópias WebP pré-processadas (ver `docs/imagens/` no backend) — mesmos
 // hosts de `images.remotePatterns` abaixo.
 const CONTENT_SECURITY_POLICY = [
   "default-src 'self'",
-  "img-src 'self' https://upload.wikimedia.org https://pub-78c1274756844d269b56dd7c167c420d.r2.dev data:",
+  `img-src 'self' https://upload.wikimedia.org ${IMAGE_HOSTS.map((host) => `https://${host}`).join(" ")} data:`,
   "script-src 'self' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline'",
   "font-src 'self'",
@@ -53,7 +66,7 @@ const nextConfig = {
     // app/data/*.json no backend) quando ainda não sincronizou.
     remotePatterns: [
       { protocol: "https", hostname: "upload.wikimedia.org", pathname: "/**" },
-      { protocol: "https", hostname: "pub-78c1274756844d269b56dd7c167c420d.r2.dev", pathname: "/**" },
+      ...IMAGE_HOSTS.map((hostname) => ({ protocol: "https", hostname, pathname: "/**" })),
     ],
     // O acervo já passa de mil imagens únicas (uma por verbete, cada uma
     // conta como "source image" separada pra cota de Otimização de Imagem

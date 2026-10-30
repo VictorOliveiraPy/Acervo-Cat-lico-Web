@@ -10,7 +10,7 @@ import { OrnamentalDivider } from "@/components/OrnamentalDivider";
 import { ReadingSizeControl } from "@/components/ReadingSizeControl";
 import { ApiError } from "@/lib/api";
 import { categoryPath, entryPath } from "@/lib/categories";
-import { paragraphs } from "@/lib/entryDisplay";
+import { paragraphs, imagePosition } from "@/lib/entryDisplay";
 import { HREFLANG, languageAlternates, formatEntryDate, OG_LOCALE, dictionaryFor, isLocale, localePath, type Locale } from "@/lib/i18n";
 import { articleJsonLd, safeJsonLd } from "@/lib/jsonLd";
 import { neighborsOf } from "@/lib/neighbors";
@@ -223,6 +223,7 @@ export default async function LocaleEntryPage({ params }: { params: Params }) {
                   fill
                   sizes="(min-width: 1024px) 68ch, 100vw"
                   className="object-cover"
+                  style={{ objectPosition: imagePosition(entry) }}
                   priority
                 />
               </div>

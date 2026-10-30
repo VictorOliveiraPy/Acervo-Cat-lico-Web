@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { BrandMark } from "@/components/BrandMark";
 import { CATEGORY_LABELS, entryPath } from "@/lib/categories";
+import { imagePosition } from "@/lib/entryDisplay";
 import { saintAssetFor } from "@/lib/saintAssets";
 import type { Entry } from "@/lib/schemas";
 
@@ -36,6 +37,7 @@ export function EntryGrid({ entries }: Props) {
                     fill
                     sizes="(min-width: 768px) 25vw, 50vw"
                     className={`object-cover ${saintAsset ? "object-top" : ""}`}
+                    style={saintAsset ? undefined : { objectPosition: imagePosition(entry) }}
                   />
                 ) : (
                   <div
