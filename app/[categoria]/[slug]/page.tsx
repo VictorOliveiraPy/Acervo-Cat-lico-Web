@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import {
   Breadcrumbs,
   MetaList,
+  PageToc,
   PrayerText,
   SourceList,
   StatusMessage,
@@ -16,6 +17,7 @@ import { EntryActions } from "@/components/EntryActions";
 import { EntryNeighbors } from "@/components/EntryNeighbors";
 import { OrnamentalDivider } from "@/components/OrnamentalDivider";
 import { ReadingSizeControl } from "@/components/ReadingSizeControl";
+import { lessonForEntry } from "@/lib/academia";
 import { ApiError, getErrorMessage } from "@/lib/api";
 import { CATEGORY_LABELS, categoryPath, entryPath } from "@/lib/categories";
 import { entryMetaFields, entryOrdinal, paragraphs } from "@/lib/entryDisplay";
@@ -129,7 +131,6 @@ export async function generateMetadata({
 
   try {
     const entry = await fetchEntry(params.categoria, params.slug);
-    const saintAsset = saintAssetFor(entry);
     const path = entryPath(params.categoria, params.slug);
     const translations = await fetchTranslationLangs(params.categoria, params.slug);
     return {
@@ -152,11 +153,7 @@ export async function generateMetadata({
         title: entry.titulo,
         description: entry.resumo,
         url: path,
-        images: saintAsset?.card
-          ? [{ url: saintAsset.card }]
-          : entry.imagem
-            ? [{ url: entry.imagem }]
-            : undefined,
+        images: entry.imagem ? [{ url: entry.imagem }] : undefined,
       },
     };
   } catch (error: unknown) {
@@ -200,10 +197,17 @@ export default async function EntryPage({ params }: { params: Params }) {
 
   const ordinal = entryOrdinal(entry);
   const saintAsset = saintAssetFor(entry);
-  const editorialImage = saintAsset?.portrait ?? entry.imagem;
   const fields = entryMetaFields(entry);
   const blocks = paragraphs(entry.corpo);
   const path = entryPath(categoria, params.slug);
+  const lesson = lessonForEntry(categoria, params.slug);
+  const tocItems = [
+    ...(fields.length > 0 ? [{ href: "#dados", label: "Dados" }] : []),
+    { href: "#leitura", label: "Leitura" },
+    ...(entry.fontes.length > 0 ? [{ href: "#fontes", label: "Fontes" }] : []),
+    ...(entry.tags.length > 0 ? [{ href: "#temas", label: "Temas relacionados" }] : []),
+    ...(lesson ? [{ href: "#estudar", label: "Estudar este tema" }] : []),
+  ];
   const [related, neighbors] = await Promise.all([
     loadRelated(categoria, params.slug, entry.tags),
     loadNeighbors(categoria, params.slug),
@@ -221,7 +225,7 @@ export default async function EntryPage({ params }: { params: Params }) {
     url: `${SITE_URL}${path}`,
     inLanguage: "pt-BR",
     isPartOf: { "@type": "WebSite", name: SITE_NAME, url: SITE_URL },
-    ...(editorialImage ? { image: editorialImage } : {}),
+    ...(entry.imagem ? { image: entry.imagem } : {}),
     ...(entry.atualizado_em ? { dateModified: entry.atualizado_em } : {}),
   };
 
@@ -258,107 +262,150 @@ export default async function EntryPage({ params }: { params: Params }) {
         ]}
       />
 
-      <header className="border-b border-border pb-8">
-        <p className="kicker">{[label.nav, ordinal].filter(Boolean).join(" · ")}</p>
-        <h1 className="mt-2 max-w-measure font-display text-title-lg text-ink md:text-title-xl">
-          {entry.titulo}
-        </h1>
-        <p className="mt-4 max-w-measure text-lead text-ink-muted">{entry.resumo}</p>
-        <EntryActions categoria={categoria} slug={entry.slug} titulo={entry.titulo} />
-      </header>
+      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_11rem] lg:gap-16">
+        <div className="min-w-0">
+          <header className="border-b border-border pb-8">
+            <p className="eyebrow">{[label.nav, ordinal].filter(Boolean).join(" · ")}</p>
+            <h1 className="mt-2 max-w-measure font-display text-title-lg text-ink md:text-title-xl">
+              {entry.titulo}
+            </h1>
+            <p className="mt-4 max-w-measure text-lead text-ink-muted">{entry.resumo}</p>
+            <EntryActions categoria={categoria} slug={entry.slug} titulo={entry.titulo} />
+          </header>
 
-      {entry.categoria === "oracoes" ? (
-        <div className="mt-8">
-          <PrayerText texto={entry.texto} />
-        </div>
-      ) : null}
-
-      {editorialImage ? (
-        <figure className="mt-8">
-          {/* Altura fixa + `fill`: as imagens vêm da Wikimedia Commons com
-              proporções bem diferentes entre si (ícone quadrado, retrato,
-              afresco panorâmico) — uma faixa de altura constante evita
-              layout shift e mantém o ritmo editorial da página, ao custo de
-              recortar (`object-cover`) o excesso lateral ou vertical. */}
-          <div
-            className={
-              saintAsset
-                ? "relative aspect-[2/3] w-full max-w-sm overflow-hidden rounded-panel border border-border bg-surface"
-                : "relative h-72 w-full max-w-measure overflow-hidden border border-border sm:h-96"
-            }
-          >
-            <Image
-              src={editorialImage}
-              alt={saintAsset?.alt ?? entry.titulo}
-              fill
-              sizes="(min-width: 1024px) 68ch, 100vw"
-              className={saintAsset ? "object-cover object-top" : "object-cover"}
-              priority
-            />
-          </div>
-          {saintAsset?.credit || entry.imagem_credito ? (
-            <figcaption className="mt-2 max-w-measure text-meta text-ink-muted">
-              {saintAsset?.credit ?? entry.imagem_credito}
-            </figcaption>
+          {entry.categoria === "oracoes" ? (
+            <div className="mt-8">
+              <PrayerText texto={entry.texto} />
+            </div>
           ) : null}
-        </figure>
-      ) : null}
 
-      {fields.length > 0 ? (
-        <section aria-label="Dados da entrada" className="mt-8">
-          <MetaList fields={fields} />
-        </section>
-      ) : null}
+          {entry.imagem ? (
+            <figure className="mt-8">
+              {/* Altura fixa + `fill`: as imagens vêm da Wikimedia Commons com
+                  proporções bem diferentes entre si, e a faixa constante evita
+                  layout shift. */}
+              <div className="relative h-72 w-full max-w-measure overflow-hidden border border-border sm:h-96">
+                <Image
+                  src={entry.imagem}
+                  alt={entry.titulo}
+                  fill
+                  sizes="(min-width: 1024px) 68ch, 100vw"
+                  className="object-cover"
+                  priority
+                />
+              </div>
+              {entry.imagem_credito ? (
+                <figcaption className="mt-2 max-w-measure text-meta text-ink-muted">
+                  {entry.imagem_credito}
+                </figcaption>
+              ) : null}
+            </figure>
+          ) : null}
 
-      <div className="mt-12 flex items-center justify-end gap-3">
-        <p className="kicker">Tamanho do texto</p>
-        <ReadingSizeControl />
-      </div>
+          {/* A ilustração do kit soma à imagem do verbete, sem substituí-la: a
+              imagem do acervo é a que buscadores e redes sociais já conhecem. */}
+          {saintAsset ? (
+            <figure className="mt-6 flex items-start gap-4">
+              <div className="relative aspect-[2/3] w-40 shrink-0 overflow-hidden rounded-panel border border-border bg-surface">
+                <Image
+                  src={saintAsset.portrait}
+                  alt={saintAsset.alt}
+                  fill
+                  sizes="10rem"
+                  className="object-cover object-top"
+                />
+              </div>
+              <figcaption className="min-w-0 text-meta text-ink-muted">{saintAsset.credit}</figcaption>
+            </figure>
+          ) : null}
 
-      <div className="reading-column mt-6">
-        {entry.categoria === "oracoes" ? (
-          <h2 className="kicker mb-4">Sobre esta oração</h2>
-        ) : null}
-        {blocks.map((block, index) => (
-          // Capitular no primeiro parágrafo do corpo, só ele — efeito de
-          // breviário antigo (`first-letter` é suporte nativo do CSS, sem
-          // precisar quebrar o texto em spans).
-          <p
-            key={index}
-            className={
-              index === 0
-                ? "first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:font-display first-letter:text-[3.4em] first-letter:font-bold first-letter:leading-[0.78] first-letter:text-accent"
-                : undefined
-            }
-          >
-            {block}
-          </p>
-        ))}
-      </div>
+          {fields.length > 0 ? (
+            <section id="dados" aria-label="Dados da entrada" className="mt-8">
+              <MetaList fields={fields} />
+            </section>
+          ) : null}
 
-      <OrnamentalDivider />
-
-      <footer className="mt-section grid gap-10 pt-2 md:grid-cols-2">
-        <section aria-labelledby="temas">
-          <h2 id="temas" className="kicker">
-            Temas relacionados
-          </h2>
-          <p className="mt-2 max-w-measure text-meta text-ink-muted">
-            Cada tema abre a busca por ele em todas as categorias do acervo.
-          </p>
-          <div className="mt-3">
-            <TagList tags={entry.tags} />
+          <div id="leitura" className="mt-12 flex items-center justify-end gap-3">
+            <p className="kicker">Tamanho do texto</p>
+            <ReadingSizeControl />
           </div>
-        </section>
 
-        <SourceList sources={entry.fontes} />
-      </footer>
+          <div className="reading-column mt-6">
+            {entry.categoria === "oracoes" ? (
+              <h2 className="kicker mb-4">Sobre esta oração</h2>
+            ) : null}
+            {blocks.map((block, index) => (
+              // Capitular no primeiro parágrafo do corpo, só ele — efeito de
+              // breviário antigo (`first-letter` é suporte nativo do CSS, sem
+              // precisar quebrar o texto em spans).
+              <p
+                key={index}
+                className={
+                  index === 0
+                    ? "first-letter:float-left first-letter:mt-1 first-letter:font-display first-letter:text-[3.4em] first-letter:font-bold first-letter:leading-[0.78] first-letter:text-accent"
+                    : undefined
+                }
+              >
+                {block}
+              </p>
+            ))}
+          </div>
+
+          <OrnamentalDivider />
+
+          <div className="mt-8">
+            <SourceList sources={entry.fontes} />
+          </div>
+
+          {lesson ? (
+            <aside
+              id="estudar"
+              aria-labelledby="estudar-titulo"
+              className="mt-8 flex flex-col gap-5 rounded-panel bg-mineral p-6 text-white sm:flex-row sm:items-center sm:justify-between"
+            >
+              <div>
+                <p className="font-sans text-label font-bold uppercase tracking-[0.16em] text-white/80">
+                  Aprender com a Academia
+                </p>
+                <h2 id="estudar-titulo" className="mt-2 font-display text-title-md text-white">
+                  Entender é só o começo.
+                </h2>
+                <p className="mt-1 text-meta text-white/85">
+                  Uma explicação guiada e um exercício, sem cadastro. Este artigo continua aberto, com ou
+                  sem a lição.
+                </p>
+              </div>
+              <Link href={`/academia/${lesson.slug}`} className="btn btn-on-mineral shrink-0">
+                Iniciar lição <span aria-hidden="true">→</span>
+              </Link>
+            </aside>
+          ) : null}
+
+          {entry.tags.length > 0 ? (
+            <section id="temas" aria-labelledby="temas-titulo" className="mt-8">
+              <h2 id="temas-titulo" className="kicker">
+                Temas relacionados
+              </h2>
+              <p className="mt-2 max-w-measure text-meta text-ink-muted">
+                Cada tema abre a busca por ele em todas as categorias do acervo.
+              </p>
+              <div className="mt-3">
+                <TagList tags={entry.tags} />
+              </div>
+            </section>
+          ) : null}
+        </div>
+
+        <aside className="hidden lg:block">
+          <PageToc label="Nesta página" items={tocItems} />
+        </aside>
+      </div>
 
       <EntryNeighbors categoria={categoria} neighbors={neighbors} />
 
       {related.length > 0 ? (
         <section aria-labelledby="mais-da-categoria" className="mt-section">
-          <div className="border-b-2 border-border-strong pb-2">
+          <div className="border-b border-border pb-2">
             <h2 id="mais-da-categoria" className="font-display text-title-md text-ink">
               Continue sua leitura
             </h2>

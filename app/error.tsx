@@ -24,12 +24,12 @@ export default function Error({
 
   return (
     <div className="mx-auto max-w-shell px-4 py-16 sm:px-6">
-      <div className="max-w-measure rounded-edge border border-danger bg-surface px-6 py-8">
+      <div className="max-w-measure rounded-panel border border-danger bg-danger-soft px-6 py-8">
         <p className="kicker text-danger">Erro</p>
         <h1 className="mt-2 font-display text-title-md text-ink">
           Não conseguimos montar esta página
         </h1>
-        <p className="mt-4 text-body text-ink-muted">
+        <p className="mt-4 text-body text-ink">
           A falha foi registrada. Tentar de novo costuma resolver quando o
           problema é momentâneo na conexão com o acervo.
         </p>
@@ -42,7 +42,7 @@ export default function Error({
         <button
           type="button"
           onClick={reset}
-          className="mt-6 rounded-edge border border-accent bg-accent px-5 py-2.5 text-label uppercase tracking-[0.09em] text-surface transition-colors hover:bg-accent-hover"
+          className="btn btn-primary mt-6"
         >
           Tentar de novo
         </button>

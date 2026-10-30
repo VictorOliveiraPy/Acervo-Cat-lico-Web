@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import tailwindConfig from "@/tailwind.config";
 import {
   COLORS,
   CONTRAST_PAIRS,
@@ -90,6 +91,27 @@ describe("tokens de cor da interface", () => {
     ) as [number, number, number];
     expect(b).toBeGreaterThanOrEqual(r - 4);
     expect(g).toBeGreaterThanOrEqual(b);
+  });
+});
+
+describe("concordância entre os tokens e o Tailwind", () => {
+  it("deve manter as cores semânticas iguais nos dois lugares", () => {
+    // Os pares de contraste só provam algo se medirem a cor que a tela pinta.
+    const colors = tailwindConfig.theme?.extend?.colors as Record<
+      string,
+      string | Record<string, string>
+    >;
+    const tone = (name: string, key: string) => (colors[name] as Record<string, string>)[key];
+
+    expect(tone("success", "DEFAULT")).toBe(COLORS.success);
+    expect(tone("success", "soft")).toBe(COLORS.successSoft);
+    expect(tone("warning", "DEFAULT")).toBe(COLORS.warning);
+    expect(tone("warning", "soft")).toBe(COLORS.warningSoft);
+    expect(tone("danger", "DEFAULT")).toBe(COLORS.danger);
+    expect(tone("danger", "soft")).toBe(COLORS.dangerSoft);
+    expect(tone("accent", "DEFAULT")).toBe(COLORS.accent);
+    expect(tone("accent", "soft")).toBe(COLORS.accentSoft);
+    expect(colors.mineral).toBe(COLORS.mineral);
   });
 });
 

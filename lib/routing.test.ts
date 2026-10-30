@@ -17,6 +17,12 @@ describe("classifyPath", () => {
     expect(classifyPath("/instagram/papas/inocencio-iii")).toEqual({ kind: "ok" });
   });
 
+  it("aceita a Academia e uma lição, mas nada mais fundo que isso", () => {
+    expect(classifyPath("/academia")).toEqual({ kind: "ok" });
+    expect(classifyPath("/academia/santissima-trindade")).toEqual({ kind: "ok" });
+    expect(classifyPath("/academia/santissima-trindade/extra")).toEqual({ kind: "not-found" });
+  });
+
   it("dá 404 para primeiro segmento que não existe", () => {
     expect(classifyPath("/nao-existe")).toEqual({ kind: "not-found" });
     expect(classifyPath("/qualquer/coisa")).toEqual({ kind: "not-found" });

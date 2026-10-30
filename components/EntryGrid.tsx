@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { BrandMark } from "@/components/BrandMark";
 import { CATEGORY_LABELS, entryPath } from "@/lib/categories";
-import { saintAssetFor } from "@/lib/saintAssets";
 import type { Entry } from "@/lib/schemas";
 
 type Props = {
@@ -10,69 +10,45 @@ type Props = {
 };
 
 /**
- * Grade de entradas em estilo "episódio" — clone do mosaico de
- * https://padrepauloricardo.org/programas/homilia-diaria: cada célula é a
- * própria foto, de ponta a ponta, com o título em branco sobreposto na base
- * sobre um gradiente escuro (garante leitura em qualquer imagem, clara ou
- * escura) e um selo no canto. Lá o selo é a duração do episódio; aqui, sem
- * duração, é a categoria — o dado que mais ajuda a escanear a grade.
- *
- * Só para a amostra da home ("Do acervo"): a listagem de uma categoria
- * inteira continua em `EntryList` (lista, com resumo) — mosaico sem texto de
- * apoio funciona para uma vitrine de poucos itens, não para escanear uma
- * categoria de 60+ entradas.
+ * Amostra de entradas da home, no cartão do Design System: imagem em cima e
+ * texto embaixo, sem título sobre a foto nem véu escuro. Só para esta vitrine
+ * curta: a listagem de uma categoria inteira continua em `EntryList`.
  */
 export function EntryGrid({ entries }: Props) {
   return (
-    <ul className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
-      {entries.map((entry, index) => {
-        const saintAsset = saintAssetFor(entry);
-        const image = saintAsset?.card ?? entry.imagem;
+    <ul className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
+      {entries.map((entry) => {
+        const image = entry.imagem;
+        const label = CATEGORY_LABELS[entry.categoria];
         return (
           <li key={entry.id}>
             <Link
               href={entryPath(entry.categoria, entry.slug)}
-              className="group relative block aspect-square overflow-hidden rounded-edge bg-ink"
+              className="group block h-full overflow-hidden rounded-panel border border-border bg-surface transition-colors hover:border-border-strong"
             >
-              {image ? (
-                <Image
-                  src={image}
-                  alt={saintAsset?.alt ?? entry.titulo}
-                  fill
-                  sizes="(min-width: 768px) 25vw, 50vw"
-                  // A vitrine tem no máximo 12 fotos, todas visíveis perto do
-                  // topo da rolagem — carregar como lazy (padrão do next/image)
-                  // deixava as últimas em preto sólido (o `bg-ink` de fundo)
-                  // por um instante enquanto a rede ainda buscava a imagem.
-                  priority={index < 2}
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-              ) : (
-                <div
-                  aria-hidden="true"
-                  className="flex h-full w-full items-center justify-center bg-raised text-title-lg"
-                >
-                  {CATEGORY_LABELS[entry.categoria].icon}
-                </div>
-              )}
-
-              {/* Gradiente escuro fixo na base: sem ele, um título branco sobre
-                  um céu claro ou uma página de manuscrito viraria ilegível —
-                  a referência não precisa disso porque as fotos dela já são
-                  escuras na base, mas o acervo tem de tudo (afrescos, ícones,
-                  manuscritos), então o gradiente é sempre desenhado. */}
-              <div
-                aria-hidden="true"
-                className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/85 via-black/35 to-transparent"
-              />
-
-              <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-3">
-                <h3 className="min-w-0 line-clamp-2 font-display text-body font-bold leading-tight text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.8)] sm:text-title-sm">
+              <div className="relative aspect-[4/3] bg-canvas">
+                {image ? (
+                  <Image
+                    src={image}
+                    alt={entry.titulo}
+                    fill
+                    sizes="(min-width: 768px) 25vw, 50vw"
+                    className="object-cover"
+                  />
+                ) : (
+                  <div
+                    aria-hidden="true"
+                    className="flex h-full w-full items-center justify-center"
+                  >
+                    <BrandMark className="h-12 w-12 opacity-40" />
+                  </div>
+                )}
+              </div>
+              <div className="p-3 sm:p-4">
+                <p className="kicker">{label.nav}</p>
+                <h3 className="mt-1 line-clamp-3 font-display text-title-sm leading-tight text-ink group-hover:text-accent">
                   {entry.titulo}
                 </h3>
-                <span className="shrink-0 whitespace-nowrap rounded-full border border-white/40 bg-black/50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-white">
-                  {CATEGORY_LABELS[entry.categoria].nav}
-                </span>
               </div>
             </Link>
           </li>

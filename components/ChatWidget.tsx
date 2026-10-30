@@ -106,7 +106,7 @@ export function ChatWidget() {
           type="button"
           onClick={() => setIsOpen(true)}
           aria-label="Abrir assistente do Compêndio Católico"
-          className="fixed bottom-5 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full border border-border bg-accent text-surface shadow-md transition-colors hover:bg-accent-hover"
+          className="fixed bottom-5 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full border border-border bg-accent text-white shadow-soft transition-colors hover:bg-accent-hover"
         >
           <SeloCarlosAcutis size={30} className="text-surface" />
           <span className="absolute right-0.5 top-0.5 h-3 w-3 rounded-full border-2 border-accent bg-success" />
@@ -116,17 +116,17 @@ export function ChatWidget() {
           role="dialog"
           aria-modal="true"
           aria-labelledby={titleId}
-          className="fixed inset-0 z-40 flex flex-col bg-surface sm:inset-auto sm:bottom-5 sm:right-5 sm:h-[min(640px,80vh)] sm:w-[380px] sm:rounded-edge sm:border sm:border-border sm:shadow-md"
+          className="fixed inset-0 z-40 flex flex-col bg-surface sm:inset-auto sm:bottom-5 sm:right-5 sm:h-[min(640px,80vh)] sm:w-[380px] sm:rounded-panel sm:border sm:border-border sm:shadow-soft"
         >
           {/* Header */}
-          <div className="flex items-center justify-between bg-accent px-4 py-3 text-surface sm:rounded-t-edge">
+          <div className="flex items-center justify-between bg-mineral px-4 py-3 text-white sm:rounded-t-panel">
             <div className="flex items-center gap-3">
               <SeloCarlosAcutis size={30} className="shrink-0 text-surface" />
               <div>
-                <p id={titleId} className="font-display text-title-sm leading-tight">
+                <p id={titleId} className="font-display text-title-sm leading-tight text-white">
                   Assistente do Compêndio
                 </p>
-                <div className="flex items-center gap-1.5 text-meta text-canvas/80">
+                <div className="flex items-center gap-1.5 text-meta text-white/85">
                   <span className="h-2 w-2 rounded-full bg-success" aria-hidden="true" />
                   Sob a intercessão de São Carlos Acutis
                 </div>
@@ -136,7 +136,7 @@ export function ChatWidget() {
               type="button"
               onClick={() => setIsOpen(false)}
               aria-label="Fechar assistente"
-              className="shrink-0 rounded-edge p-1.5 text-surface/80 hover:bg-accent-hover hover:text-surface"
+              className="shrink-0 rounded-edge p-1.5 text-white hover:bg-white/10"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -158,8 +158,8 @@ export function ChatWidget() {
                 <div
                   className={
                     message.role === "user"
-                      ? "whitespace-pre-wrap rounded-edge bg-accent px-3 py-2 text-body text-surface"
-                      : "whitespace-pre-wrap rounded-edge border border-border bg-surface px-3 py-2 text-body text-ink"
+                      ? "whitespace-pre-wrap rounded-panel bg-mineral px-3 py-2 text-body text-white"
+                      : "whitespace-pre-wrap rounded-panel border border-border bg-surface px-3 py-2 text-body text-ink"
                   }
                 >
                   {message.text}
@@ -179,7 +179,7 @@ export function ChatWidget() {
               </div>
             ))}
             {pending ? (
-              <div className="max-w-[85%] self-start rounded-edge border border-border bg-surface px-3 py-2 text-body text-ink-muted">
+              <div className="max-w-[85%] self-start rounded-panel border border-border bg-surface px-3 py-2 text-body text-ink-muted">
                 Buscando no acervo…
               </div>
             ) : null}
@@ -192,7 +192,7 @@ export function ChatWidget() {
           ) : null}
 
           {/* Input */}
-          <div className="flex items-center gap-2 border-t border-border bg-surface p-3 sm:rounded-b-edge">
+          <div className="flex items-center gap-2 border-t border-border bg-surface p-3 sm:rounded-b-panel">
             <label htmlFor={inputId} className="sr-only">
               Sua pergunta
             </label>
@@ -210,7 +210,7 @@ export function ChatWidget() {
                   void handleSend();
                 }
               }}
-              className="flex-1 rounded-edge border border-border bg-canvas px-3 py-2 text-body text-ink placeholder:text-ink-muted focus:border-accent focus:outline-none disabled:opacity-60"
+              className="flex-1 rounded-edge border border-border-strong bg-raised px-3 py-2 text-body text-ink placeholder:text-ink-muted focus:border-accent focus:outline-none disabled:opacity-60"
             />
             <button
               type="button"

@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { BrandMark } from "@/components/BrandMark";
 import { CATEGORY_LABELS, entryPath } from "@/lib/categories";
 import { entryHighlight, entryOrdinal } from "@/lib/entryDisplay";
 import { DEFAULT_LOCALE, localePath, type SiteLang } from "@/lib/i18n";
-import { saintAssetFor } from "@/lib/saintAssets";
 import type { Entry } from "@/lib/schemas";
 
 type Props = {
@@ -36,8 +36,7 @@ export function EntryList({ entries, showCategory = false, lang = DEFAULT_LOCALE
   return (
     <ul className="flex flex-col">
       {entries.map((entry) => {
-        const saintAsset = saintAssetFor(entry);
-        const image = saintAsset?.avatar ?? entry.imagem;
+        const image = entry.imagem;
         const ordinal = entryOrdinal(entry);
         const highlight = entryHighlight(entry);
         const label = showCategory
@@ -53,19 +52,17 @@ export function EntryList({ entries, showCategory = false, lang = DEFAULT_LOCALE
               {image ? (
                 <Image
                   src={image}
-                  alt={saintAsset?.alt ?? entry.titulo}
+                  alt={entry.titulo}
                   width={160}
                   height={112}
-                  className={`h-28 w-full shrink-0 border border-border object-cover sm:h-24 sm:w-32 ${
-                    saintAsset ? "rounded-panel bg-surface object-top" : "rounded-edge"
-                  }`}
+                  className="h-28 w-full shrink-0 rounded-edge border border-border object-cover sm:h-24 sm:w-32"
                 />
               ) : (
                 <div
                   aria-hidden="true"
-                  className="flex h-28 w-full shrink-0 items-center justify-center rounded-edge border border-border bg-surface text-title-md sm:h-24 sm:w-32"
+                  className="flex h-28 w-full shrink-0 items-center justify-center rounded-edge border border-border bg-surface sm:h-24 sm:w-32"
                 >
-                  {CATEGORY_LABELS[entry.categoria].icon}
+                  <BrandMark className="h-10 w-10 opacity-40" />
                 </div>
               )}
 
@@ -73,7 +70,7 @@ export function EntryList({ entries, showCategory = false, lang = DEFAULT_LOCALE
                 <h3 className="font-display text-title-sm text-ink group-hover:text-accent">
                   {entry.titulo}
                 </h3>
-                {label ? <p className="mt-1 kicker text-accent">{label}</p> : null}
+                {label ? <p className="eyebrow mt-1">{label}</p> : null}
                 <p className="mt-2 max-w-measure text-body text-ink-muted">
                   {entry.resumo}
                 </p>

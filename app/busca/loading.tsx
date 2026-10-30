@@ -7,11 +7,11 @@ export default function Loading() {
   return (
     <div className="mx-auto max-w-shell px-4 py-10 sm:px-6">
       <div aria-hidden="true" className="max-w-measure animate-pulse space-y-4">
-        <div className="h-3 w-32 bg-raised" />
-        <div className="h-9 w-full bg-raised" />
+        <div className="h-3 w-32 bg-border/60" />
+        <div className="h-9 w-full bg-border/60" />
       </div>
       <div className="mt-8 max-w-2xl">
-        <div aria-hidden="true" className="h-14 w-full animate-pulse bg-raised" />
+        <div aria-hidden="true" className="h-14 w-full animate-pulse bg-border/60" />
       </div>
       <div className="mt-10">
         <ListSkeleton rows={5} />

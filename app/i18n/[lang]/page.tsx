@@ -66,7 +66,7 @@ export default async function LocaleHome({ params }: { params: Params }) {
       <PageHeader title={t.homeHeading} description={t.homeLead} />
 
       <section aria-labelledby="categorias" className="mt-10">
-        <div className="border-b-2 border-border-strong pb-2">
+        <div className="border-b border-border pb-2">
           <h2 id="categorias" className="font-display text-title-md text-ink">
             {t.categoriesHeading}
           </h2>
@@ -82,7 +82,7 @@ export default async function LocaleHome({ params }: { params: Params }) {
                   {info.nome}
                 </span>
                 <span className="max-w-measure text-body text-ink-muted">{info.descricao}</span>
-                <span className="kicker text-accent">{t.entryCount(info.total)}</span>
+                <span className="eyebrow">{t.entryCount(info.total)}</span>
               </Link>
             </li>
           ))}

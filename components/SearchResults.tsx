@@ -68,7 +68,7 @@ export function SearchResults({
 
         return (
           <section key={group.slug} aria-labelledby={`grupo-${group.slug}`}>
-            <div className="flex items-baseline justify-between gap-4 border-b-2 border-border-strong pb-2">
+            <div className="flex items-baseline justify-between gap-4 border-b border-border pb-2">
               <h2
                 id={`grupo-${group.slug}`}
                 className="font-display text-title-sm text-accent"
@@ -108,7 +108,7 @@ export function SearchResults({
         <button
           type="button"
           onClick={() => setVisibleCount((count) => count + REVEAL_STEP)}
-          className="self-start rounded-edge border border-accent px-5 py-2.5 text-label uppercase tracking-[0.09em] text-accent transition-colors hover:bg-accent hover:text-surface"
+          className="btn btn-secondary self-start"
         >
           Mostrar mais resultados ({totalResults - visibleCount} restantes)
         </button>

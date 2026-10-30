@@ -15,6 +15,9 @@
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
+    /* O cabeçalho é fixo: sem isto, o sumário do artigo levaria a seção para
+       baixo dele. */
+    scroll-padding-top: 8rem;
   }
 
   body {
@@ -54,72 +57,52 @@
 }
 
 @layer components {
-  /*
-   * Procissão de santos da home (components/SantosCaminhantes.tsx). O santo
-   * só anda no primeiro terço do ciclo e espera fora de cena no resto, o que
-   * deixa o elenco revezando sem sobrepor todo mundo ao mesmo tempo.
-   */
-  .santo-caminha {
-    animation-name: santo-caminha;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    will-change: transform;
-  }
-
-  .santo-caminha:hover,
-  .santo-caminha:active {
-    animation-play-state: paused;
-  }
-
-  .santo-passo {
-    animation: santo-balanco 0.7s ease-in-out infinite alternate;
-    transform-origin: 50% 100%;
-  }
-
-  .santo-pe-a {
-    animation: santo-pe 0.7s ease-in-out infinite alternate;
-  }
-
-  .santo-pe-b {
-    animation: santo-pe 0.7s ease-in-out infinite alternate-reverse;
-  }
-
-  @keyframes santo-caminha {
-    0% {
-      transform: translateX(-9rem);
-    }
-    33.33%,
-    100% {
-      transform: translateX(calc(100vw + 1rem));
-    }
-  }
-
-  @keyframes santo-balanco {
-    from {
-      transform: translateY(0) rotate(-1.5deg);
-    }
-    to {
-      transform: translateY(-3px) rotate(1.5deg);
-    }
-  }
-
-  @keyframes santo-pe {
-    from {
-      transform: translateY(0);
-    }
-    to {
-      transform: translateY(-2px);
-    }
-  }
-
   /* Rótulo de seção em caixa alta — o mesmo em cabeçalho, ficha e busca. */
   .kicker {
     @apply font-sans text-label font-bold uppercase tracking-[0.14em] text-ink-muted;
   }
 
+  /* Abertura de seção: o rótulo em bordô do protótipo aprovado. O `.kicker`
+     continua sendo o rótulo neutro de metadados. */
+  .eyebrow {
+    @apply font-sans text-label font-bold uppercase tracking-[0.16em] text-accent;
+  }
+
+  /*
+   * Botões do Design System 1.0. Uma só ação primária por região de decisão;
+   * os 44px de altura são o alvo mínimo de toque.
+   */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-edge border px-4 py-2.5 text-center font-sans text-meta font-bold transition-colors;
+    min-height: 44px;
+  }
+
+  .btn-primary {
+    @apply border-accent bg-accent text-white hover:border-accent-hover hover:bg-accent-hover;
+  }
+
+  .btn-secondary {
+    @apply border-border-strong bg-transparent text-ink hover:border-accent hover:text-accent;
+  }
+
+  /* Variante do bloco azul-mineral: o anel de foco bordô sumiria nesse fundo. */
+  .btn-on-mineral {
+    @apply border-canvas bg-canvas text-mineral hover:bg-raised;
+  }
+
+  .btn-on-mineral:focus-visible {
+    outline-color: theme("colors.canvas");
+  }
+
+  .btn-tertiary {
+    @apply inline-flex items-center gap-1.5 py-1 font-sans text-meta font-bold text-accent underline-offset-4 hover:text-accent-hover hover:underline;
+  }
+
   /* Coluna de leitura do corpo das entradas. */
   .reading-column p {
-    @apply mx-auto max-w-measure text-lead text-ink;
+    @apply max-w-measure font-display text-ink;
+    font-size: 1.25rem;
+    line-height: 2.05rem;
   }
 
   .reading-column p + p {
@@ -135,7 +118,7 @@
     float: left;
     font-size: 3.4rem;
     line-height: 2.6rem;
-    padding: 0.35rem 0.55rem 0 0;
+    padding: 0.35rem 0.4rem 0 0;
   }
 
   /*

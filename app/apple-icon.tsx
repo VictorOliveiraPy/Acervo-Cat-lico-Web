@@ -1,5 +1,7 @@
 import { ImageResponse } from "next/og";
 
+import { COLORS } from "@/lib/designTokens";
+
 export const runtime = "edge";
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
@@ -21,8 +23,8 @@ export default function AppleIcon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#6B1F2A",
-          color: "#F5F0E6",
+          backgroundColor: COLORS.accent,
+          color: COLORS.onAccent,
           fontFamily: "Georgia, serif",
           fontSize: 110,
           fontWeight: 700,

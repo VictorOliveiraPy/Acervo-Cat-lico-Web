@@ -1,5 +1,7 @@
 import { ImageResponse } from "next/og";
 
+import { COLORS } from "@/lib/designTokens";
+
 export const runtime = "edge";
 
 /**
@@ -18,8 +20,8 @@ export async function GET() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#6B1F2A",
-          color: "#F5F0E6",
+          backgroundColor: COLORS.accent,
+          color: COLORS.onAccent,
           fontFamily: "Georgia, serif",
           fontSize: 220,
           fontWeight: 700,

@@ -27,7 +27,7 @@ export function VelaMural({ velas }: { velas: Vela[] }) {
         return (
           <li
             key={vela.id}
-            className="flex gap-4 rounded-edge border border-border bg-surface p-4"
+            className="flex gap-4 rounded-panel border border-border bg-surface p-4"
           >
             <Image
               src={info.imagem}
@@ -37,15 +37,15 @@ export function VelaMural({ velas }: { velas: Vela[] }) {
               className="h-20 w-20 shrink-0 rounded-edge object-cover sm:h-24 sm:w-24"
             />
             <div className="min-w-0">
-              <p className="kicker text-accent">{info.label}</p>
+              <p className="eyebrow">{info.label}</p>
               <p className="font-display text-body text-ink">{vela.nome}</p>
-              {local ? <p className="text-meta text-ink-muted/80">{local}</p> : null}
+              {local ? <p className="text-meta text-ink-muted">{local}</p> : null}
               {vela.intencao ? (
                 <p className="mt-1 text-meta italic text-ink-muted">
                   “{vela.intencao}”
                 </p>
               ) : null}
-              <p className="mt-2 text-meta text-ink-muted/80">
+              <p className="mt-2 text-meta text-ink-muted">
                 {formatVelaDate(vela.criado_em)}
               </p>
             </div>

@@ -37,6 +37,7 @@ npm audit           # dependências vulneráveis
 ├── app/                        # App Router (Next.js 14)
 │   ├── page.tsx                 # home — lista de categorias
 │   ├── busca/page.tsx            # busca textual
+│   ├── academia/                 # Academia da Fé: índice e lições
 │   └── [categoria]/
 │       ├── page.tsx               # listagem paginada
 │       └── [slug]/page.tsx        # detalhe de uma entrada

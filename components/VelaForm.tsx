@@ -26,7 +26,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="rounded-edge border border-accent bg-accent px-6 py-3 text-label uppercase tracking-[0.09em] text-surface transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-60"
+      className="btn btn-primary disabled:cursor-not-allowed disabled:opacity-60"
     >
       {pending ? "Acendendo…" : "Acender a vela"}
     </button>
@@ -57,7 +57,7 @@ function VelaPicker({
               key={item.tipo}
               className={`flex cursor-pointer flex-col items-center gap-2 rounded-edge border p-3 transition-colors ${
                 checked
-                  ? "border-accent bg-surface"
+                  ? "border-accent bg-accent-soft"
                   : "border-border hover:border-accent/60"
               }`}
             >
@@ -81,7 +81,7 @@ function VelaPicker({
           );
         })}
       </div>
-      <p className="mt-3 text-meta text-ink-muted/70">Fotos: {creditos.join(" · ")}</p>
+      <p className="mt-3 text-meta text-ink-muted">Fotos: {creditos.join(" · ")}</p>
     </fieldset>
   );
 }
@@ -105,7 +105,7 @@ export function VelaForm() {
     <form
       ref={formRef}
       action={formAction}
-      className="flex flex-col gap-6 rounded-edge border border-border bg-surface p-6"
+      className="flex flex-col gap-6 rounded-panel border border-border bg-surface p-6"
     >
       <VelaPicker selected={tipo} onSelect={setTipo} />
 
@@ -120,7 +120,7 @@ export function VelaForm() {
           required
           maxLength={VELA_NOME_MAX}
           placeholder="Ex.: Maria, ou 'uma mãe em oração'"
-          className="mt-2 w-full rounded-edge border border-border bg-canvas px-4 py-2.5 text-body text-ink placeholder:text-ink-muted/70 focus:border-accent focus:outline-none"
+          className="mt-2 w-full rounded-edge border border-border-strong bg-raised px-4 py-2.5 text-body text-ink placeholder:text-ink-muted focus:border-accent focus:outline-none"
         />
       </div>
 
@@ -134,7 +134,7 @@ export function VelaForm() {
           rows={3}
           maxLength={VELA_INTENCAO_MAX}
           placeholder="Ex.: Pela saúde da minha família"
-          className="mt-2 w-full resize-none rounded-edge border border-border bg-canvas px-4 py-2.5 text-body text-ink placeholder:text-ink-muted/70 focus:border-accent focus:outline-none"
+          className="mt-2 w-full resize-none rounded-edge border border-border-strong bg-raised px-4 py-2.5 text-body text-ink placeholder:text-ink-muted focus:border-accent focus:outline-none"
         />
       </div>
 
@@ -149,7 +149,7 @@ export function VelaForm() {
             type="text"
             maxLength={VELA_CIDADE_MAX}
             placeholder="Ex.: Aparecida"
-            className="mt-2 w-full rounded-edge border border-border bg-canvas px-4 py-2.5 text-body text-ink placeholder:text-ink-muted/70 focus:border-accent focus:outline-none"
+            className="mt-2 w-full rounded-edge border border-border-strong bg-raised px-4 py-2.5 text-body text-ink placeholder:text-ink-muted focus:border-accent focus:outline-none"
           />
         </div>
         <div>
@@ -162,7 +162,7 @@ export function VelaForm() {
             type="text"
             maxLength={VELA_ESTADO_MAX}
             placeholder="Ex.: SP"
-            className="mt-2 w-full rounded-edge border border-border bg-canvas px-4 py-2.5 text-body text-ink placeholder:text-ink-muted/70 focus:border-accent focus:outline-none"
+            className="mt-2 w-full rounded-edge border border-border-strong bg-raised px-4 py-2.5 text-body text-ink placeholder:text-ink-muted focus:border-accent focus:outline-none"
           />
         </div>
       </div>
@@ -177,9 +177,9 @@ export function VelaForm() {
           type="email"
           maxLength={VELA_EMAIL_MAX}
           placeholder="seuemail@exemplo.com"
-          className="mt-2 w-full rounded-edge border border-border bg-canvas px-4 py-2.5 text-body text-ink placeholder:text-ink-muted/70 focus:border-accent focus:outline-none"
+          className="mt-2 w-full rounded-edge border border-border-strong bg-raised px-4 py-2.5 text-body text-ink placeholder:text-ink-muted focus:border-accent focus:outline-none"
         />
-        <p className="mt-1.5 text-meta text-ink-muted/70">
+        <p className="mt-1.5 text-meta text-ink-muted">
           Fica só entre você e o site — nunca aparece no mural.
         </p>
       </div>

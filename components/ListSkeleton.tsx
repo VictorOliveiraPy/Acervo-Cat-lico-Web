@@ -15,13 +15,13 @@ export function ListSkeleton({ rows = 5 }: { rows?: number }) {
           key={index}
           className="flex flex-col gap-4 border-t border-border py-6 sm:flex-row sm:gap-6"
         >
-          <div className="h-28 w-full shrink-0 rounded-edge bg-raised sm:h-24 sm:w-32" />
+          <div className="h-28 w-full shrink-0 rounded-edge bg-border/60 sm:h-24 sm:w-32" />
           <div className="min-w-0 flex-1 space-y-3">
-            <div className="h-5 w-2/3 bg-raised" />
-            <div className="h-3 w-24 bg-raised/70" />
+            <div className="h-5 w-2/3 bg-border/60" />
+            <div className="h-3 w-24 bg-border/60" />
             <div className="space-y-2 pt-1">
-              <div className="h-3 w-full max-w-measure bg-raised/70" />
-              <div className="h-3 w-5/6 max-w-measure bg-raised/70" />
+              <div className="h-3 w-full max-w-measure bg-border/60" />
+              <div className="h-3 w-5/6 max-w-measure bg-border/60" />
             </div>
           </div>
         </div>

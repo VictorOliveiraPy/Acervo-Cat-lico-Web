@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useId, useState } from "react";
 
 import { trackEvent } from "@/lib/analytics";
 
@@ -14,11 +14,13 @@ type Props = {
   variant?: "compact" | "prominent";
   /** Rótulo acessível — o campo do cabeçalho não tem label visível. */
   label?: string;
+  /** Texto de exemplo; distingue a busca de uma categoria da busca do cabeçalho. */
+  placeholder?: string;
 };
 
 const FIELD_STYLE = {
   compact: "h-10 text-meta",
-  prominent: "h-14 text-lead",
+  prominent: "h-12 text-body sm:h-14",
 } as const;
 
 /**
@@ -38,9 +40,12 @@ export function SearchField({
   category,
   variant = "compact",
   label = "Buscar no acervo",
+  placeholder,
 }: Props) {
   const router = useRouter();
   const [query, setQuery] = useState(initialQuery);
+  // O cabeçalho e a página podem ter um campo cada: o id precisa ser único.
+  const inputId = useId();
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -62,24 +67,25 @@ export function SearchField({
       className="flex w-full items-stretch gap-1 rounded-panel border border-border-strong bg-raised p-1 transition-colors focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/15"
     >
       {category ? <input type="hidden" name="categoria" value={category} /> : null}
-      <label className="sr-only" htmlFor={`search-${variant}`}>
+      <label className="sr-only" htmlFor={inputId}>
         {label}
       </label>
       <input
-        id={`search-${variant}`}
+        id={inputId}
         type="search"
         name="q"
         value={query}
         onChange={(event) => setQuery(event.target.value)}
-        placeholder="Buscar qualquer tema do mundo católico…"
+        placeholder={placeholder ?? (variant === "prominent" ? "O que você deseja compreender?" : "Buscar no acervo…")}
         autoComplete="off"
-        className={`${FIELD_STYLE[variant]} min-w-0 w-full border-0 bg-transparent px-3 font-sans text-ink placeholder:text-ink-muted/80 focus:outline-none`}
+        className={`${FIELD_STYLE[variant]} min-w-0 w-full border-0 bg-transparent px-3 font-sans text-ink placeholder:text-meta placeholder:text-ink-muted focus:outline-none sm:placeholder:text-[length:inherit]`}
       />
       <button
         type="submit"
-        className={`${FIELD_STYLE[variant]} shrink-0 rounded-edge border border-accent bg-accent px-5 font-sans text-label uppercase tracking-[0.09em] text-white transition-colors hover:bg-accent-hover`}
+        className={`${FIELD_STYLE[variant]} shrink-0 rounded-edge border border-accent bg-accent px-3 font-sans text-meta font-bold text-white transition-colors hover:bg-accent-hover sm:px-5`}
       >
         Buscar
+        {variant === "prominent" ? <span aria-hidden="true" className="hidden sm:inline"> →</span> : null}
       </button>
     </form>
   );

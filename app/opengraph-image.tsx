@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 
+import { COLORS } from "@/lib/designTokens";
 import { SITE_NAME } from "@/lib/site";
 
 export const runtime = "edge";
@@ -10,7 +11,7 @@ export const contentType = "image/png";
  * Prévia padrão de compartilhamento (WhatsApp, Twitter, redes sociais).
  *
  * Desenhada na hora com `next/og`, na mesma paleta do site (`tailwind.config.ts`
- * — pergaminho, bordô, dourado), em vez de depender de um arquivo de imagem
+ * — canvas mineral, bordô e azul institucional), em vez de depender de um arquivo de imagem
  * estático que alguém teria que desenhar e manter atualizado.
  */
 export default function OpengraphImage() {
@@ -24,7 +25,7 @@ export default function OpengraphImage() {
           flexDirection: "column",
           justifyContent: "center",
           padding: "88px",
-          backgroundColor: "#F5F0E6",
+          backgroundColor: COLORS.canvas,
         }}
       >
         <div
@@ -32,7 +33,7 @@ export default function OpengraphImage() {
             fontSize: 30,
             letterSpacing: 6,
             textTransform: "uppercase",
-            color: "#B8912F",
+            color: COLORS.accent,
             fontFamily: "Georgia, serif",
           }}
         >
@@ -45,7 +46,7 @@ export default function OpengraphImage() {
             maxWidth: 920,
             fontSize: 58,
             lineHeight: 1.2,
-            color: "#6B1F2A",
+            color: COLORS.mineral,
             fontFamily: "Georgia, serif",
           }}
         >

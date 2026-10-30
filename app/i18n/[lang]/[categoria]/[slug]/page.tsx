@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { Breadcrumbs, PrayerText, StatusMessage } from "@/components/Editorial";
+import { Breadcrumbs, PageToc, PrayerText, SourceList, StatusMessage } from "@/components/Editorial";
 import { EntryList } from "@/components/EntryList";
 import { EntryNeighbors } from "@/components/EntryNeighbors";
 import { OrnamentalDivider } from "@/components/OrnamentalDivider";
@@ -14,6 +14,7 @@ import { paragraphs } from "@/lib/entryDisplay";
 import { HREFLANG, OG_LOCALE, dictionaryFor, isLocale, localePath, type Locale } from "@/lib/i18n";
 import { safeJsonLd } from "@/lib/jsonLd";
 import { neighborsOf } from "@/lib/neighbors";
+import { saintAssetFor } from "@/lib/saintAssets";
 import { isCategorySlug, type CategorySlug, type Entry } from "@/lib/schemas";
 import {
   fetchCategories,
@@ -120,6 +121,7 @@ export default async function LocaleEntryPage({ params }: { params: Params }) {
   }
 
   const blocks = paragraphs(entry.corpo);
+  const saintAsset = saintAssetFor(entry);
   const path = localePath(lang, entryPath(categoria, params.slug));
   const ptPath = entryPath(categoria, params.slug);
   const [categoryLabel, more, neighbors] = await Promise.all([
@@ -168,117 +170,136 @@ export default async function LocaleEntryPage({ params }: { params: Params }) {
         ]}
       />
 
-      <header className="border-b border-border pb-8">
-        <p className="kicker">{categoryLabel}</p>
-        <h1 className="mt-2 max-w-measure font-display text-title-lg text-ink md:text-title-xl">
-          {entry.titulo}
-        </h1>
-        <p className="mt-4 max-w-measure text-lead text-ink-muted">{entry.resumo}</p>
-        <p className="mt-4 text-meta text-ink-muted">
-          {t.translationNote}{" "}
-          <Link
-            href={ptPath}
-            hrefLang="pt-BR"
-            className="text-accent underline underline-offset-4 hover:text-accent-hover"
-          >
-            {t.originalInPortuguese}
-          </Link>
-        </p>
-      </header>
+      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_11rem] lg:gap-16">
+        <div className="min-w-0">
+          <header className="border-b border-border pb-8">
+            <p className="eyebrow">{categoryLabel}</p>
+            <h1 className="mt-2 max-w-measure font-display text-title-lg text-ink md:text-title-xl">
+              {entry.titulo}
+            </h1>
+            <p className="mt-4 max-w-measure text-lead text-ink-muted">{entry.resumo}</p>
+            <p className="mt-4 text-meta text-ink-muted">
+              {t.translationNote}{" "}
+              <Link
+                href={ptPath}
+                hrefLang="pt-BR"
+                className="text-accent underline underline-offset-4 hover:text-accent-hover"
+              >
+                {t.originalInPortuguese}
+              </Link>
+            </p>
+          </header>
 
-      {entry.categoria === "oracoes" ? (
-        <div className="mt-8">
-          <PrayerText texto={entry.texto} />
-        </div>
-      ) : null}
-
-      {entry.imagem ? (
-        <figure className="mt-8">
-          <div className="relative h-72 w-full max-w-measure overflow-hidden border border-border sm:h-96">
-            <Image
-              src={entry.imagem}
-              alt={entry.titulo}
-              fill
-              sizes="(min-width: 1024px) 68ch, 100vw"
-              className="object-cover"
-              priority
-            />
-          </div>
-          {entry.imagem_credito ? (
-            <figcaption className="mt-2 max-w-measure text-meta text-ink-muted">
-              {entry.imagem_credito}
-            </figcaption>
+          {entry.categoria === "oracoes" ? (
+            <div className="mt-8">
+              <PrayerText texto={entry.texto} />
+            </div>
           ) : null}
-        </figure>
-      ) : null}
 
-      <div className="mt-12 flex items-center justify-end gap-3">
-        <p className="kicker">{t.textSize}</p>
-        <ReadingSizeControl />
+          {entry.imagem ? (
+            <figure className="mt-8">
+              {/* Altura fixa + `fill`: as imagens vêm da Wikimedia Commons com
+                  proporções bem diferentes entre si, e a faixa constante evita
+                  layout shift. */}
+              <div className="relative h-72 w-full max-w-measure overflow-hidden border border-border sm:h-96">
+                <Image
+                  src={entry.imagem}
+                  alt={entry.titulo}
+                  fill
+                  sizes="(min-width: 1024px) 68ch, 100vw"
+                  className="object-cover"
+                  priority
+                />
+              </div>
+              {entry.imagem_credito ? (
+                <figcaption className="mt-2 max-w-measure text-meta text-ink-muted">
+                  {entry.imagem_credito}
+                </figcaption>
+              ) : null}
+            </figure>
+          ) : null}
+
+          {/* A ilustração do kit soma à imagem do verbete, sem substituí-la: a
+              imagem do acervo é a que buscadores e redes sociais já conhecem. */}
+          {saintAsset ? (
+            <figure className="mt-6 flex items-start gap-4">
+              <div className="relative aspect-[2/3] w-40 shrink-0 overflow-hidden rounded-panel border border-border bg-surface">
+                <Image
+                  src={saintAsset.portrait}
+                  alt={saintAsset.alt}
+                  fill
+                  sizes="10rem"
+                  className="object-cover object-top"
+                />
+              </div>
+              <figcaption className="min-w-0 text-meta text-ink-muted">{saintAsset.credit}</figcaption>
+            </figure>
+          ) : null}
+
+          <div id="leitura" className="mt-12 flex items-center justify-end gap-3">
+            <p className="kicker">{t.textSize}</p>
+            <ReadingSizeControl />
+          </div>
+
+          <div className="reading-column mt-6">
+            {entry.categoria === "oracoes" ? <h2 className="kicker mb-4">{t.aboutPrayer}</h2> : null}
+            {blocks.map((block, index) => (
+              <p
+                key={index}
+                className={
+                  index === 0
+                    ? "first-letter:float-left first-letter:mt-1 first-letter:font-display first-letter:text-[3.4em] first-letter:font-bold first-letter:leading-[0.78] first-letter:text-accent"
+                    : undefined
+                }
+              >
+                {block}
+              </p>
+            ))}
+          </div>
+
+          <OrnamentalDivider />
+
+          <div className="mt-8">
+            <SourceList sources={entry.fontes} title={t.sources} />
+          </div>
+
+          {entry.tags.length > 0 ? (
+            <section id="temas" aria-labelledby="temas-titulo" className="mt-8">
+              <h2 id="temas-titulo" className="kicker">
+                {t.relatedTopics}
+              </h2>
+              {/* Sem link: a busca ainda é só em português. */}
+              <ul className="mt-3 flex flex-wrap gap-2">
+                {entry.tags.map((tag) => (
+                  <li
+                    key={tag}
+                    className="inline-flex items-center rounded-edge border border-border bg-surface px-2.5 py-1 text-meta text-ink-muted"
+                  >
+                    {tag}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
+        </div>
+
+        <aside className="hidden lg:block">
+          <PageToc
+            label={t.onThisPage}
+            items={[
+              { href: "#leitura", label: t.entryText },
+              ...(entry.fontes.length > 0 ? [{ href: "#fontes", label: t.sources }] : []),
+              ...(entry.tags.length > 0 ? [{ href: "#temas", label: t.relatedTopics }] : []),
+            ]}
+          />
+        </aside>
       </div>
-
-      <div className="reading-column mt-6">
-        {entry.categoria === "oracoes" ? <h2 className="kicker mb-4">{t.aboutPrayer}</h2> : null}
-        {blocks.map((block, index) => (
-          <p
-            key={index}
-            className={
-              index === 0
-                ? "first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:font-display first-letter:text-[3.4em] first-letter:font-bold first-letter:leading-[0.78] first-letter:text-accent"
-                : undefined
-            }
-          >
-            {block}
-          </p>
-        ))}
-      </div>
-
-      <OrnamentalDivider />
-
-      <footer className="mt-section grid gap-10 pt-2 md:grid-cols-2">
-        {entry.tags.length > 0 ? (
-          <section aria-labelledby="temas">
-            <h2 id="temas" className="kicker">
-              {t.relatedTopics}
-            </h2>
-            {/* Sem link: a busca ainda é só em português. */}
-            <ul className="mt-3 flex flex-wrap gap-2">
-              {entry.tags.map((tag) => (
-                <li
-                  key={tag}
-                  className="inline-flex items-center rounded-edge border border-border bg-surface px-2.5 py-1 text-meta text-ink-muted"
-                >
-                  {tag}
-                </li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
-
-        {entry.fontes.length > 0 ? (
-          <section aria-labelledby="fontes">
-            <h2 id="fontes" className="kicker">
-              {t.sources}
-            </h2>
-            <ul className="mt-3 space-y-2">
-              {entry.fontes.map((source) => (
-                <li
-                  key={source}
-                  className="max-w-measure border-t border-border pt-2 text-meta text-ink-muted"
-                >
-                  {source}
-                </li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
-      </footer>
 
       <EntryNeighbors categoria={categoria} neighbors={neighbors} lang={lang} />
 
       {more.length > 0 ? (
         <section aria-labelledby="mais-da-categoria" className="mt-section">
-          <div className="border-b-2 border-border-strong pb-2">
+          <div className="border-b border-border pb-2">
             <h2 id="mais-da-categoria" className="font-display text-title-md text-ink">
               {t.keepReading}
             </h2>

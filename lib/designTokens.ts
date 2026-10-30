@@ -45,10 +45,10 @@ export const COLORS = {
   // identidade.
   success: "#326D51",
   successSoft: "#E7F2EB",
-  warning: "#8A5A00",
+  warning: "#7A5210",
   warningSoft: "#F6EEDD",
-  danger: "#A3322B",
-  dangerSoft: "#F7E6E3",
+  danger: "#973027",
+  dangerSoft: "#F6E3E1",
 
   /** Branco sobre o acento. Não é `canvas` por papel, é o par de contraste. */
   onAccent: "#FFFFFF",
@@ -81,6 +81,11 @@ export const CONTRAST_PAIRS: ReadonlyArray<
   ["muted", "surface", 4.5, "texto secundário sobre card"],
   ["accent", "canvas", 4.5, "link e ação primária como texto"],
   ["onAccent", "accent", 4.5, "rótulo branco sobre o botão de acento"],
+  ["accent", "accentSoft", 4.5, "alternativa marcada na lição"],
+  ["success", "successSoft", 4.5, "feedback de acerto"],
+  ["warning", "warningSoft", 4.5, "aviso editorial"],
+  ["danger", "dangerSoft", 4.5, "feedback de erro"],
+  ["onAccent", "mineral", 4.5, "texto claro no bloco azul-mineral da Academia"],
   ["border", "canvas", 1.0, "filete de 1px — divisão estrutural, não texto"],
 ];
 

@@ -83,6 +83,9 @@ export type Dictionary = {
   textSize: string;
   relatedTopics: string;
   sources: string;
+  onThisPage: string;
+  entryData: string;
+  entryText: string;
   previous: string;
   next: string;
   neighborsLabel: string;
@@ -112,6 +115,9 @@ export const DICTIONARY: Record<SiteLang, Dictionary> = {
     textSize: "Tamanho do texto",
     relatedTopics: "Temas relacionados",
     sources: "Fontes",
+    onThisPage: "Nesta página",
+    entryData: "Dados",
+    entryText: "Leitura",
     previous: "← Anterior",
     next: "Próxima →",
     neighborsLabel: "Entradas vizinhas",
@@ -140,6 +146,9 @@ export const DICTIONARY: Record<SiteLang, Dictionary> = {
     textSize: "Tamaño del texto",
     relatedTopics: "Temas relacionados",
     sources: "Fuentes",
+    onThisPage: "En esta página",
+    entryData: "Datos",
+    entryText: "Lectura",
     previous: "← Anterior",
     next: "Siguiente →",
     neighborsLabel: "Entradas vecinas",
@@ -168,6 +177,9 @@ export const DICTIONARY: Record<SiteLang, Dictionary> = {
     textSize: "Text size",
     relatedTopics: "Related topics",
     sources: "Sources",
+    onThisPage: "On this page",
+    entryData: "Details",
+    entryText: "Reading",
     previous: "← Previous",
     next: "Next →",
     neighborsLabel: "Neighbouring entries",

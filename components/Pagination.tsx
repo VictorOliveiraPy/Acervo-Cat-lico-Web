@@ -20,9 +20,9 @@ export function Pagination({ basePath, state }: Props) {
   if (state.totalPages <= 1) return null;
 
   const linkStyle =
-    "rounded-edge border border-accent px-4 py-2 text-meta text-accent transition-colors hover:bg-accent hover:text-surface";
+    "btn btn-secondary";
   const disabledStyle =
-    "rounded-edge border border-border px-4 py-2 text-meta text-ink-muted/70";
+    "btn cursor-not-allowed border-border text-ink-muted";
 
   return (
     <nav

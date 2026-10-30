@@ -53,7 +53,7 @@ function SearchFilters({
   );
 
   const chipStyle =
-    "inline-flex items-center gap-1.5 rounded-edge border px-3 py-1.5 text-meta transition-colors";
+    "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-meta transition-colors";
 
   // Categoria sem ocorrência continua contabilizada (prova que a busca
   // "olhou" ali) mas some pra dentro do <details> — 49 categorias, a maioria
@@ -88,7 +88,7 @@ function SearchFilters({
         aria-current={isSelected ? "true" : undefined}
         className={`${chipStyle} ${
           isSelected
-            ? "border-accent bg-accent text-surface"
+            ? "border-mineral bg-mineral text-white"
             : "border-border bg-surface text-ink-muted hover:border-accent hover:text-accent"
         }`}
       >
@@ -106,7 +106,7 @@ function SearchFilters({
           aria-current={selected === null ? "true" : undefined}
           className={`${chipStyle} ${
             selected === null
-              ? "border-accent bg-accent text-surface"
+              ? "border-mineral bg-mineral text-white"
               : "border-border bg-surface text-ink-muted hover:border-accent hover:text-accent"
           }`}
         >

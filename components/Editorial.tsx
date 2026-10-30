@@ -27,7 +27,7 @@ export function PageHeader({
 }: PageHeaderProps) {
   return (
     <div className="border-b border-border pb-8">
-      {kicker ? <p className="kicker">{kicker}</p> : null}
+      {kicker ? <p className="eyebrow">{kicker}</p> : null}
       <h1 className="mt-2 font-display text-title-lg text-ink md:text-title-xl">
         {title}
       </h1>
@@ -49,7 +49,7 @@ export function PageHeader({
  */
 export function EditorialNotice({ children }: { children: React.ReactNode }) {
   return (
-    <aside className="rounded-edge border-l-2 border-warning bg-accent-soft/40 px-5 py-4">
+    <aside className="rounded-edge border-l-2 border-warning bg-warning-soft px-5 py-4">
       <p className="kicker text-warning">Nota editorial</p>
       <p className="mt-2 max-w-measure text-meta text-ink">{children}</p>
     </aside>
@@ -114,26 +114,76 @@ export function TagList({ tags }: { tags: string[] }) {
   );
 }
 
-/** Fontes citadas pela entrada, como texto — o acervo não inventa link. */
-export function SourceList({ sources }: { sources: string[] }) {
+/**
+ * Fontes citadas, como texto: o acervo não inventa link.
+ *
+ * `details` aberto: é o componente expansível do protótipo, sem JavaScript, mas
+ * a procedência vem à vista porque vale mais que qualquer ornamento da página.
+ */
+export function SourceList({
+  sources,
+  title = "Fontes",
+}: {
+  sources: readonly string[];
+  title?: string;
+}) {
   if (sources.length === 0) return null;
 
   return (
-    <section aria-labelledby="fontes">
-      <h2 id="fontes" className="kicker">
-        Fontes
-      </h2>
-      <ul className="mt-3 space-y-2">
+    <details open id="fontes" className="group rounded-panel border border-border bg-surface">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 text-meta font-bold text-ink [&::-webkit-details-marker]:hidden">
+        <span className="flex items-baseline gap-2">
+          <h2 className="font-sans text-meta font-bold text-ink">{title}</h2>
+          <span className="font-normal text-ink-muted">({sources.length})</span>
+        </span>
+        <span aria-hidden="true" className="font-normal group-open:hidden">
+          +
+        </span>
+        <span aria-hidden="true" className="hidden font-normal group-open:inline">
+          −
+        </span>
+      </summary>
+      <ul className="space-y-2 px-4 pb-4">
         {sources.map((source) => (
-          <li
-            key={source}
-            className="max-w-measure border-t border-border pt-2 text-meta text-ink-muted"
-          >
+          <li key={source} className="border-t border-border pt-2 text-meta text-ink-muted">
             {source}
           </li>
         ))}
       </ul>
-    </section>
+    </details>
+  );
+}
+
+/**
+ * Sumário contextual do artigo, na lateral das telas grandes. Não é sidebar
+ * global: só existe dentro do artigo, e some no celular para não empurrar a
+ * leitura para baixo.
+ */
+export function PageToc({
+  label,
+  items,
+}: {
+  label: string;
+  items: ReadonlyArray<{ href: string; label: string }>;
+}) {
+  if (items.length < 2) return null;
+
+  return (
+    <nav aria-label={label} className="sticky top-36">
+      <p className="kicker border-b border-border pb-3">{label}</p>
+      <ul className="mt-2 flex flex-col">
+        {items.map((item) => (
+          <li key={item.href}>
+            <a
+              href={item.href}
+              className="block py-1.5 text-meta text-ink-muted underline-offset-4 hover:text-accent hover:underline"
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 }
 
@@ -181,14 +231,14 @@ export function StatusMessage({
   children?: React.ReactNode;
   tone?: "info" | "error";
 }) {
-  const border = tone === "error" ? "border-danger" : "border-border";
+  const box = tone === "error" ? "border-danger bg-danger-soft" : "border-border bg-surface";
   const heading = tone === "error" ? "text-danger" : "text-ink";
 
   return (
-    <div className={`rounded-edge border ${border} bg-surface px-6 py-8`}>
+    <div className={`rounded-panel border ${box} px-6 py-8`}>
       <h2 className={`font-display text-title-sm ${heading}`}>{title}</h2>
       {children ? (
-        <div className="mt-3 max-w-measure text-body text-ink-muted">
+        <div className={`mt-3 max-w-measure text-body ${tone === "error" ? "text-ink" : "text-ink-muted"}`}>
           {children}
         </div>
       ) : null}

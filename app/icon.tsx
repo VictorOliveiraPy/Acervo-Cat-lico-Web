@@ -1,5 +1,7 @@
 import { ImageResponse } from "next/og";
 
+import { COLORS } from "@/lib/designTokens";
+
 export const runtime = "edge";
 export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
@@ -15,8 +17,8 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#6B1F2A",
-          color: "#F5F0E6",
+          backgroundColor: COLORS.accent,
+          color: COLORS.onAccent,
           fontFamily: "Georgia, serif",
           fontSize: 20,
           fontWeight: 700,

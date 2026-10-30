@@ -95,8 +95,9 @@ const config: Config = {
         feature: "16px",
       },
       boxShadow: {
-        // Sem sombras no cromo: profundidade vem de espaço e do filete de 1px.
         none: "none",
+        // Única sombra aprovada, reservada a overlays flutuantes.
+        soft: "0 12px 40px rgba(28, 48, 53, 0.08)",
       },
     },
   },

@@ -3,7 +3,9 @@ export type ProductEvent =
   | "candle_lit"
   | "liturgy_opened"
   | "entry_favorited"
-  | "entry_shared";
+  | "entry_shared"
+  | "lesson_started"
+  | "lesson_completed";
 
 type ProductEventPayload = Record<string, string | number | boolean | undefined>;
 

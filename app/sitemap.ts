@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 
+import { indexableLessons } from "@/lib/academia";
 import { categoryPath, entryPath } from "@/lib/categories";
 import { ENABLED_LOCALES, HREFLANG, localePath, type Locale } from "@/lib/i18n";
 import { ApiError } from "@/lib/api";
@@ -79,6 +80,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/liturgia-diaria`, changeFrequency: "daily", priority: 0.9 },
   ];
 
+  // Lição só entra depois da revisão humana (`review` em `lib/academia.ts`).
+  const lessons = indexableLessons();
+  const academyPages: MetadataRoute.Sitemap =
+    lessons.length > 0
+      ? [
+          { url: `${SITE_URL}/academia`, changeFrequency: "weekly", priority: 0.7 },
+          ...lessons.map((lesson) => ({
+            url: `${SITE_URL}/academia/${lesson.slug}`,
+            changeFrequency: "monthly" as const,
+            priority: 0.6,
+          })),
+        ]
+      : [];
+
   const perCategory = await Promise.all(
     CATEGORY_SLUGS.map(async (categoria) => ({
       categoria,
@@ -106,5 +121,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const translated = (await Promise.all(ENABLED_LOCALES.map(localizedPages))).flat();
 
-  return [...staticPages, ...categoryPages, ...entryPages, ...translated];
+  return [...staticPages, ...academyPages, ...categoryPages, ...entryPages, ...translated];
 }

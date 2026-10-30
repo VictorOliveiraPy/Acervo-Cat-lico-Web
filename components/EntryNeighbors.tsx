@@ -19,7 +19,7 @@ export function EntryNeighbors({ categoria, neighbors, lang = DEFAULT_LOCALE }: 
   if (!previous && !next) return null;
 
   const linkStyle =
-    "group flex flex-col gap-1 rounded-edge border border-border px-4 py-3 transition-colors hover:border-accent hover:bg-surface";
+    "group flex flex-col gap-1 rounded-panel border border-border bg-surface px-4 py-3 transition-colors hover:border-accent";
 
   return (
     <nav

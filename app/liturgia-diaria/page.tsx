@@ -48,7 +48,7 @@ const VERSE_NUMBER_RE = /(\d+)(?=[A-ZÀÁÂÃÇÉÊÍÓÔÕÚ"'«])/g;
 function VerseText({ texto }: { texto: string }) {
   const partes = texto.split(VERSE_NUMBER_RE);
   return (
-    <p className="max-w-measure text-body leading-loose text-ink">
+    <p className="max-w-measure font-display text-[1.25rem] leading-[2.05rem] text-ink">
       {partes.map((parte, index) =>
         index % 2 === 1 ? (
           <sup key={index} className="mr-0.5 font-display text-meta font-semibold text-accent">
@@ -79,7 +79,7 @@ function Leitura({
 }) {
   return (
     <section aria-labelledby={`leitura-${rotulo}`} className="border-t border-border pt-8">
-      <p id={`leitura-${rotulo}`} className="kicker text-accent">
+      <p id={`leitura-${rotulo}`} className="eyebrow">
         {rotulo}
       </p>
       <p className="mt-1 text-meta text-ink-muted">{leitura.referencia}</p>
