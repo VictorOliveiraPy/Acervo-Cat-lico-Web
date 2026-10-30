@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
-import { PageHeader } from "@/components/Editorial";
+import { PerfilView } from "@/components/perfil/PerfilView";
 import { ProfileForm } from "@/components/ProfileForm";
 import { LESSONS } from "@/lib/academia";
 import { currentUser } from "@/lib/auth";
 import { LOGIN_ENABLED } from "@/lib/auth-public";
 import { CATEGORY_NAV, categoryPath } from "@/lib/categories";
-import { syncProfile } from "@/lib/services/perfilService";
+import { listFavorites, listNotes, syncProfile } from "@/lib/services/perfilService";
 
 export const metadata: Metadata = {
   title: "Meu perfil",
@@ -23,20 +23,29 @@ export default async function PerfilPage() {
   if (!user) redirect("/api/auth/signin?callbackUrl=/perfil");
 
   const profile = await syncProfile(user.subject, user.name);
+  const [favoritos, anotacoes] = await Promise.all([
+    listFavorites(user.subject),
+    listNotes(user.subject),
+  ]);
   const categories = CATEGORY_NAV.map(({ slug, label }) => ({ slug, label: label.nav }));
   const completed = LESSONS.filter(({ slug }) => profile.licoes.includes(slug));
   const preferred = categories.filter(({ slug }) => profile.preferencias.includes(slug));
 
   return (
     <div className="mx-auto max-w-shell px-4 py-10 sm:px-6">
-      <PageHeader
-        kicker="Meu perfil"
-        title={profile.nome}
-        description={`${profile.pontos} pontos em ${completed.length} de ${LESSONS.length} lições da Academia da Fé.`}
+      <PerfilView
+        nome={profile.nome}
+        pontos={profile.pontos}
+        padroeiroId={profile.padroeiro_id}
+        licoesConcluidas={completed.length}
+        licoesTotal={LESSONS.length}
+        favoritos={favoritos}
+        anotacoes={anotacoes}
+        licoes={LESSONS.map(({ slug, title }) => ({ slug, title }))}
       />
 
       {preferred.length > 0 ? (
-        <section aria-labelledby="meus-temas" className="mt-8">
+        <section aria-labelledby="meus-temas" className="mt-12 border-t border-border pt-8">
           <h2 id="meus-temas" className="font-display text-title-md text-ink">
             Meus temas
           </h2>
@@ -96,8 +105,10 @@ export default async function PerfilPage() {
       </section>
 
       <p className="mt-8 max-w-measure text-meta text-ink-muted">
-        Guardamos só o identificador do seu login, o nome de exibição, os temas escolhidos e as lições
-        concluídas. Não guardamos seu e-mail nem sua foto.
+        Guardamos só o identificador do seu login, o nome de exibição, o padroeiro, os temas
+        escolhidos, as lições concluídas, os textos favoritos e as anotações. O exame de consciência
+        nunca é salvo nem enviado. Não guardamos seu e-mail nem sua foto. Ao apagar a conta, tudo isso
+        é apagado junto.
       </p>
     </div>
   );

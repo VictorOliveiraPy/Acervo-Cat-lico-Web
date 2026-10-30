@@ -35,7 +35,7 @@ export function ProfileForm({
 
   async function removeAccount() {
     const confirmed = window.confirm(
-      "Apagar seu perfil, pontos e lições concluídas? Isso não pode ser desfeito.",
+      "Apagar seu perfil, pontos, lições concluídas, textos favoritos e anotações? Isso não pode ser desfeito.",
     );
     if (!confirmed) return;
     await deleteAccountAction();
