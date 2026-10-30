@@ -27,7 +27,6 @@ const CATEGORIES = new Set<string>(CATEGORY_SLUGS);
 /** Rotas de um único segmento (`/busca`, `/velas`...) e os arquivos gerados pelo Next. */
 const SINGLE_SEGMENT_ROUTES = new Set([
   "busca",
-  "liturgia-diaria",
   "velas",
   "perfil",
   "ranking",
@@ -42,7 +41,7 @@ const SINGLE_SEGMENT_ROUTES = new Set([
 /** `/instagram/[categoria]/[slug]` é a rota mais funda do site. */
 const MAX_INSTAGRAM_SEGMENTS = 3;
 const MAX_CATEGORY_SEGMENTS = 2;
-/** `/academia` e `/academia/[licao]`; lição inexistente é 404 na própria rota. */
+/** `/academia/[licao]` e `/liturgia-diaria/[data]`: o valor inválido é 404 na própria rota. */
 const MAX_ACADEMIA_SEGMENTS = 2;
 
 const NOT_FOUND: PathVerdict = { kind: "not-found" };
@@ -79,6 +78,7 @@ export function classifyPath(pathname: string): PathVerdict {
   }
 
   if (CATEGORIES.has(first)) return segments.length <= MAX_CATEGORY_SEGMENTS ? OK : NOT_FOUND;
+  if (first === "liturgia-diaria") return segments.length <= MAX_ACADEMIA_SEGMENTS ? OK : NOT_FOUND;
   if (first === "academia") return segments.length <= MAX_ACADEMIA_SEGMENTS ? OK : NOT_FOUND;
   if (first === "instagram") return segments.length <= MAX_INSTAGRAM_SEGMENTS ? OK : NOT_FOUND;
   if (SINGLE_SEGMENT_ROUTES.has(first)) return segments.length === 1 ? OK : NOT_FOUND;

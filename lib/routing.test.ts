@@ -22,6 +22,8 @@ describe("classifyPath", () => {
     expect(classifyPath("/academia/santissima-trindade")).toEqual({ kind: "ok" });
     expect(classifyPath("/academia/santissima-trindade/extra")).toEqual({ kind: "not-found" });
     expect(classifyPath("/perfil")).toEqual({ kind: "ok" });
+    expect(classifyPath("/liturgia-diaria/2026-10-30")).toEqual({ kind: "ok" });
+    expect(classifyPath("/liturgia-diaria/2026-10-30/x")).toEqual({ kind: "not-found" });
     expect(classifyPath("/ranking")).toEqual({ kind: "ok" });
   });
 

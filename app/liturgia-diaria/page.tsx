@@ -1,166 +1,64 @@
 import type { Metadata } from "next";
 
-import { Breadcrumbs, PageHeader, PrayerText, StatusMessage } from "@/components/Editorial";
-import { ApiError, getErrorMessage } from "@/lib/api";
-import { LITURGIA_ATIVA, formatLiturgiaDate, liturgicalColorHex } from "@/lib/liturgia";
+import { Breadcrumbs, PageHeader, StatusMessage } from "@/components/Editorial";
+import { LiturgiaView } from "@/components/LiturgiaView";
+import { ApiError } from "@/lib/api";
+import { formatLongDate, todayInBrazil } from "@/lib/liturgia";
+import type { LiturgiaDiaria } from "@/lib/liturgiaSchemas";
 import { fetchLiturgiaDiaria } from "@/lib/services/liturgiaService";
-import type { LeituraLiturgica, LiturgiaDiaria } from "@/lib/liturgiaSchemas";
 
-const TITLE = "Liturgia Diária";
-const DESCRIPTION =
-  "As leituras da Missa de hoje: primeira leitura, salmo responsorial, segunda leitura (aos domingos) e o evangelho do dia — atualizadas todo dia.";
+// O dia muda à meia-noite: a página revalida a cada 5 minutos, e cada um dos dias
+// vem pronto do banco da API, sem depender da fonte externa nesta hora.
+export const revalidate = 300;
 
-export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
-  alternates: { canonical: "/liturgia-diaria" },
-  // `images` explícito: declarar `openGraph` aqui substitui por inteiro o
-  // que a página herdaria do `app/opengraph-image.tsx` — sem isto, a página
-  // compartilhada no WhatsApp/redes saía sem nenhuma prévia de imagem.
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    url: "/liturgia-diaria",
-    images: ["/opengraph-image"],
-  },
-  // Indexável de propósito (revertido de `noindex` na auditoria de SEO de
-  // 2026-09-18): "liturgia de hoje"/"evangelho de hoje" é busca de altíssimo
-  // volume recorrente no nicho católico — todo site de referência do ramo
-  // (Vatican News, Aleteia, CNBB) indexa a mesma URL estável mesmo com
-  // conteúdo trocando todo dia. O Google recrawla páginas que mudam com
-  // frequência e mostra o conteúdo atual, não uma "versão velha" — manter
-  // `noindex` só abre mão de tráfego de graça sem ganhar nada em troca.
-  robots: { index: true, follow: true },
-};
+const FALLBACK_DESCRIPTION =
+  "As leituras da Missa de hoje: primeira leitura, salmo responsorial, segunda leitura (aos domingos) e o evangelho do dia.";
 
-/**
- * Número de versículo colado na palavra seguinte, do jeito que a fonte
- * manda ("2Abraão gerou Isaac"): em textos curtos (uma oração, um salmo)
- * isso nem se nota, mas numa leitura longa — a genealogia de Mateus 1 tem
- * 16 versículos seguidos — vira parede de texto ilegível. O corte do split
- * é logo antes de cada número (lookahead, não consome a letra seguinte),
- * então o array alterna [texto, número, texto, número, ...].
- */
-const VERSE_NUMBER_RE = /(\d+)(?=[A-ZÀÁÂÃÇÉÊÍÓÔÕÚ"'«])/g;
-
-/** Texto de uma leitura bíblica, com os números de versículo destacados
- * como índice sobrescrito — mesma convenção de qualquer Bíblia impressa. */
-function VerseText({ texto }: { texto: string }) {
-  const partes = texto.split(VERSE_NUMBER_RE);
-  return (
-    <p className="max-w-measure font-display text-[1.25rem] leading-[2.05rem] text-ink">
-      {partes.map((parte, index) =>
-        index % 2 === 1 ? (
-          <sup key={index} className="mr-0.5 font-display text-meta font-semibold text-accent">
-            {parte}
-          </sup>
-        ) : (
-          <span key={index}>{parte}</span>
-        ),
-      )}
-    </p>
-  );
+async function loadToday(): Promise<LiturgiaDiaria | null> {
+  try {
+    return await fetchLiturgiaDiaria();
+  } catch (error: unknown) {
+    if (error instanceof ApiError) return null;
+    throw error;
+  }
 }
 
-/**
- * Uma seção de leitura: referência (livro/capítulo) e o texto. O salmo usa
- * `PrayerText` (já quebra linha por verso, curto o bastante pra itálico não
- * atrapalhar); as leituras em prosa — mais longas, às vezes uma genealogia
- * inteira — usam `VerseText`, sem itálico e com os versículos numerados.
- */
-function Leitura({
-  rotulo,
-  leitura,
-  variant = "prosa",
-}: {
-  rotulo: string;
-  leitura: LeituraLiturgica;
-  variant?: "prosa" | "salmo";
-}) {
-  return (
-    <section aria-labelledby={`leitura-${rotulo}`} className="border-t border-border pt-8">
-      <p id={`leitura-${rotulo}`} className="eyebrow">
-        {rotulo}
-      </p>
-      <p className="mt-1 text-meta text-ink-muted">{leitura.referencia}</p>
-      <div className="mt-4">
-        {variant === "salmo" ? <PrayerText texto={leitura.texto} /> : <VerseText texto={leitura.texto} />}
-      </div>
-    </section>
-  );
+export async function generateMetadata(): Promise<Metadata> {
+  const liturgia = await loadToday();
+  const isCurrent = liturgia !== null && !liturgia.desatualizada;
+  const title = isCurrent
+    ? `Liturgia Diária de hoje, ${formatLongDate(liturgia.data)} — Evangelho e Leituras`
+    : "Liturgia Diária — Evangelho e Leituras";
+  const description = liturgia
+    ? `Evangelho do dia: ${liturgia.evangelho.referencia}. Leia a primeira leitura (${liturgia.primeira_leitura.referencia}), o salmo e o Evangelho da Missa${isCurrent ? " de hoje" : ""}.`
+    : FALLBACK_DESCRIPTION;
+
+  return {
+    title: { absolute: title },
+    description,
+    alternates: { canonical: "/liturgia-diaria" },
+    openGraph: { title, description, url: "/liturgia-diaria", images: ["/opengraph-image"] },
+    // Só sem nenhuma liturgia salva: uma página sem leituras não deve ser indexada.
+    robots: { index: liturgia !== null, follow: true },
+  };
 }
 
 export default async function LiturgiaDiariaPage() {
-  let liturgia: LiturgiaDiaria | null = null;
-  let loadError: ApiError | null = null;
-  if (LITURGIA_ATIVA) {
-    try {
-      liturgia = await fetchLiturgiaDiaria();
-    } catch (error: unknown) {
-      if (!(error instanceof ApiError)) throw error;
-      loadError = error;
-    }
+  const liturgia = await loadToday();
+
+  if (!liturgia) {
+    return (
+      <div className="mx-auto max-w-shell px-4 py-10 sm:px-6">
+        <Breadcrumbs trail={[{ label: "Acervo", href: "/" }, { label: "Liturgia Diária" }]} />
+        <PageHeader kicker="Liturgia" title="Liturgia Diária" description={FALLBACK_DESCRIPTION} />
+        <div className="mt-10">
+          <StatusMessage title="A liturgia não respondeu">
+            <p>Recarregue a página em instantes. O restante do acervo continua aberto.</p>
+          </StatusMessage>
+        </div>
+      </div>
+    );
   }
 
-  return (
-    <div className="mx-auto max-w-shell px-4 py-10 sm:px-6">
-      <Breadcrumbs trail={[{ label: "Acervo", href: "/" }, { label: TITLE }]} />
-
-      {liturgia ? (
-        <>
-          <PageHeader
-            kicker="Liturgia de hoje"
-            title={TITLE}
-            description={`${formatLiturgiaDate(liturgia.data)}${liturgia.celebracao ? ` · ${liturgia.celebracao}` : ""}`}
-          />
-
-          {liturgia.cor_liturgica ? (
-            <p className="mt-4 flex items-center gap-2 text-meta text-ink-muted">
-              <span
-                aria-hidden="true"
-                className="h-3 w-3 rounded-full border border-border"
-                style={{
-                  backgroundColor: liturgicalColorHex(liturgia.cor_liturgica) ?? "transparent",
-                }}
-              />
-              Cor litúrgica: {liturgia.cor_liturgica}
-            </p>
-          ) : null}
-
-          <div className="mt-10 flex flex-col gap-8">
-            <Leitura rotulo="Primeira leitura" leitura={liturgia.primeira_leitura} />
-            <Leitura rotulo="Salmo responsorial" leitura={liturgia.salmo} variant="salmo" />
-            {liturgia.segunda_leitura ? (
-              <Leitura rotulo="Segunda leitura" leitura={liturgia.segunda_leitura} />
-            ) : null}
-            <Leitura rotulo="Evangelho" leitura={liturgia.evangelho} />
-          </div>
-
-          <p className="mt-10 border-t border-border pt-4 text-meta text-ink-muted">
-            Fonte: {liturgia.fonte}. Para uso litúrgico oficial na Missa, consulte
-            sempre o Lecionário aprovado pela Conferência Episcopal.
-          </p>
-        </>
-      ) : (
-        <>
-          <PageHeader kicker="Todo dia, um evangelho novo" title={TITLE} description={DESCRIPTION} />
-          <div className="mt-10">
-            {LITURGIA_ATIVA ? (
-              <StatusMessage title="A liturgia de hoje não respondeu" tone="error">
-                <p>{loadError ? getErrorMessage(loadError) : "Erro inesperado."}</p>
-                <p className="mt-3">Recarregue a página em instantes.</p>
-              </StatusMessage>
-            ) : (
-              <StatusMessage title="Liturgia temporariamente indisponível">
-                <p>
-                  As leituras voltam a esta página assim que a fonte estiver disponível. O
-                  restante do acervo continua aberto.
-                </p>
-              </StatusMessage>
-            )}
-          </div>
-        </>
-      )}
-    </div>
-  );
+  return <LiturgiaView title="Liturgia Diária" liturgia={liturgia} today={todayInBrazil()} />;
 }

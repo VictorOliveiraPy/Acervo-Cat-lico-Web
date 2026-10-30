@@ -13,7 +13,7 @@ import { CATEGORY_LABELS, categoryPath, entryPath } from "@/lib/categories";
 import { CATEGORY_GROUPS } from "@/lib/categoryGroups";
 import { formatEntryCount } from "@/lib/entryDisplay";
 import { safeJsonLd } from "@/lib/jsonLd";
-import { LITURGIA_ATIVA, formatLiturgiaDate } from "@/lib/liturgia";
+import { formatLiturgiaDate } from "@/lib/liturgia";
 import type { LiturgiaDiaria } from "@/lib/liturgiaSchemas";
 import { featuredSaint, type SaintAsset } from "@/lib/saintAssets";
 import { CATEGORY_SLUGS, type CategoryInfo, type Entry } from "@/lib/schemas";
@@ -176,7 +176,7 @@ function sortByNavOrder(categories: CategoryInfo[]): CategoryInfo[] {
 }
 
 export default async function HomePage() {
-  const liturgiaPromise = LITURGIA_ATIVA ? loadLiturgia() : Promise.resolve(null);
+  const liturgiaPromise = loadLiturgia();
   const featuredPromise = loadFeaturedSaint();
   // Falha da API sobe para `error.tsx`: com cache, a última home boa continua no
   // ar, em vez de uma mensagem de erro guardada e servida como 200.

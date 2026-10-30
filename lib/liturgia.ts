@@ -3,13 +3,68 @@
  * cru vem da API, a apresentação mora aqui.
  */
 
-/**
- * Liturgia desativada enquanto a API responde `LITURGIA_INDISPONIVEL`: some da
- * home e do rodapé, e a página não consulta a API. A URL continua no ar e no
- * sitemap de propósito, porque é uma busca recorrente e já está indexada.
- * Para reativar, basta trocar para `true`.
- */
-export const LITURGIA_ATIVA = false;
+const DAY_MS = 24 * 60 * 60 * 1000;
+const BRAZIL_OFFSET_MS = 3 * 60 * 60 * 1000;
+/** Janela publicada: a API tem os próximos 7 dias; o passado evita URLs sem fim. */
+const DAYS_AHEAD = 7;
+const DAYS_BEHIND = 61;
+
+const MONTHS = [
+  "janeiro",
+  "fevereiro",
+  "março",
+  "abril",
+  "maio",
+  "junho",
+  "julho",
+  "agosto",
+  "setembro",
+  "outubro",
+  "novembro",
+  "dezembro",
+];
+
+function toUtc(iso: string): number {
+  const [year, month, day] = iso.split("-").map(Number) as [number, number, number];
+  return Date.UTC(year, month - 1, day);
+}
+
+function fromUtc(time: number): string {
+  return new Date(time).toISOString().slice(0, 10);
+}
+
+/** Hoje em Brasília (UTC-3, sem horário de verão desde 2019), como `AAAA-MM-DD`. */
+export function todayInBrazil(now: Date = new Date()): string {
+  return fromUtc(now.getTime() - BRAZIL_OFFSET_MS);
+}
+
+/** "30 de outubro de 2026". */
+export function formatLongDate(iso: string): string {
+  const [year, month, day] = iso.split("-").map(Number) as [number, number, number];
+  return `${day} de ${MONTHS[month - 1]} de ${year}`;
+}
+
+/** Só data real dentro da janela vira página; o resto é 404. */
+export function isServedLiturgyDate(iso: string, today: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return false;
+  const time = toUtc(iso);
+  if (fromUtc(time) !== iso) return false;
+  const distance = (time - toUtc(today)) / DAY_MS;
+  return distance >= -DAYS_BEHIND && distance <= DAYS_AHEAD;
+}
+
+export function neighborLiturgyDates(
+  iso: string,
+  today: string,
+): { previous: string | null; next: string | null } {
+  const time = toUtc(iso);
+  const previous = fromUtc(time - DAY_MS);
+  const next = fromUtc(time + DAY_MS);
+  return {
+    previous: isServedLiturgyDate(previous, today) ? previous : null,
+    next: isServedLiturgyDate(next, today) ? next : null,
+  };
+}
 
 /** Data por extenso em português, ex.: "terça-feira, 8 de setembro de 2026". */
 export function formatLiturgiaDate(isoDate: string): string {

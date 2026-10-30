@@ -7,6 +7,7 @@
 
 export const MAIN_NAV = [
   { id: "explorar", label: "Explorar", href: "/" },
+  { id: "liturgia", label: "Liturgia de hoje", href: "/liturgia-diaria" },
   { id: "academia", label: "Academia da Fé", href: "/academia" },
   { id: "santos", label: "Santos", href: "/santos" },
   { id: "velas", label: "Velas", href: "/velas" },

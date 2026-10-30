@@ -22,6 +22,8 @@ export const liturgiaDiariaSchema = z.object({
   segunda_leitura: leituraLiturgicaSchema.nullable(),
   evangelho: leituraLiturgicaSchema,
   fonte: z.string(),
+  /** A API só tinha a última liturgia salva, de outro dia. */
+  desatualizada: z.boolean().default(false),
 });
 
 export type LeituraLiturgica = z.infer<typeof leituraLiturgicaSchema>;

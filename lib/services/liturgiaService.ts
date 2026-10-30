@@ -7,13 +7,12 @@ import { apiGet } from "@/lib/api";
 import { liturgiaDiariaSchema, type LiturgiaDiaria } from "@/lib/liturgiaSchemas";
 
 /**
- * Liturgia de hoje (ou de `data`, se passada) — nunca cacheada pelo Next:
- * o backend já cacheia por dia (ver `liturgia_repository.py`), cachear de
- * novo aqui só arriscaria servir o dia errado depois da virada da meia-noite.
+ * Liturgia de hoje (ou de `data`, se passada). A API lê do próprio banco, e os 5
+ * minutos de cache limitam quanto tempo o dia anterior aparece depois da meia-noite.
  */
 export function fetchLiturgiaDiaria(data?: string): Promise<LiturgiaDiaria> {
   return apiGet("/liturgia-diaria", liturgiaDiariaSchema, {
     query: { data },
-    revalidateSeconds: 0,
+    revalidateSeconds: 300,
   });
 }
