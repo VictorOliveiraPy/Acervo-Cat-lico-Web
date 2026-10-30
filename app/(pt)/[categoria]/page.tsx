@@ -13,6 +13,7 @@ import {
 } from "@/components/Editorial";
 import { ApiError } from "@/lib/api";
 import { CATEGORY_LABELS, categoryPath } from "@/lib/categories";
+import { CATEGORY_SEO_DESCRIPTION } from "@/lib/categorySeo";
 import { formatEntryCount } from "@/lib/entryDisplay";
 import { languageAlternates } from "@/lib/i18n";
 import { computePagination, parseOffset } from "@/lib/pagination";
@@ -69,13 +70,14 @@ export async function generateMetadata({
   // `?offset=7` não virar uma cópia indexável.
   const pageOffset = Math.floor(parseOffset(searchParams.offset) / PAGE_SIZE) * PAGE_SIZE;
   const canonical = pageOffset > 0 ? `${path}?offset=${pageOffset}` : path;
+  const description = CATEGORY_SEO_DESCRIPTION[params.categoria];
   const heading =
     pageOffset > 0
       ? `${label.heading} — página ${pageOffset / PAGE_SIZE + 1}`
       : label.heading;
   return {
     title: heading,
-    description: label.tagline,
+    description,
     alternates: {
       canonical,
       languages:
@@ -90,7 +92,7 @@ export async function generateMetadata({
     // saía sem nenhuma prévia de imagem.
     openGraph: {
       title: heading,
-      description: label.tagline,
+      description,
       url: canonical,
       images: ["/opengraph-image"],
     },

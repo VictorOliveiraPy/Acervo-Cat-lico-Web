@@ -11,8 +11,8 @@ import { ReadingSizeControl } from "@/components/ReadingSizeControl";
 import { ApiError } from "@/lib/api";
 import { categoryPath, entryPath } from "@/lib/categories";
 import { paragraphs } from "@/lib/entryDisplay";
-import { HREFLANG, languageAlternates, OG_LOCALE, dictionaryFor, isLocale, localePath, type Locale } from "@/lib/i18n";
-import { safeJsonLd } from "@/lib/jsonLd";
+import { HREFLANG, languageAlternates, formatEntryDate, OG_LOCALE, dictionaryFor, isLocale, localePath, type Locale } from "@/lib/i18n";
+import { articleJsonLd, safeJsonLd } from "@/lib/jsonLd";
 import { neighborsOf } from "@/lib/neighbors";
 import { saintAssetFor } from "@/lib/saintAssets";
 import { isCategorySlug, type CategorySlug, type Entry } from "@/lib/schemas";
@@ -118,16 +118,18 @@ export default async function LocaleEntryPage({ params }: { params: Params }) {
   ]);
 
   const entryJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "CreativeWork",
-    name: entry.titulo,
-    description: entry.resumo,
-    url: `${SITE_URL}${path}`,
-    inLanguage: HREFLANG[lang],
-    translationOfWork: { "@type": "CreativeWork", url: `${SITE_URL}${ptPath}`, inLanguage: "pt-BR" },
-    isPartOf: { "@type": "WebSite", name: SITE_NAME, url: `${SITE_URL}${localePath(lang, "/")}` },
-    ...(entry.imagem ? { image: entry.imagem } : {}),
-    ...(entry.atualizado_em ? { dateModified: entry.atualizado_em } : {}),
+    ...articleJsonLd({
+      url: `${SITE_URL}${path}`,
+      titulo: entry.titulo,
+      resumo: entry.resumo,
+      imagem: entry.imagem,
+      inLanguage: HREFLANG[lang],
+      publicado_em: entry.publicado_em,
+      atualizado_em: entry.atualizado_em,
+      nascimento: "nascimento" in entry ? entry.nascimento : null,
+      morte: "morte" in entry ? entry.morte : null,
+    }),
+    translationOfWork: { "@type": "Article", url: `${SITE_URL}${ptPath}`, inLanguage: "pt-BR" },
   };
 
   const breadcrumbJsonLd = {
@@ -165,6 +167,14 @@ export default async function LocaleEntryPage({ params }: { params: Params }) {
               {entry.titulo}
             </h1>
             <p className="mt-4 max-w-measure text-lead text-ink-muted">{entry.resumo}</p>
+            {entry.atualizado_em ? (
+              <p className="mt-3 text-meta text-ink-muted">
+                {t.updatedOn}{" "}
+                <time dateTime={entry.atualizado_em}>
+                  {formatEntryDate(lang, entry.atualizado_em)}
+                </time>
+              </p>
+            ) : null}
             <p className="mt-4 text-meta text-ink-muted">
               {t.translationNote}{" "}
               <Link

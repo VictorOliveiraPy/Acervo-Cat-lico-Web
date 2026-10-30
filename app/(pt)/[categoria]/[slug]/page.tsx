@@ -20,8 +20,8 @@ import { lessonForEntry } from "@/lib/academia";
 import { ApiError } from "@/lib/api";
 import { CATEGORY_LABELS, categoryPath, entryPath } from "@/lib/categories";
 import { entryMetaFields, entryOrdinal, paragraphs } from "@/lib/entryDisplay";
-import { safeJsonLd } from "@/lib/jsonLd";
-import { HREFLANG, languageAlternates } from "@/lib/i18n";
+import { articleJsonLd, safeJsonLd } from "@/lib/jsonLd";
+import { HREFLANG, formatEntryDate, languageAlternates } from "@/lib/i18n";
 import { neighborsOf } from "@/lib/neighbors";
 import { saintAssetFor } from "@/lib/saintAssets";
 import { isCategorySlug, type CategorySlug, type Entry } from "@/lib/schemas";
@@ -197,21 +197,19 @@ export default async function EntryPage({ params }: { params: Params }) {
     loadNeighbors(categoria, params.slug),
   ]);
 
-  // Dados estruturados: CreativeWork identifica a entrada em si (título,
-  // resumo, imagem), BreadcrumbList espelha a navegação visível logo abaixo
-  // — os dois juntos são o que habilita o Google a mostrar a migalha de
-  // caminho no resultado de busca em vez de só a URL crua.
-  const entryJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "CreativeWork",
-    name: entry.titulo,
-    description: entry.resumo,
+  // Dados estruturados: o Article identifica o verbete, e o BreadcrumbList espelha a
+  // navegação visível logo abaixo, o que habilita a migalha no resultado de busca.
+  const entryJsonLd = articleJsonLd({
     url: `${SITE_URL}${path}`,
+    titulo: entry.titulo,
+    resumo: entry.resumo,
+    imagem: entry.imagem,
     inLanguage: "pt-BR",
-    isPartOf: { "@type": "WebSite", name: SITE_NAME, url: SITE_URL },
-    ...(entry.imagem ? { image: entry.imagem } : {}),
-    ...(entry.atualizado_em ? { dateModified: entry.atualizado_em } : {}),
-  };
+    publicado_em: entry.publicado_em,
+    atualizado_em: entry.atualizado_em,
+    nascimento: "nascimento" in entry ? entry.nascimento : null,
+    morte: "morte" in entry ? entry.morte : null,
+  });
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -254,6 +252,14 @@ export default async function EntryPage({ params }: { params: Params }) {
               {entry.titulo}
             </h1>
             <p className="mt-4 max-w-measure text-lead text-ink-muted">{entry.resumo}</p>
+            {entry.atualizado_em ? (
+              <p className="mt-3 text-meta text-ink-muted">
+                Atualizado em{" "}
+                <time dateTime={entry.atualizado_em}>
+                  {formatEntryDate("pt", entry.atualizado_em)}
+                </time>
+              </p>
+            ) : null}
             <EntryActions categoria={categoria} slug={entry.slug} titulo={entry.titulo} />
           </header>
 

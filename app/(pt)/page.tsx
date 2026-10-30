@@ -31,6 +31,7 @@ export const revalidate = 300;
 // Só a home é canônica de "/". No layout, esse valor era herdado por toda página
 // sem canonical própria, inclusive as 404, dizendo ao Google que eram cópias da home.
 export const metadata: Metadata = {
+  title: { absolute: "Compêndio Católico — Santos, Orações, Catecismo e Liturgia Diária" },
   alternates: { canonical: "/", languages: languageAlternates("/") },
 };
 
@@ -209,8 +210,8 @@ export default async function HomePage() {
             </h1>
             <p className="mt-5 max-w-xl text-lead text-ink-muted">
               Digite um nome, um tema ou um lugar: a busca cobre {totalEntries}{" "}
-              entradas em {categories.length} categorias — de santos e papas a
-              pecados, orações e a Missa.
+              entradas em {categories.length} categorias, com santos, orações, Catecismo,
+              liturgia diária, papas, sacramentos e a Missa.
             </p>
 
             <div className="mt-7 max-w-xl">

@@ -29,6 +29,7 @@ const SINGLE_SEGMENT_ROUTES = new Set([
   "busca",
   "velas",
   "perfil",
+  "sobre",
   "ranking",
   "icon",
   "apple-icon",

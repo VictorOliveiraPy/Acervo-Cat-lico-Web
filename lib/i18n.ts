@@ -57,6 +57,13 @@ export function languageAlternates(ptPath: string): Record<string, string> {
   };
 }
 
+/** Data `AAAA-MM-DD` por extenso no idioma da página. */
+export function formatEntryDate(lang: SiteLang, iso: string): string {
+  return new Intl.DateTimeFormat(HREFLANG[lang], { dateStyle: "long", timeZone: "UTC" }).format(
+    new Date(`${iso}T12:00:00Z`),
+  );
+}
+
 /** Código BCP 47 para `<html lang>`, `hreflang` e `inLanguage`. */
 export const HREFLANG: Record<SiteLang, string> = {
   pt: "pt-BR",
@@ -98,6 +105,7 @@ export type Dictionary = {
   onThisPage: string;
   entryData: string;
   entryText: string;
+  updatedOn: string;
   previous: string;
   next: string;
   neighborsLabel: string;
@@ -130,6 +138,7 @@ export const DICTIONARY: Record<SiteLang, Dictionary> = {
     onThisPage: "Nesta página",
     entryData: "Dados",
     entryText: "Leitura",
+    updatedOn: "Atualizado em",
     previous: "← Anterior",
     next: "Próxima →",
     neighborsLabel: "Entradas vizinhas",
@@ -161,6 +170,7 @@ export const DICTIONARY: Record<SiteLang, Dictionary> = {
     onThisPage: "En esta página",
     entryData: "Datos",
     entryText: "Lectura",
+    updatedOn: "Actualizado el",
     previous: "← Anterior",
     next: "Siguiente →",
     neighborsLabel: "Entradas vecinas",
@@ -192,6 +202,7 @@ export const DICTIONARY: Record<SiteLang, Dictionary> = {
     onThisPage: "On this page",
     entryData: "Details",
     entryText: "Reading",
+    updatedOn: "Updated on",
     previous: "← Previous",
     next: "Next →",
     neighborsLabel: "Neighbouring entries",

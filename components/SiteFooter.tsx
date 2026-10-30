@@ -92,6 +92,12 @@ export async function SiteFooter() {
 
         <div className="mt-8 flex flex-wrap items-center gap-4 border-t border-border pt-4 text-meta text-ink-muted">
           <Link
+            href="/sobre"
+            className="underline-offset-4 hover:text-accent hover:underline"
+          >
+            Sobre e como escrevemos →
+          </Link>
+          <Link
             href="/academia"
             className="underline-offset-4 hover:text-accent hover:underline"
           >
