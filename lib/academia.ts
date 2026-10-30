@@ -1,3 +1,4 @@
+import { COMPENDIO_LESSONS } from "@/lib/academiaCompendio";
 import type { CategorySlug } from "@/lib/schemas";
 
 /**
@@ -37,7 +38,7 @@ export type Lesson = {
   concept: {
     title: string;
     paragraphs: readonly string[];
-    /** Termos exibidos lado a lado como apoio visual da explicação. */
+    /** Termos exibidos lado a lado como apoio visual; pode ficar vazio. */
     highlights: readonly string[];
   };
   sources: readonly string[];
@@ -111,7 +112,7 @@ export const LESSONS: readonly Lesson[] = [
     module: "Fundamentos da Fé",
     title: "A criação do mundo",
     subtitle: "Deus criou o universo do nada, livremente, com sabedoria e amor.",
-    review: "pending",
+    review: "reviewed",
     concept: {
       title: "Deus criou tudo, livremente.",
       paragraphs: [
@@ -150,6 +151,7 @@ export const LESSONS: readonly Lesson[] = [
       { categoria: "crisma", slug: "deus-pai-todo-poderoso-e-criador" },
     ],
   },
+  ...COMPENDIO_LESSONS,
 ];
 
 export function lessonBySlug(slug: string): Lesson | null {
@@ -170,7 +172,3 @@ export function indexableLessons(): Lesson[] {
   return LESSONS.filter((lesson) => lesson.review === "reviewed");
 }
 
-/** A resposta certa é decidida aqui, num só lugar, e não dentro da tela. */
-export function isCorrectAnswer(lesson: Lesson, optionId: string): boolean {
-  return lesson.quiz.correctId === optionId;
-}

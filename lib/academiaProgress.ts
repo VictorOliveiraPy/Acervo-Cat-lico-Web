@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import type { Lesson } from "@/lib/academia";
+
 /**
  * Progresso das lições, guardado neste navegador.
  *
@@ -7,6 +9,14 @@ import { z } from "zod";
  * para isso, o mesmo usado por favoritos e tamanho do texto. O progresso não
  * acompanha a pessoa em outro aparelho, e o texto da tela diz isso.
  */
+
+/**
+ * A resposta certa é decidida aqui, e não dentro da tela. Fica neste módulo, e não
+ * em `lib/academia.ts`, para a tela da lição não levar o texto de todas as lições.
+ */
+export function isCorrectAnswer(lesson: Lesson, optionId: string): boolean {
+  return lesson.quiz.correctId === optionId;
+}
 
 export const PROGRESS_STORAGE_KEY = "compendio:academia:progress";
 

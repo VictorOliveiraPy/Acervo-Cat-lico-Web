@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-import { isCorrectAnswer, type Lesson } from "@/lib/academia";
+import type { Lesson } from "@/lib/academia";
 import {
   LAST_STEP,
   LESSON_STEPS,
+  isCorrectAnswer,
   readProgress,
   saveProgress,
   withStep,
@@ -142,6 +143,7 @@ export function LessonFlow({ lesson, articleHref }: { lesson: Lesson; articleHre
                 {paragraph}
               </p>
             ))}
+            {lesson.concept.highlights.length > 0 ? (
             <ul className="mt-6 grid gap-2 sm:grid-cols-3">
               {lesson.concept.highlights.map((highlight) => (
                 <li
@@ -152,6 +154,7 @@ export function LessonFlow({ lesson, articleHref }: { lesson: Lesson; articleHre
                 </li>
               ))}
             </ul>
+            ) : null}
             <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
               <button type="button" onClick={startPractice} className="btn btn-primary">
                 Responder exercício <span aria-hidden="true">→</span>

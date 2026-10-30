@@ -3,11 +3,17 @@ import { describe, expect, it } from "vitest";
 import {
   LESSONS,
   indexableLessons,
-  isCorrectAnswer,
   lessonBySlug,
   lessonForEntry,
 } from "@/lib/academia";
-import { LAST_STEP, lessonStatus, parseProgress, withStep } from "@/lib/academiaProgress";
+import { COMPENDIO_LESSONS } from "@/lib/academiaCompendio";
+import {
+  LAST_STEP,
+  isCorrectAnswer,
+  lessonStatus,
+  parseProgress,
+  withStep,
+} from "@/lib/academiaProgress";
 import { saintAssetFor } from "@/lib/saintAssets";
 
 const trindade = lessonBySlug("santissima-trindade");
@@ -53,12 +59,34 @@ describe("lições da Academia", () => {
   });
 });
 
-describe("lição da criação", () => {
-  it("deve ficar fora dos buscadores até a revisão e abrir a partir do artigo", () => {
-    const criacao = lessonBySlug("a-criacao");
-    expect(criacao?.review).toBe("pending");
-    expect(indexableLessons()).not.toContain(criacao);
-    expect(lessonForEntry("catecismo", "a-criacao")).toBe(criacao);
+describe("lições do Compêndio", () => {
+  it("deve ter as 50 lições, além da Trindade e da criação", () => {
+    expect(COMPENDIO_LESSONS).toHaveLength(50);
+    expect(LESSONS).toHaveLength(52);
+  });
+
+  it("deve manter slugs únicos, porque cada um vira uma URL", () => {
+    const slugs = LESSONS.map(({ slug }) => slug);
+    expect(new Set(slugs).size).toBe(slugs.length);
+  });
+
+  it("deve citar a fonte e ligar cada lição a um verbete do acervo", () => {
+    for (const lesson of COMPENDIO_LESSONS) {
+      expect(lesson.sources[0], lesson.slug).toMatch(/^Compêndio do Catecismo da Igreja Católica, n\. \d+$/);
+      expect(lesson.relatedEntries.length, lesson.slug).toBeGreaterThan(0);
+      expect(lesson.quiz.options, lesson.slug).toHaveLength(3);
+    }
+  });
+
+  it("não deve deixar a alternativa certa sempre na mesma posição", () => {
+    const positions = new Set(COMPENDIO_LESSONS.map(({ quiz }) => quiz.correctId));
+    expect(positions).toEqual(new Set(["a", "b", "c"]));
+  });
+
+  it("deve publicar todas como revisadas e abrir a partir do artigo", () => {
+    expect(LESSONS.every(({ review }) => review === "reviewed")).toBe(true);
+    expect(lessonForEntry("catecismo", "a-criacao")?.slug).toBe("a-criacao");
+    expect(lessonForEntry("novissimos", "purgatorio")?.slug).toBe("o-purgatorio");
   });
 });
 
