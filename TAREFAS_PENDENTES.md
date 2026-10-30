@@ -2,23 +2,10 @@
 
 O que depende de uma pessoa: acesso, decisão ou revisão. Marque ao concluir.
 
-## Publicar o novo perfil (fazer primeiro, nesta ordem)
-O código está pronto e testado na branch `perfil-padroeiro` dos dois repositórios, mas ainda não está em produção.
-
-- [ ] Trocar o `INTERNAL_API_SECRET`. O valor apareceu em uma conversa e dá acesso às anotações de qualquer pessoa. Usar o mesmo valor novo em dois lugares:
-  - VPS: `/opt/acervo-catolico-api/deploy/.env`
-  - Vercel: variável de ambiente
-- [ ] Publicar a API. Tem que ser antes do site, ou `/perfil` quebra:
-  ```sh
-  cd Acervo-Cat-lico-API
-  git switch main && git merge --ff-only perfil-padroeiro && git push origin main
-  ssh root@212.28.185.69 'sh /opt/acervo-catolico-api/deploy/atualizar.sh'
-  ```
-- [ ] Publicar o site. A Vercel faz o deploy sozinha ao receber a `main`, e isso também aplica a troca do segredo:
-  ```sh
-  cd Acervo-Cat-lico-Web
-  git switch main && git merge --ff-only perfil-padroeiro && git push origin main
-  ```
+## Segurança (fazer primeiro)
+- [ ] Trocar o `INTERNAL_API_SECRET`, se ainda não foi trocado. O valor apareceu em uma conversa e dá acesso às anotações de qualquer pessoa. Usar o mesmo valor novo nos dois lugares; enquanto eles forem diferentes, `/perfil` fica fora do ar:
+  - VPS: `/opt/acervo-catolico-api/deploy/.env`, depois `sh atualizar.sh`
+  - Vercel: variável de ambiente, depois redeploy
 
 ## Revisão religiosa
 - [ ] Revisar com um padre o exame de consciência e o roteiro "Na hora" (`lib/confissao.ts`). Esses textos vieram do protótipo, sem fonte citada. Os 5 passos já batem com o n. 303 do Compêndio.
