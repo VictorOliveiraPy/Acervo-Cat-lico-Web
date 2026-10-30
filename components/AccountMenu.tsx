@@ -1,7 +1,6 @@
 "use client";
 
 import { getSession, signIn } from "next-auth/react";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { importLocalProgressAction } from "@/app/(pt)/perfil/actions";
@@ -44,9 +43,11 @@ export function AccountMenu() {
 
   if (loggedIn) {
     return (
-      <Link href="/perfil" className="shrink-0 text-meta font-semibold text-ink-muted hover:text-accent">
+      // `<a>`, e não `Link`: o perfil tem conteúdo privado e abre do zero, sem herdar
+      // scripts de terceiros já carregados em outras páginas.
+      <a href="/perfil" className="shrink-0 text-meta font-semibold text-ink-muted hover:text-accent">
         Perfil
-      </Link>
+      </a>
     );
   }
   return (

@@ -1,6 +1,7 @@
 import Script from "next/script";
 
 import { ChatWidget } from "@/components/ChatWidget";
+import { NotOnPrivatePages } from "@/components/NotOnPrivatePages";
 import { PtOnly } from "@/components/PtOnly";
 import { PwaRegister } from "@/components/PwaRegister";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -45,11 +46,13 @@ export function SiteShell({
           (Vercel → NEXT_PUBLIC_HIMETRICA_API_KEY) — sem ela, undefined
           viraria a string "undefined" no atributo. */}
       {process.env.NEXT_PUBLIC_HIMETRICA_API_KEY && (
-        <Script
-          src="https://cdn.himetrica.com/tracker.js"
-          strategy="afterInteractive"
-          data-api-key={process.env.NEXT_PUBLIC_HIMETRICA_API_KEY}
-        />
+        <NotOnPrivatePages>
+          <Script
+            src="https://cdn.himetrica.com/tracker.js"
+            strategy="afterInteractive"
+            data-api-key={process.env.NEXT_PUBLIC_HIMETRICA_API_KEY}
+          />
+        </NotOnPrivatePages>
       )}
     </body>
   );
