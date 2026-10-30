@@ -3,6 +3,14 @@
  * cru vem da API, a apresentação mora aqui.
  */
 
+/**
+ * Liturgia desativada enquanto a API responde `LITURGIA_INDISPONIVEL`: some da
+ * home e do rodapé, e a página não consulta a API. A URL continua no ar e no
+ * sitemap de propósito, porque é uma busca recorrente e já está indexada.
+ * Para reativar, basta trocar para `true`.
+ */
+export const LITURGIA_ATIVA = false;
+
 /** Data por extenso em português, ex.: "terça-feira, 8 de setembro de 2026". */
 export function formatLiturgiaDate(isoDate: string): string {
   const formatted = new Intl.DateTimeFormat("pt-BR", {

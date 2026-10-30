@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { Breadcrumbs, PageHeader, PrayerText, StatusMessage } from "@/components/Editorial";
 import { ApiError, getErrorMessage } from "@/lib/api";
-import { formatLiturgiaDate, liturgicalColorHex } from "@/lib/liturgia";
+import { LITURGIA_ATIVA, formatLiturgiaDate, liturgicalColorHex } from "@/lib/liturgia";
 import { fetchLiturgiaDiaria } from "@/lib/services/liturgiaService";
 import type { LeituraLiturgica, LiturgiaDiaria } from "@/lib/liturgiaSchemas";
 
@@ -93,11 +93,13 @@ function Leitura({
 export default async function LiturgiaDiariaPage() {
   let liturgia: LiturgiaDiaria | null = null;
   let loadError: ApiError | null = null;
-  try {
-    liturgia = await fetchLiturgiaDiaria();
-  } catch (error: unknown) {
-    if (!(error instanceof ApiError)) throw error;
-    loadError = error;
+  if (LITURGIA_ATIVA) {
+    try {
+      liturgia = await fetchLiturgiaDiaria();
+    } catch (error: unknown) {
+      if (!(error instanceof ApiError)) throw error;
+      loadError = error;
+    }
   }
 
   return (
@@ -143,10 +145,19 @@ export default async function LiturgiaDiariaPage() {
         <>
           <PageHeader kicker="Todo dia, um evangelho novo" title={TITLE} description={DESCRIPTION} />
           <div className="mt-10">
-            <StatusMessage title="A liturgia de hoje não respondeu" tone="error">
-              <p>{loadError ? getErrorMessage(loadError) : "Erro inesperado."}</p>
-              <p className="mt-3">Recarregue a página em instantes.</p>
-            </StatusMessage>
+            {LITURGIA_ATIVA ? (
+              <StatusMessage title="A liturgia de hoje não respondeu" tone="error">
+                <p>{loadError ? getErrorMessage(loadError) : "Erro inesperado."}</p>
+                <p className="mt-3">Recarregue a página em instantes.</p>
+              </StatusMessage>
+            ) : (
+              <StatusMessage title="Liturgia temporariamente indisponível">
+                <p>
+                  As leituras voltam a esta página assim que a fonte estiver disponível. O
+                  restante do acervo continua aberto.
+                </p>
+              </StatusMessage>
+            )}
           </div>
         </>
       )}

@@ -13,7 +13,7 @@ import { CATEGORY_LABELS, categoryPath, entryPath } from "@/lib/categories";
 import { CATEGORY_GROUPS } from "@/lib/categoryGroups";
 import { formatEntryCount } from "@/lib/entryDisplay";
 import { safeJsonLd } from "@/lib/jsonLd";
-import { formatLiturgiaDate } from "@/lib/liturgia";
+import { LITURGIA_ATIVA, formatLiturgiaDate } from "@/lib/liturgia";
 import type { LiturgiaDiaria } from "@/lib/liturgiaSchemas";
 import { featuredSaint, type SaintAsset } from "@/lib/saintAssets";
 import { CATEGORY_SLUGS, type CategoryInfo, type Entry } from "@/lib/schemas";
@@ -171,7 +171,7 @@ function sortByNavOrder(categories: CategoryInfo[]): CategoryInfo[] {
 
 export default async function HomePage() {
   let data: HomeData;
-  const liturgiaPromise = loadLiturgia();
+  const liturgiaPromise = LITURGIA_ATIVA ? loadLiturgia() : Promise.resolve(null);
   const featuredPromise = loadFeaturedSaint();
   try {
     data = await loadHome();

@@ -4,6 +4,7 @@ import { CATEGORY_LABELS, categoryPath } from "@/lib/categories";
 import { CATEGORY_GROUPS } from "@/lib/categoryGroups";
 import { ApiError } from "@/lib/api";
 import { HIMETRICA_SHARE_URL } from "@/lib/himetricaShareUrl";
+import { LITURGIA_ATIVA } from "@/lib/liturgia";
 import { SeloCarlosAcutis } from "@/components/SeloCarlosAcutis";
 import { fetchHealth } from "@/lib/services/acervoService";
 import { INSTAGRAM_URL } from "@/lib/site";
@@ -97,12 +98,14 @@ export async function SiteFooter() {
           >
             Academia da Fé →
           </Link>
-          <Link
-            href="/liturgia-diaria"
-            className="underline-offset-4 hover:text-accent hover:underline"
-          >
-            Liturgia diária →
-          </Link>
+          {LITURGIA_ATIVA ? (
+            <Link
+              href="/liturgia-diaria"
+              className="underline-offset-4 hover:text-accent hover:underline"
+            >
+              Liturgia diária →
+            </Link>
+          ) : null}
           <a
             href={INSTAGRAM_URL}
             target="_blank"
