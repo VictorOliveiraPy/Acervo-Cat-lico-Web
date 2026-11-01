@@ -9,9 +9,9 @@ const DESCRIPTION =
   "Santos, Catecismo e história da Igreja em vídeos curtos, os mesmos que publicamos no Instagram do Compêndio Católico.";
 
 export const metadata: Metadata = {
-  title: "Vídeos",
+  title: "Reels",
   description: DESCRIPTION,
-  alternates: { canonical: "/videos" },
+  alternates: { canonical: "/reels" },
 };
 
 function FollowLink() {
@@ -22,10 +22,10 @@ function FollowLink() {
   );
 }
 
-export default function VideosPage() {
+export default function ReelsPage() {
   return (
     <div className="mx-auto max-w-shell px-4 py-10 sm:px-6">
-      <PageHeader kicker="Instagram" title="Vídeos" description={DESCRIPTION} />
+      <PageHeader kicker="Instagram" title="Reels" description={DESCRIPTION} />
       <div className="mt-6">
         <FollowLink />
       </div>
@@ -34,7 +34,7 @@ export default function VideosPage() {
           <InstagramPost key={video.id} video={video} />
         ))}
         <div className="text-center">
-          <p className="mb-4 text-body text-ink-muted">Tem mais vídeos no nosso perfil.</p>
+          <p className="mb-4 text-body text-ink-muted">Tem mais reels no nosso perfil.</p>
           <FollowLink />
         </div>
       </div>

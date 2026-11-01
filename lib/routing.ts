@@ -32,7 +32,7 @@ const SINGLE_SEGMENT_ROUTES = new Set([
   "sobre",
   "santo-do-dia",
   "ranking",
-  "videos",
+  "reels",
   "icon",
   "apple-icon",
   "opengraph-image",

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Adiciona vídeos do perfil ao feed de `/videos`: baixa a capa para
+ * Adiciona vídeos do perfil ao feed de `/reels`: baixa a capa para
  * `public/videos/` e põe legenda e formato no topo de `lib/instagramVideos.json`.
  *
  *   node scripts/add-instagram-video.ts URL [URL...]   (do mais novo para o mais antigo)

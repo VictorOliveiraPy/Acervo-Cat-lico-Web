@@ -11,7 +11,7 @@ export const MAIN_NAV = [
   { id: "academia", label: "Academia da Fé", href: "/academia" },
   { id: "santos", label: "Santos", href: "/santos" },
   { id: "velas", label: "Velas", href: "/velas" },
-  { id: "videos", label: "Vídeos", href: "/videos" },
+  { id: "reels", label: "Reels", href: "/reels" },
 ] as const;
 
 export type MainNavId = (typeof MAIN_NAV)[number]["id"];

@@ -95,6 +95,12 @@ const nextConfig = {
         destination: "/",
         permanent: true,
       },
+      {
+        // O feed saiu primeiro como `/videos`, e essa URL já foi avisada ao IndexNow.
+        source: "/videos",
+        destination: "/reels",
+        permanent: true,
+      },
     ];
   },
   async headers() {

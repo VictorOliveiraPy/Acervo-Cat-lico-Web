@@ -30,7 +30,7 @@ npm run build       # build de produção
 npm audit           # dependências vulneráveis
 ```
 
-Para pôr vídeos novos do Instagram em `/videos` (precisa de Node 22.18+), do mais novo para o mais antigo:
+Para pôr vídeos novos do Instagram em `/reels` (precisa de Node 22.18+), do mais novo para o mais antigo:
 
 ```bash
 node scripts/add-instagram-video.ts https://www.instagram.com/p/ID/ [outra URL...]

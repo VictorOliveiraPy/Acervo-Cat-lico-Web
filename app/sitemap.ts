@@ -108,7 +108,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/santo-do-dia`, changeFrequency: "daily", priority: 0.8 },
     // Só a página principal: vela nenhuma e nenhuma página do mural entra aqui.
     { url: `${SITE_URL}/velas`, changeFrequency: "weekly", priority: 0.5 },
-    { url: `${SITE_URL}/videos`, changeFrequency: "weekly", priority: 0.5 },
+    { url: `${SITE_URL}/reels`, changeFrequency: "weekly", priority: 0.5 },
   ];
 
   // Lição só entra depois da revisão humana (`review` em `lib/academia.ts`).

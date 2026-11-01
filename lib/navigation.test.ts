@@ -8,7 +8,7 @@ describe("item ativo da navegação global", () => {
     expect(activeNavItem("/academia/santissima-trindade")).toBe("academia");
     expect(activeNavItem("/santos/cecilia-de-roma")).toBe("santos");
     expect(activeNavItem("/velas")).toBe("velas");
-    expect(activeNavItem("/videos")).toBe("videos");
+    expect(activeNavItem("/reels")).toBe("reels");
     expect(activeNavItem("/liturgia-diaria/2026-10-30")).toBe("liturgia");
   });
 

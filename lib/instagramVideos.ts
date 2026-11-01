@@ -1,7 +1,7 @@
 import videos from "@/lib/instagramVideos.json";
 
 /**
- * Vídeos do Instagram mostrados em `/videos`, do mais novo para o mais antigo.
+ * Vídeos do Instagram mostrados em `/reels`, do mais novo para o mais antigo.
  *
  * O JSON e as capas em `public/videos/` são gerados por
  * `scripts/add-instagram-video.ts`: as URLs de capa do Instagram expiram, então
