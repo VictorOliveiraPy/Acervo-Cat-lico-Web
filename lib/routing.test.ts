@@ -25,6 +25,8 @@ describe("classifyPath", () => {
     expect(classifyPath("/liturgia-diaria/2026-10-30")).toEqual({ kind: "ok" });
     expect(classifyPath("/liturgia-diaria/2026-10-30/x")).toEqual({ kind: "not-found" });
     expect(classifyPath("/ranking")).toEqual({ kind: "ok" });
+    expect(classifyPath("/videos")).toEqual({ kind: "ok" });
+    expect(classifyPath("/videos/x")).toEqual({ kind: "not-found" });
     expect(classifyPath("/santo-do-dia")).toEqual({ kind: "ok" });
     expect(classifyPath("/tema/franciscanos")).toEqual({ kind: "ok" });
     expect(classifyPath("/tema/franciscanos/2")).toEqual({ kind: "ok" });
