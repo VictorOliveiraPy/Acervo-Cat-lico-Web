@@ -1,0 +1,51 @@
+# Põe em /reels os vídeos novos do Instagram e faz o commit; a Vercel publica.
+# Sem o segredo INSTAGRAM_TOKEN, os passos são pulados (ver README, "Reels automáticos").
+name: Reels do Instagram
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  reels:
+    runs-on: ubuntu-latest
+    env:
+      INSTAGRAM_TOKEN: ${{ secrets.INSTAGRAM_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        if: env.INSTAGRAM_TOKEN != ''
+
+      - uses: actions/setup-node@v4
+        if: env.INSTAGRAM_TOKEN != ''
+        with:
+          node-version: 24
+
+      - name: Buscar reels novos
+        if: env.INSTAGRAM_TOKEN != ''
+        run: node scripts/add-instagram-video.ts --novos
+
+      - name: Commit e push
+        if: env.INSTAGRAM_TOKEN != ''
+        run: |
+          git add lib/instagramVideos.json public/videos
+          git diff --cached --quiet && exit 0
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -m "feat(reels): novos reels do Instagram"
+          git push
+
+      # O token vale 60 dias; renovar a cada execução mantém o job rodando sem ninguém mexer.
+      # Falha no primeiro dia (o Instagram só renova token com mais de 24 h) e sem SECRETS_PAT.
+      - name: Renovar o token
+        if: env.INSTAGRAM_TOKEN != ''
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.SECRETS_PAT }}
+        run: |
+          token=$(curl -sf "https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&access_token=$INSTAGRAM_TOKEN" | jq -r '.access_token // empty')
+          test -n "$token"
+          echo "::add-mask::$token"
+          gh secret set INSTAGRAM_TOKEN --body "$token"

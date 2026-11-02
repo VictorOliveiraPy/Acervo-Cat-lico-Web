@@ -81,6 +81,19 @@ node scripts/add-instagram-video.ts https://www.instagram.com/p/ID/ [outra URL..
 Em produção (Vercel), configure `API_URL` apontando para a URL
 pública do backend no Render, com `/api` no final. Ver `DEPLOY.md`.
 
+### Reels automáticos
+
+O job `.github/workflows/reels.yml` roda a cada 6 horas, põe em `/reels` os vídeos
+novos do perfil compendiocatolico e faz o commit. Precisa de dois segredos do repositório
+(Settings → Secrets and variables → Actions):
+
+- `INSTAGRAM_TOKEN`: token da API do Instagram com login do Instagram, gerado no app da
+  Meta (developers.facebook.com → app → Instagram → Configuração da API com login do
+  Instagram → Gerar tokens de acesso). Só precisa de `instagram_business_basic`.
+- `SECRETS_PAT`: token fine-grained do GitHub só deste repositório, com permissão
+  "Secrets: Read and write". O job usa para guardar o token do Instagram renovado,
+  que vence em 60 dias.
+
 ---
 
 > Este repositório é o irmão de

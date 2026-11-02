@@ -1,9 +1,9 @@
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
 import { INSTAGRAM_VIDEOS, instagramEmbedHeight } from "@/lib/instagramVideos";
-import { firstParagraph, shortcodeFromUrl } from "@/scripts/add-instagram-video";
+import { firstParagraph, jpegSize, pickNewVideos, shortcodeFromUrl } from "@/scripts/add-instagram-video";
 
 describe("vídeos do Instagram", () => {
   it("deve ter a capa de cada vídeo em public/videos", () => {
@@ -47,5 +47,26 @@ describe("script de adicionar vídeo", () => {
   it("deve usar só o primeiro parágrafo da legenda", () => {
     expect(firstParagraph("Gancho do vídeo?\n\nResto da legenda.\n\n#tag")).toBe("Gancho do vídeo?");
     expect(firstParagraph("  Só uma linha  ")).toBe("Só uma linha");
+  });
+
+  it("deve ler o tamanho da capa do próprio JPEG", () => {
+    expect(jpegSize(readFileSync("public/videos/DfKxEMihfJN.jpg"))).toEqual({ width: 640, height: 640 });
+    expect(jpegSize(readFileSync("public/videos/DfMw1btB8hj.jpg"))).toEqual({ width: 640, height: 1138 });
+    expect(jpegSize(new TextEncoder().encode("não é imagem"))).toBeNull();
+  });
+
+  it("deve pegar só os vídeos mais novos que o feed, na ordem da API", () => {
+    const video = (id: string) => ({ media_type: "VIDEO", permalink: `https://www.instagram.com/reel/${id}/`, thumbnail_url: `https://capa/${id}.jpg` });
+    const media = [
+      video("novo2"),
+      { media_type: "IMAGE", permalink: "https://www.instagram.com/p/foto/" },
+      { ...video("novo1"), caption: "Legenda" },
+      video("conhecido"),
+      video("antigo"),
+    ];
+    expect(pickNewVideos(media, new Set(["conhecido"]))).toEqual([
+      { id: "novo2", coverUrl: "https://capa/novo2.jpg", caption: "" },
+      { id: "novo1", coverUrl: "https://capa/novo1.jpg", caption: "Legenda" },
+    ]);
   });
 });
