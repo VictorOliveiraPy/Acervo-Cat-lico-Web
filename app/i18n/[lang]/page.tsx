@@ -53,6 +53,21 @@ export default async function LocaleHome({ params }: { params: Params }) {
     <div className="mx-auto max-w-shell px-4 py-10 sm:px-6">
       <PageHeader title={t.homeHeading} description={t.homeLead} />
 
+      {/* Aviso sobre funcionalidades exclusivas do português */}
+      <div className="mt-6 rounded-panel border border-border bg-surface px-5 py-4">
+        <p className="text-meta text-ink-muted">
+          {lang === "es"
+            ? "Algunos contenidos — liturgia diaria, asistente de preguntas, velas y la Academia de la Fe — están disponibles solo en portugués por ahora. "
+            : "Some features — daily liturgy, chat assistant, candles and the Faith Academy — are currently available in Portuguese only. "}
+          <Link
+            href="/"
+            className="text-accent underline underline-offset-4 hover:text-accent-hover"
+          >
+            {lang === "es" ? "Explorar en portugués →" : "Explore in Portuguese →"}
+          </Link>
+        </p>
+      </div>
+
       <section aria-labelledby="categorias" className="mt-10">
         <div className="border-b border-border pb-2">
           <h2 id="categorias" className="font-display text-title-md text-ink">
