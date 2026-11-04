@@ -25,6 +25,13 @@ export function SiteShell({
           __html: `try{var s=localStorage.getItem("compendio:reading-size");if(s==="larger"||s==="largest"){document.documentElement.dataset.readingSize=s;}}catch(e){}`,
         }}
       />
+      {/* Aplica o tema salvo (lib/theme.ts) antes da primeira pintura —
+          sem isso, quem escolheu "dark" veria o fundo claro por um instante. */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `try{var t=localStorage.getItem("compendio:theme");if(t==="dark"||t==="light"){document.documentElement.dataset.theme=t;}}catch(e){}`,
+        }}
+      />
       <a
         href="#conteudo"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-edge focus:bg-accent focus:px-4 focus:py-2 focus:text-meta focus:text-canvas"

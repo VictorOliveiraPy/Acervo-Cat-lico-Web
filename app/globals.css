@@ -11,6 +11,70 @@
  * disputando a mesma decisão visual.
  */
 
+/* ─── Tokens de dark mode ─────────────────────────────────────────────────────
+ * Override das variáveis CSS quando: (a) o SO pede dark OU (b) o usuário
+ * escolheu explicitamente via botão (data-theme="dark" na <html>).
+ * Valores escolhidos para manter o contraste WCAG AA em fundo escuro.
+ */
+@layer base {
+  :root {
+    --color-canvas: #F3F4F1;
+    --color-surface: #FBFCF9;
+    --color-raised: #FFFFFF;
+    --color-border: #D2D9D6;
+    --color-border-strong: #AEB9B6;
+    --color-ink: #253039;
+    --color-ink-muted: #41505A;
+    --color-accent: #8C313E;
+    --color-accent-hover: #722632;
+    --color-accent-soft: #F5E9EB;
+  }
+
+  /* Dark automático pelo SO */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --color-canvas: #141719;
+      --color-surface: #1D2023;
+      --color-raised: #252A2E;
+      --color-border: #333C42;
+      --color-border-strong: #4A5560;
+      --color-ink: #E8ECF0;
+      --color-ink-muted: #9AABB5;
+      --color-accent: #C4606E;
+      --color-accent-hover: #D4757F;
+      --color-accent-soft: #3A1E22;
+    }
+  }
+
+  /* Dark escolhido manualmente */
+  [data-theme="dark"] {
+    --color-canvas: #141719;
+    --color-surface: #1D2023;
+    --color-raised: #252A2E;
+    --color-border: #333C42;
+    --color-border-strong: #4A5560;
+    --color-ink: #E8ECF0;
+    --color-ink-muted: #9AABB5;
+    --color-accent: #C4606E;
+    --color-accent-hover: #D4757F;
+    --color-accent-soft: #3A1E22;
+  }
+
+  /* Light forçado manualmente (desativa o automático do OS) */
+  [data-theme="light"] {
+    --color-canvas: #F3F4F1;
+    --color-surface: #FBFCF9;
+    --color-raised: #FFFFFF;
+    --color-border: #D2D9D6;
+    --color-border-strong: #AEB9B6;
+    --color-ink: #253039;
+    --color-ink-muted: #41505A;
+    --color-accent: #8C313E;
+    --color-accent-hover: #722632;
+    --color-accent-soft: #F5E9EB;
+  }
+}
+
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;

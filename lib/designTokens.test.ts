@@ -101,7 +101,15 @@ describe("concordância entre os tokens e o Tailwind", () => {
       string,
       string | Record<string, string>
     >;
-    const tone = (name: string, key: string) => (colors[name] as Record<string, string>)[key];
+    const tone = (name: string, key: string): string =>
+      ((colors[name] as Record<string, string>)[key]) ?? "";
+
+    // Extrai o hex de fallback de uma variável CSS: "var(--x, #abc)" → "#abc"
+    // Cores que não usam variável CSS retornam o valor direto.
+    function resolveColor(value: string): string {
+      const match = value.match(/var\([^,]+,\s*(#[0-9a-fA-F]{6})\)/);
+      return (match?.[1]) ?? value;
+    }
 
     expect(tone("success", "DEFAULT")).toBe(COLORS.success);
     expect(tone("success", "soft")).toBe(COLORS.successSoft);
@@ -109,8 +117,8 @@ describe("concordância entre os tokens e o Tailwind", () => {
     expect(tone("warning", "soft")).toBe(COLORS.warningSoft);
     expect(tone("danger", "DEFAULT")).toBe(COLORS.danger);
     expect(tone("danger", "soft")).toBe(COLORS.dangerSoft);
-    expect(tone("accent", "DEFAULT")).toBe(COLORS.accent);
-    expect(tone("accent", "soft")).toBe(COLORS.accentSoft);
+    expect(resolveColor(tone("accent", "DEFAULT"))).toBe(COLORS.accent);
+    expect(resolveColor(tone("accent", "soft"))).toBe(COLORS.accentSoft);
     expect(colors.mineral).toBe(COLORS.mineral);
   });
 });

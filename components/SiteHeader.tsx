@@ -8,6 +8,7 @@ import { BrandMark } from "@/components/BrandMark";
 import { CategoryNav } from "@/components/CategoryNav";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { SearchField } from "@/components/SearchField";
+import { ThemeControl } from "@/components/ThemeControl";
 import { DEFAULT_LOCALE, dictionaryFor, langFromPathname, localePath } from "@/lib/i18n";
 import { MAIN_NAV, activeNavItem } from "@/lib/navigation";
 
@@ -71,7 +72,8 @@ export function SiteHeader() {
             </nav>
           ) : null}
 
-          <div className="ml-auto flex items-center gap-4 md:min-w-0 md:flex-1 md:justify-end">
+          <div className="ml-auto flex items-center gap-3 md:min-w-0 md:flex-1 md:justify-end">
+            <ThemeControl />
             <LanguageSwitcher />
           {isPortuguese ? <AccountMenu /> : null}
             {isPortuguese ? (

@@ -21,37 +21,36 @@ const config: Config = {
     extend: {
       colors: {
         // Superfícies, do mais claro ao mais recuado.
-        canvas: "#F3F4F1", // fundo editorial aprovado
+        // Os valores usam variáveis CSS para suportar dark mode (var definido em globals.css).
+        canvas: "var(--color-canvas, #F3F4F1)",
         gold: "#A8843A", // só filetes e ornamentos: 3,3:1 sobre o fundo não serve para texto
-        surface: "#FBFCF9", // cards, campos, painéis
-        raised: "#FFFFFF", // faixas elevadas e campos
+        surface: "var(--color-surface, #FBFCF9)",
+        raised: "var(--color-raised, #FFFFFF)",
 
-        // Linhas: `border` é o filete visível de 1px que substitui a sombra.
+        // Linhas
         border: {
-          DEFAULT: "#D2D9D6",
-          strong: "#AEB9B6", // divisória mais marcada, sem virar preto
+          DEFAULT: "var(--color-border, #D2D9D6)",
+          strong: "var(--color-border-strong, #AEB9B6)",
         },
 
-        // Texto.
+        // Texto
         ink: {
-          DEFAULT: "#253039", // corpo e títulos
-          muted: "#41505A", // texto secundário (resumos, legendas)
+          DEFAULT: "var(--color-ink, #253039)",
+          muted: "var(--color-ink-muted, #41505A)",
         },
 
-        // Acento único: bordô.
+        // Acento único: bordô
         accent: {
-          DEFAULT: "#8C313E",
-          hover: "#722632",
-          active: "#722632",
-          soft: "#F5E9EB", // preenchimento lavado (seleção, realce de busca)
+          DEFAULT: "var(--color-accent, #8C313E)",
+          hover: "var(--color-accent-hover, #722632)",
+          active: "var(--color-accent-hover, #722632)",
+          soft: "var(--color-accent-soft, #F5E9EB)",
         },
 
-        // Azul mineral institucional para superfícies de contraste, não para
-        // competir com o bordô nas ações.
+        // Azul mineral institucional — não muda entre temas
         mineral: "#263E4D",
 
-        // Cor semântica, separada do acento de marca: estado não se confunde
-        // com identidade.
+        // Cores semânticas de estado — não mudam entre temas
         success: {
           DEFAULT: "#326D51",
           soft: "#E7F2EB",

@@ -18,6 +18,7 @@ import { GuardarTexto } from "@/components/GuardarTexto";
 import { EntrySections, EntrySectionsToc } from "@/components/EntrySections";
 import { OrnamentalDivider } from "@/components/OrnamentalDivider";
 import { ReadingSizeControl } from "@/components/ReadingSizeControl";
+import { ThemeControl } from "@/components/ThemeControl";
 import { lessonForEntry } from "@/lib/academia";
 import { ApiError } from "@/lib/api";
 import { CATEGORY_LABELS, categoryPath, entryPath } from "@/lib/categories";
@@ -28,8 +29,7 @@ import { HREFLANG, formatEntryDate, languageAlternates } from "@/lib/i18n";
 import { neighborsOf } from "@/lib/neighbors";
 import { favoriteFromEntry } from "@/lib/perfil";
 import { saintAssetFor } from "@/lib/saintAssets";
-import { isCategorySlug, type CategorySlug, type Entry } from "@/lib/schemas";
-import {
+import { isCategorySlug, type CategorySlug, type Entry } from "@/lib/schemas";import {
   fetchCategoryIndex,
   fetchEntry,
   fetchEntryPage,
@@ -325,9 +325,15 @@ export default async function EntryPage({ params }: { params: Params }) {
 
           <EntrySectionsToc entry={entry} />
 
-          <div id="leitura" className="mt-12 flex items-center justify-end gap-3">
-            <p className="kicker">Tamanho do texto</p>
-            <ReadingSizeControl />
+          <div id="leitura" className="mt-12 flex flex-wrap items-center justify-end gap-4">
+            <div className="flex items-center gap-2">
+              <p className="kicker">Tema</p>
+              <ThemeControl />
+            </div>
+            <div className="flex items-center gap-2">
+              <p className="kicker">Tamanho do texto</p>
+              <ReadingSizeControl />
+            </div>
           </div>
 
           <div className="reading-column mt-6">
