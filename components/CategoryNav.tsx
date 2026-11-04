@@ -21,21 +21,13 @@ function linkStyle(isActive: boolean): string {
 /**
  * Navegação das categorias de acesso mais direto, presente em toda página.
  *
- * Só as `PRIMARY_CATEGORY_SLUGS` (as mais buscadas/clássicas) — o painel
- * "Todas as categorias" que existia aqui foi removido: com "Percorrer por
- * categoria" na home virando um índice completo das 45, agrupado por
- * assunto (ver `app/page.tsx`), e o rodapé já trazendo o mesmo índice em
- * toda página (`SiteFooter`), duplicar essa lista inteira aqui — atrás de
- * um clique, sobre a faixa de navegação — parou de justificar o peso.
- * Faixa também mais baixa (`h-9`, era `h-11`): fazia parte do mesmo pedido
- * de "diminuir o cabeçalho".
+ * Só as `PRIMARY_CATEGORY_SLUGS` (as mais buscadas/clássicas). No desktop
+ * aparece como faixa abaixo do header. No mobile aparece como scroll horizontal
+ * compacto — visível em qualquer tela, porque em celular é o único atalho
+ * rápido para categorias (o footer fica fora da tela).
  *
- * Não aparece na home: "Comece por aqui" (`app/page.tsx`) já mostra esse
- * mesmo recorte de categorias, logo abaixo do herói — repetir a faixa ali
- * em cima seria a mesma lista duas vezes na primeira tela.
- *
- * No celular também não aparece: o cabeçalho fixo já tem a navegação principal,
- * e o índice completo continua na home e no rodapé.
+ * Não aparece na home: o bloco "Explore a fé" já cobre esse papel.
+ * Não aparece na Academia: a navegação da Academia é interna.
  */
 export function CategoryNav() {
   const pathname = usePathname();
@@ -49,9 +41,9 @@ export function CategoryNav() {
   return (
     <nav
       aria-label="Categorias de acesso direto"
-      className="hidden border-t border-border bg-canvas md:block"
+      className="border-t border-border bg-canvas"
     >
-      <ul className="mx-auto flex max-w-shell items-stretch gap-6 overflow-x-auto px-4 sm:px-6">
+      <ul className="mx-auto flex max-w-shell items-stretch gap-4 overflow-x-auto px-4 sm:gap-6 sm:px-6">
         {PRIMARY_CATEGORY_SLUGS.map((slug) => (
           <li key={slug} className="shrink-0">
             <Link
@@ -63,6 +55,15 @@ export function CategoryNav() {
             </Link>
           </li>
         ))}
+        {/* "Todas" como atalho rápido para o índice completo no rodapé */}
+        <li className="shrink-0">
+          <a
+            href="#todas-categorias"
+            className={`${LINK_BASE} border-transparent text-ink-muted hover:border-border-strong hover:text-ink`}
+          >
+            Todas →
+          </a>
+        </li>
       </ul>
     </nav>
   );
