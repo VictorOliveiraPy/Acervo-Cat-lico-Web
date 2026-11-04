@@ -247,7 +247,7 @@ export default async function LocaleEntryPage({ params }: { params: Params }) {
                 key={index}
                 className={
                   index === 0
-                    ? "first-letter:float-left first-letter:mt-1 first-letter:font-display first-letter:text-[3.4em] first-letter:font-bold first-letter:leading-[0.78] first-letter:text-accent"
+                    ? "flow-root first-letter:float-left first-letter:mt-1 first-letter:font-display first-letter:text-[3.4em] first-letter:font-bold first-letter:leading-[0.78] first-letter:text-accent"
                     : undefined
                 }
               >

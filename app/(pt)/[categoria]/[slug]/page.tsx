@@ -344,11 +344,13 @@ export default async function EntryPage({ params }: { params: Params }) {
               // Capitular no primeiro parágrafo do corpo, só ele — efeito de
               // breviário antigo (`first-letter` é suporte nativo do CSS, sem
               // precisar quebrar o texto em spans).
+              // `flow-root` no parágrafo contém o float da capitular e evita
+              // que o parágrafo seguinte envolva a letra caso o texto seja curto.
               <p
                 key={index}
                 className={
                   index === 0
-                    ? "first-letter:float-left first-letter:mt-1 first-letter:font-display first-letter:text-[3.4em] first-letter:font-bold first-letter:leading-[0.78] first-letter:text-accent"
+                    ? "flow-root first-letter:float-left first-letter:mt-1 first-letter:font-display first-letter:text-[3.4em] first-letter:font-bold first-letter:leading-[0.78] first-letter:text-accent"
                     : undefined
                 }
               >

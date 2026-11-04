@@ -176,7 +176,15 @@
   /*
    * Capitular no primeiro parágrafo da entrada: é o único ornamento
    * tipográfico do projeto, e marca onde a leitura começa de fato.
+   *
+   * A capitular usa `display: flow-root` no parágrafo pai para conter o float
+   * e evitar que o texto seguinte se aproxime antes do parágrafo terminar —
+   * problema clássico em verbetes curtos (menos de ~60 palavras).
    */
+  .reading-column > p:first-of-type {
+    display: flow-root;
+  }
+
   .reading-column > p:first-of-type::first-letter {
     @apply font-display text-ink-muted;
     float: left;
