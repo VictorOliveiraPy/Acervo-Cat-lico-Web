@@ -60,6 +60,9 @@ export function ChatWidget() {
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // O indicador de status começa neutro (cinza) e só vira verde após a
+  // primeira resposta bem-sucedida da API — nunca mente ao usuário.
+  const [apiOnline, setApiOnline] = useState<boolean | null>(null);
   const threadRef = useRef<HTMLDivElement>(null);
   const inputId = useId();
   const titleId = useId();
@@ -108,8 +111,10 @@ export function ChatWidget() {
     setPending(false);
     if (result.status === "error") {
       setError(result.message);
+      setApiOnline(false);
       return;
     }
+    setApiOnline(true);
     setMessages((prev) => [
       ...prev,
       { id: newId(), role: "bot", text: result.resposta, fontes: result.fontes, time: formatTime() },
@@ -147,8 +152,11 @@ export function ChatWidget() {
                   Assistente do Compêndio
                 </p>
                 <div className="flex items-center gap-1.5 text-meta text-white/85">
-                  <span className="h-2 w-2 rounded-full bg-success" aria-hidden="true" />
-                  Sob a intercessão de São Carlos Acutis
+                  <span
+                    className={`h-2 w-2 rounded-full ${apiOnline === true ? "bg-success" : apiOnline === false ? "bg-danger" : "bg-white/40"}`}
+                    aria-hidden="true"
+                  />
+                  {apiOnline === false ? "Serviço indisponível" : "Sob a intercessão de São Carlos Acutis"}
                 </div>
               </div>
             </div>
