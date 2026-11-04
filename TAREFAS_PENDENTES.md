@@ -19,12 +19,12 @@ O que depende de uma pessoa: acesso, decisão ou revisão. Marque ao concluir.
 - [ ] Validar 3 páginas no [Rich Results Test](https://search.google.com/test/rich-results): um santo, um papa e uma oração.
 
 ## Textos do site
-- [ ] Escrever a página `/sobre` (`app/(pt)/sobre/page.tsx`) e mudar `TEXTO_PRONTO` para `true`. Até lá ela fica em `noindex`.
+- [x] Escrever a página `/sobre` — conteúdo completo com missão, fontes, revisão e contato. `TEXTO_PRONTO` ativado, `index: true`, no sitemap. *(2026-11-04)*
 - [ ] Revisar as 49 descrições das categorias (`lib/categorySeo.ts`), que são provisórias.
 - [ ] Escrever as descrições dos temas principais (`THEME_DESCRIPTIONS` em `lib/temas.ts`).
 
 ## Search Console
-- [ ] Reenviar o sitemap (2500 URLs).
+- [ ] Reenviar o sitemap (agora com /sobre incluída).
 - [ ] Clicar em "Validar correção" nos relatórios de indexação.
 - [ ] Conferir "Ações manuais" e, em "Desempenho", a queda de impressões desde 2026-10-02.
 - [ ] Exportar a lista das 23 URLs de "cópia sem canônica".
@@ -38,7 +38,9 @@ O que depende de uma pessoa: acesso, decisão ou revisão. Marque ao concluir.
 - [ ] Conferir se a foto sai vazia no gerador de imagens do Instagram. O problema não foi confirmado.
 
 ## Decisões em aberto
-- [ ] `/velas`: a primeira página é indexável e mostra texto de visitantes. Decidir se precisa de moderação, por risco de spam no Google.
+- [ ] `/velas`: decidir se precisa de moderação, por risco de spam no Google.
+- [ ] Decidir o que fazer com verbetes rasos: 613 das 1776 entradas têm menos de 100 palavras — aprofundar ou retirar do sitemap.
+- [ ] Decidir sobre unificar os 77 títulos repetidos em 166 URLs (santos, doutores-da-Igreja, padres-da-Igreja).
 - [ ] Decidir o que fazer com `perfil-padroeiro.html` na raiz do projeto, que está fora do Git.
 
 ## Conteúdo e evolução
@@ -46,3 +48,16 @@ O que depende de uma pessoa: acesso, decisão ou revisão. Marque ao concluir.
 - [ ] Preencher as seções opcionais dos verbetes: biografia, oração, frases, iconografia, curiosidades e perguntas frequentes.
 - [ ] Trocar os santos de primitivas por modelos `.glb` (`SAINT_GLB` em `components/perfil/SaintModel.tsx`).
 - [ ] Levar ao espanhol o que existe só em português: WhatsApp, seções opcionais, links de tema, lupa e "Guardar texto".
+
+## Melhorias UX implementadas *(2026-11-04)*
+- [x] `/sobre` com conteúdo real (missão, fontes, revisão, contato) — E-E-A-T
+- [x] CategoryNav visível no mobile como scroll horizontal
+- [x] Tempo de leitura no `EntryList` (consistência com o `EntryGrid` da home)
+- [x] Botão de WhatsApp visível no topo do verbete (não só no rodapé)
+- [x] Dark mode com detecção automática do SO e controle manual no header
+- [x] Status real do chat widget (ponto verde só após resposta bem-sucedida da API)
+- [x] Fix da capitular em parágrafos curtos (`display: flow-root`)
+- [x] Onboarding do "Guardar texto" com hint inline visível no mobile
+- [x] Paginação com links diretos para qualquer página (janela 1 … 4 5 6 … N)
+- [x] `/sobre` adicionada ao sitemap
+- [x] Aviso de funcionalidades PT-only nas páginas em ES/EN
