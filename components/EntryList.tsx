@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { BrandMark } from "@/components/BrandMark";
 import { CATEGORY_LABELS, entryPath } from "@/lib/categories";
-import { entryHighlight, entryOrdinal, imagePosition } from "@/lib/entryDisplay";
+import { entryHighlight, entryOrdinal, imagePosition, readingMinutes } from "@/lib/entryDisplay";
 import { DEFAULT_LOCALE, localePath, type SiteLang } from "@/lib/i18n";
 import { saintAssetFor } from "@/lib/saintAssets";
 import type { Entry } from "@/lib/schemas";
@@ -83,7 +83,12 @@ export function EntryList({ entries, showCategory = false, lang = DEFAULT_LOCALE
                 <h3 className="font-display text-title-sm text-ink group-hover:text-accent">
                   {entry.titulo}
                 </h3>
-                {label ? <p className="eyebrow mt-1">{label}</p> : null}
+                <div className="mt-1 flex flex-wrap items-center gap-x-3">
+                  {label ? <p className="eyebrow">{label}</p> : null}
+                  <p className="text-meta text-ink-muted">
+                    {readingMinutes(entry.corpo)} min de leitura
+                  </p>
+                </div>
                 <p className="mt-2 max-w-measure text-body text-ink-muted">
                   {entry.resumo}
                 </p>
