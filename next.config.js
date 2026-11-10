@@ -28,8 +28,8 @@ const IMAGE_HOSTS = [
 // que isto pra cobrir o que existe hoje. `img-src` libera a Wikimedia (fonte
 // editorial original, ainda usada como fallback) e o bucket R2 que serve as
 // cópias WebP pré-processadas (ver `docs/imagens/` no backend) — mesmos
-// hosts de `images.remotePatterns` abaixo. `frame-src` libera só o player oficial
-// do Instagram, que carrega quando a pessoa clica num vídeo (`InstagramPost`).
+// hosts de `images.remotePatterns` abaixo. `media-src` libera o R2 de onde vêm os
+// MP4 de `/reels` (`ReelCard`).
 const CONTENT_SECURITY_POLICY = [
   "default-src 'self'",
   `img-src 'self' https://upload.wikimedia.org ${IMAGE_HOSTS.map((host) => `https://${host}`).join(" ")} data:`,
@@ -37,7 +37,7 @@ const CONTENT_SECURITY_POLICY = [
   "style-src 'self' 'unsafe-inline'",
   "font-src 'self'",
   "connect-src 'self'",
-  "frame-src https://www.instagram.com",
+  `media-src 'self' ${IMAGE_HOSTS.map((host) => `https://${host}`).join(" ")}`,
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",

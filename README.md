@@ -30,11 +30,16 @@ npm run build       # build de produção
 npm audit           # dependências vulneráveis
 ```
 
-Para pôr vídeos novos do Instagram em `/reels` (precisa de Node 22.18+), do mais novo para o mais antigo:
+Para pôr vídeos do estúdio (projeto `videos-py`, ao lado deste) em `/reels`, do mais novo
+para o mais antigo (precisa de Node 22.18+ e FFmpeg; `npx wrangler login` uma vez antes):
 
 ```bash
-node scripts/add-instagram-video.ts https://www.instagram.com/p/ID/ [outra URL...]
+R2_BUCKET=nome-do-bucket node scripts/add-reel.ts santos sao-francisco-de-assis [outro-slug...]
 ```
+
+O primeiro argumento é o tema do filtro (lista em `REEL_TEMAS`, `lib/reels.ts`). O script
+comprime o MP4 para 720p, envia para `reels/` no R2, grava a capa em `public/reels/` e põe
+título e legenda (lidos do `.md` do estúdio) em `lib/reels.json`.
 
 ## Estrutura
 
@@ -80,19 +85,6 @@ node scripts/add-instagram-video.ts https://www.instagram.com/p/ID/ [outra URL..
 
 Em produção (Vercel), configure `API_URL` apontando para a URL
 pública do backend no Render, com `/api` no final. Ver `DEPLOY.md`.
-
-### Reels automáticos
-
-O job `.github/workflows/reels.yml` roda a cada 6 horas, põe em `/reels` os vídeos
-novos do perfil compendiocatolico e faz o commit. Precisa de dois segredos do repositório
-(Settings → Secrets and variables → Actions):
-
-- `INSTAGRAM_TOKEN`: token da API do Instagram com login do Instagram, gerado no app da
-  Meta (developers.facebook.com → app → Instagram → Configuração da API com login do
-  Instagram → Gerar tokens de acesso). Só precisa de `instagram_business_basic`.
-- `SECRETS_PAT`: token fine-grained do GitHub só deste repositório, com permissão
-  "Secrets: Read and write". O job usa para guardar o token do Instagram renovado,
-  que vence em 60 dias.
 
 ---
 

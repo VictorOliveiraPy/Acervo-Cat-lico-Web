@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { PageHeader } from "@/components/Editorial";
-import { InstagramPost } from "@/components/InstagramPost";
-import { INSTAGRAM_VIDEOS } from "@/lib/instagramVideos";
+import { ReelCard } from "@/components/ReelCard";
+import { parseTema, REEL_TEMAS, REELS } from "@/lib/reels";
 import { INSTAGRAM_URL } from "@/lib/site";
 
 const DESCRIPTION =
-  "Santos, Catecismo e história da Igreja em vídeos curtos, os mesmos que publicamos no Instagram do Compêndio Católico.";
+  "Santos, Bíblia, Missa e história da Igreja em vídeos curtos do Compêndio Católico. Filtre pelo tema que você quer ver.";
 
 export const metadata: Metadata = {
   title: "Reels",
@@ -14,30 +15,51 @@ export const metadata: Metadata = {
   alternates: { canonical: "/reels" },
 };
 
-function FollowLink() {
+function FilterLink({ href, active, children }: { href: string; active: boolean; children: string }) {
   return (
-    <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-      Seguir no Instagram <span aria-hidden="true">→</span>
-    </a>
+    <Link
+      href={href}
+      aria-current={active ? "page" : undefined}
+      className={`inline-flex min-h-[36px] items-center rounded-full border px-3 text-meta transition-colors ${
+        active ? "border-ink bg-ink text-canvas" : "border-border text-ink hover:border-accent"
+      }`}
+    >
+      {children}
+    </Link>
   );
 }
 
-export default function ReelsPage() {
+export default function ReelsPage({ searchParams }: { searchParams: { tema?: string | string[] } }) {
+  const tema = parseTema(searchParams.tema);
+  const reels = tema ? REELS.filter((reel) => reel.tema === tema) : REELS;
+
   return (
     <div className="mx-auto max-w-shell px-4 py-10 sm:px-6">
-      <PageHeader kicker="Instagram" title="Reels" description={DESCRIPTION} />
+      <PageHeader kicker="Vídeos" title="Reels" description={DESCRIPTION} />
       <div className="mt-6">
-        <FollowLink />
+        <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+          Seguir no Instagram <span aria-hidden="true">→</span>
+        </a>
       </div>
-      <div className="mx-auto mt-10 flex max-w-[470px] flex-col gap-8">
-        {INSTAGRAM_VIDEOS.map((video) => (
-          <InstagramPost key={video.id} video={video} />
+
+      <nav aria-label="Filtrar por tema" className="mt-8 flex flex-wrap gap-2">
+        <FilterLink href="/reels" active={!tema}>
+          Todos
+        </FilterLink>
+        {Object.entries(REEL_TEMAS).map(([id, label]) => (
+          <FilterLink key={id} href={`/reels?tema=${id}`} active={tema === id}>
+            {label}
+          </FilterLink>
         ))}
-        <div className="text-center">
-          <p className="mb-4 text-body text-ink-muted">Tem mais reels no nosso perfil.</p>
-          <FollowLink />
-        </div>
-      </div>
+      </nav>
+
+      <ul className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        {reels.map((reel) => (
+          <li key={reel.slug}>
+            <ReelCard reel={reel} />
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
