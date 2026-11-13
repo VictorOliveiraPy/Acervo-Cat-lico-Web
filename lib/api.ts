@@ -14,7 +14,7 @@
 import type { ZodType } from "zod";
 import { z } from "zod";
 
-const DEFAULT_BASE_URL = "http://localhost:8000/api";
+const DEFAULT_BASE_URL = "https://acervo-cat-lico-api-jqtz.onrender.com/api";
 
 /** Cache padrão das leituras: o acervo é curado, muda em ritmo editorial. */
 const DEFAULT_REVALIDATE_SECONDS = 300;
@@ -73,7 +73,7 @@ export type GetOptions = {
  *
  * Usa `||`, não `??`: uma env var configurada como string vazia (acontece
  * ao criar a variável na Vercel sem preencher o valor) deve cair no
- * default local, não virar uma URL relativa que quebra o `fetch` com
+ * default, não virar uma URL relativa que quebra o `fetch` com
  * "Failed to parse URL from /categories".
  */
 export function getApiBaseUrl(): string {

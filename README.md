@@ -17,7 +17,7 @@ npm run dev
 ```
 
 - App: <http://localhost:3000>
-- Por padrão aponta para a API local em `http://localhost:8000/api`
+- Por padrão aponta para a API de produção em `https://acervo-cat-lico-api-jqtz.onrender.com/api`
   (ver `lib/api.ts` → `getApiBaseUrl()`).
 
 ## Comandos de desenvolvimento
@@ -81,7 +81,7 @@ título e legenda (lidos do `.md` do estúdio) em `lib/reels.json`.
 
 | Variável | Default (dev) | Descrição |
 |---|---|---|
-| `API_URL` | `http://localhost:8000/api` | Base URL da API (ver `Compendio-Catolico-API`) |
+| `API_URL` | `https://acervo-cat-lico-api-jqtz.onrender.com/api` | Base URL da API (ver `Compendio-Catolico-API`) |
 
 Em produção (Vercel), configure `API_URL` apontando para a URL
 pública do backend no Render, com `/api` no final. Ver `DEPLOY.md`.
