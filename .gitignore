@@ -9,3 +9,6 @@ coverage/
 # Rascunhos de posts do Instagram (imagem + legenda) — gerados sob demanda
 # pela rota /instagram/[categoria]/[slug], não fazem sentido versionados.
 /instagram/
+.vercel
+.env*
+!.env.example
