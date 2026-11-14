@@ -1,0 +1,22 @@
+# Caddy da VPS: único container com portas abertas; HTTPS automático (Let's Encrypt).
+# Cria a rede `deploy_default` que o front e a API (Acervo-Cat-lico-API/deploy) usam — suba este primeiro.
+name: deploy
+services:
+  caddy:
+    image: caddy:2.8-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_dados:/data
+      - caddy_config:/config
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+
+volumes:
+  caddy_dados:
+  caddy_config:

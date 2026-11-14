@@ -1,0 +1,32 @@
+# Front na VPS, ao lado da API (Acervo-Cat-lico-API/deploy) e atrás do Caddy (deploy/proxy).
+# Os três se enxergam pela rede `deploy_default`; só o Caddy publica portas.
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+      args:
+        # O build gera as páginas estáticas chamando a API pela URL pública (o build não entra na rede interna).
+        API_URL: ${API_URL_PUBLICA:?defina API_URL_PUBLICA no deploy/.env}
+        AUTH_GOOGLE_ID: ${AUTH_GOOGLE_ID:-}
+        NEXT_PUBLIC_HIMETRICA_API_KEY: ${NEXT_PUBLIC_HIMETRICA_API_KEY:-}
+    container_name: compendio-catolico-web
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # Em execução, a API é chamada pela rede interna, sem sair da máquina.
+      API_URL: http://acervo-catolico-api:8000/api
+    expose:
+      - "3000"
+    networks:
+      - proxy
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+networks:
+  proxy:
+    external: true
+    name: deploy_default

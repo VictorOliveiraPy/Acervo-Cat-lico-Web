@@ -1,0 +1,14 @@
+# O certificado só sai depois que o DNS (Cloudflare, "DNS only") apontar para o IP desta VPS.
+compendio-catolico.com {
+	encode zstd gzip
+	reverse_proxy compendio-catolico-web:3000
+}
+
+www.compendio-catolico.com {
+	redir https://compendio-catolico.com{uri} permanent
+}
+
+api.compendio-catolico.com {
+	encode zstd gzip
+	reverse_proxy acervo-catolico-api:8000
+}
