@@ -2,21 +2,39 @@
  * Santos que a pessoa pode escolher como padroeiro. Os `id` são os mesmos que a API
  * aceita em `padroeiro_id`: acrescentar um santo aqui exige acrescentar lá também.
  */
-export type PatronAttribute = "cordao" | "estrelas" | "lirio" | "rosas";
+export type PatronAttribute = "cordao" | "estrelas" | "lirio";
 
-export type Patron = {
-  id: "francisco" | "maria" | "jose" | "teresinha";
+type PatronBase = {
+  id:
+    | "francisco"
+    | "maria"
+    | "jose"
+    | "teresinha"
+    | "antonio"
+    | "pedro"
+    | "bento"
+    | "miguel"
+    | "carlo"
+    | "cecilia";
   nome: string;
   /** Versão curta para os botões do seletor. */
   nomeCurto: string;
   festa: string;
-  atributo: PatronAttribute;
+  /** `tunica` e `manto` também pintam a bolinha do seletor. */
   cores: { tunica: string; manto?: string; cabelo?: string; veu?: string };
-  capuz?: boolean;
-  barba?: boolean;
-  /** Manto curto, na altura dos ombros, em vez de manto até os pés. */
-  capa?: boolean;
 };
+
+/** Ou o santo tem modelo `.glb` próprio, ou é montado com primitivas: nunca os dois. */
+export type Patron = PatronBase &
+  (
+    | { modelo: string }
+    | { modelo?: undefined; atributo: PatronAttribute; capuz?: boolean; barba?: boolean }
+  );
+
+/** Modelos vindos do Santo Guardião, com a malha comprimida em Draco. */
+function modelo(id: PatronBase["id"]): string {
+  return `/modelos/${id}.glb`;
+}
 
 export type PatronId = Patron["id"];
 
@@ -49,16 +67,62 @@ export const PATRONS: readonly Patron[] = [
   },
   {
     id: "teresinha",
-    nome: "Santa Teresinha",
+    nome: "Santa Teresinha do Menino Jesus",
     nomeCurto: "Santa Teresinha",
     festa: "1º de outubro",
-    atributo: "rosas",
-    cores: { tunica: "#6A4A33", manto: "#EFEBE2", veu: "#26262A" },
-    capa: true,
+    cores: { tunica: "#6A4A33", manto: "#EFEBE2" },
+    modelo: modelo("teresinha"),
+  },
+  {
+    id: "antonio",
+    nome: "Santo Antônio de Pádua",
+    nomeCurto: "Santo Antônio",
+    festa: "13 de junho",
+    cores: { tunica: "#8B4513" },
+    modelo: modelo("antonio"),
+  },
+  {
+    id: "pedro",
+    nome: "São Pedro Apóstolo",
+    nomeCurto: "São Pedro",
+    festa: "29 de junho",
+    cores: { tunica: "#1E40AF", manto: "#C9A227" },
+    modelo: modelo("pedro"),
+  },
+  {
+    id: "bento",
+    nome: "São Bento de Núrsia",
+    nomeCurto: "São Bento",
+    festa: "11 de julho",
+    cores: { tunica: "#1F2937" },
+    modelo: modelo("bento"),
+  },
+  {
+    id: "miguel",
+    nome: "São Miguel Arcanjo",
+    nomeCurto: "São Miguel",
+    festa: "29 de setembro",
+    cores: { tunica: "#7C3AED", manto: "#60A5FA" },
+    modelo: modelo("miguel"),
+  },
+  {
+    id: "carlo",
+    nome: "São Carlo Acutis",
+    nomeCurto: "São Carlo Acutis",
+    festa: "12 de outubro",
+    cores: { tunica: "#3B82F6", manto: "#F59E0B" },
+    modelo: modelo("carlo"),
+  },
+  {
+    id: "cecilia",
+    nome: "Santa Cecília",
+    nomeCurto: "Santa Cecília",
+    festa: "22 de novembro",
+    cores: { tunica: "#A855F7", manto: "#E879F9" },
+    modelo: modelo("cecilia"),
   },
 ];
 
-export const DEFAULT_PATRON: PatronId = "francisco";
 
 /** Valor desconhecido vindo do banco cai no padrão, em vez de quebrar a página. */
 export function patronById(id: string): Patron {

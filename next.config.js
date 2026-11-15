@@ -29,14 +29,19 @@ const IMAGE_HOSTS = [
 // editorial original, ainda usada como fallback) e o bucket R2 que serve as
 // cópias WebP pré-processadas (ver `docs/imagens/` no backend) — mesmos
 // hosts de `images.remotePatterns` abaixo. `media-src` libera o R2 de onde vêm os
-// MP4 de `/reels` (`ReelCard`).
+// MP4 de `/reels` (`ReelCard`). `wasm-unsafe-eval` e `worker-src blob:` são do
+// decodificador Draco dos santos 3D do perfil (`public/draco/`), que roda
+// WebAssembly num worker criado a partir de um blob; não liberam `eval` de JS.
+// `img-src`/`connect-src blob:`: o carregador de `.glb` lê as texturas embutidas
+// como blob (via `fetch` no Chrome, via `<img>` no Safari e no Firefox).
 const CONTENT_SECURITY_POLICY = [
   "default-src 'self'",
-  `img-src 'self' https://upload.wikimedia.org ${IMAGE_HOSTS.map((host) => `https://${host}`).join(" ")} data:`,
-  "script-src 'self' 'unsafe-inline'",
+  `img-src 'self' https://upload.wikimedia.org ${IMAGE_HOSTS.map((host) => `https://${host}`).join(" ")} data: blob:`,
+  "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'",
+  "worker-src 'self' blob:",
   "style-src 'self' 'unsafe-inline'",
   "font-src 'self'",
-  "connect-src 'self'",
+  "connect-src 'self' blob:",
   `media-src 'self' ${IMAGE_HOSTS.map((host) => `https://${host}`).join(" ")}`,
   "frame-ancestors 'none'",
   "base-uri 'self'",

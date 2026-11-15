@@ -53,7 +53,8 @@ export function AccountMenu() {
   return (
     <button
       type="button"
-      onClick={() => void signIn("google")}
+      // Conta nova cai no perfil, onde o primeiro passo é escolher o santo de devoção.
+      onClick={() => void signIn("google", { callbackUrl: "/perfil" })}
       className="shrink-0 text-meta font-semibold text-ink-muted hover:text-accent"
     >
       Entrar

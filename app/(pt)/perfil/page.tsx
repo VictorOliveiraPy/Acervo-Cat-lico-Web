@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
+import { PatronChoice } from "@/components/perfil/PatronChoice";
 import { PerfilView } from "@/components/perfil/PerfilView";
 import { ProfileForm } from "@/components/ProfileForm";
 import { LESSONS } from "@/lib/academia";
@@ -23,6 +24,13 @@ export default async function PerfilPage() {
   if (!user) redirect("/api/auth/signin?callbackUrl=/perfil");
 
   const profile = await syncProfile(user.subject, user.name);
+  if (profile.padroeiro_id === null) {
+    return (
+      <div className="mx-auto max-w-shell px-4 py-10 sm:px-6">
+        <PatronChoice nome={profile.nome} />
+      </div>
+    );
+  }
   const [favoritos, anotacoes] = await Promise.all([
     listFavorites(user.subject),
     listNotes(user.subject),

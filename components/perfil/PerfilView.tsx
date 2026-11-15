@@ -6,8 +6,9 @@ import { setPatronAction } from "@/app/(pt)/perfil/actions";
 import { ConfessionPanel } from "@/components/perfil/ConfessionPanel";
 import { FavoritesPanel } from "@/components/perfil/FavoritesPanel";
 import { NotesPanel } from "@/components/perfil/NotesPanel";
+import { PatronPicker } from "@/components/perfil/PatronPicker";
 import { SaintStage } from "@/components/perfil/SaintStage";
-import { PATRONS, patronById, type PatronId } from "@/lib/padroeiros";
+import { patronById, type PatronId } from "@/lib/padroeiros";
 import {
   PROFILE_TABS,
   levelFor,
@@ -46,14 +47,14 @@ export function PerfilView({
 }: {
   nome: string;
   pontos: number;
-  padroeiroId: string;
+  padroeiroId: PatronId;
   licoesConcluidas: number;
   licoesTotal: number;
   favoritos: readonly Favorite[];
   anotacoes: readonly Note[];
   licoes: ReadonlyArray<{ slug: string; title: string }>;
 }) {
-  const [patronId, setPatronId] = useState<string>(padroeiroId);
+  const [patronId, setPatronId] = useState<PatronId>(padroeiroId);
   const [patronError, setPatronError] = useState("");
   const [favorites, setFavorites] = useState<readonly Favorite[]>(favoritos);
   const [notes, setNotes] = useState<readonly Note[]>(anotacoes);
@@ -145,30 +146,7 @@ export function PerfilView({
 
           <div className="flex flex-col gap-2">
             <p className="text-meta text-ink-muted">Escolha seu padroeiro</p>
-            <div className="flex flex-wrap gap-2">
-              {PATRONS.map((option) => (
-                <button
-                  key={option.id}
-                  type="button"
-                  aria-pressed={option.id === patron.id}
-                  onClick={() => void choosePatron(option.id)}
-                  className={`flex min-h-[36px] items-center gap-2 rounded-full border bg-surface py-1 pl-1.5 pr-3 text-meta transition-colors ${
-                    option.id === patron.id
-                      ? "border-accent font-semibold text-accent"
-                      : "border-border text-ink hover:border-accent"
-                  }`}
-                >
-                  <span
-                    aria-hidden="true"
-                    className="h-5 w-5 rounded-full border border-border"
-                    style={{
-                      background: `linear-gradient(135deg, ${option.cores.tunica} 50%, ${option.cores.manto ?? option.cores.tunica} 50%)`,
-                    }}
-                  />
-                  {option.nomeCurto}
-                </button>
-              ))}
-            </div>
+            <PatronPicker selected={patron.id} onChoose={(id) => void choosePatron(id)} />
             <p role="status" aria-live="polite" className="text-meta text-danger">
               {patronError}
             </p>

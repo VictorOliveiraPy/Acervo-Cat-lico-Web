@@ -1,4 +1,5 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
@@ -36,7 +37,24 @@ describe("levelFor", () => {
 
 describe("padroeiros", () => {
   it("deve ter os ids que a API aceita", () => {
-    expect(PATRONS.map(({ id }) => id)).toEqual(["francisco", "maria", "jose", "teresinha"]);
+    expect(PATRONS.map(({ id }) => id)).toEqual([
+      "francisco",
+      "maria",
+      "jose",
+      "teresinha",
+      "antonio",
+      "pedro",
+      "bento",
+      "miguel",
+      "carlo",
+      "cecilia",
+    ]);
+  });
+
+  it("deve apontar cada modelo 3D para um arquivo publicado", () => {
+    const models = PATRONS.flatMap((patron) => (patron.modelo ? [patron.modelo] : []));
+    expect(models).toHaveLength(7);
+    for (const model of models) expect(existsSync(join("public", model))).toBe(true);
   });
 
   it("deve cair no padrão com um id desconhecido", () => {

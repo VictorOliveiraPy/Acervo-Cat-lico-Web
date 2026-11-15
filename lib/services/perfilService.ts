@@ -6,6 +6,7 @@
 import { z } from "zod";
 
 import { ApiError, apiGet, getApiBaseUrl } from "@/lib/api";
+import { isPatronId } from "@/lib/padroeiros";
 import {
   favoriteSchema,
   noteSchema,
@@ -19,7 +20,12 @@ const profileSchema = z.object({
   no_ranking: z.boolean(),
   pontos: z.number(),
   licoes: z.array(z.string()),
-  padroeiro_id: z.string(),
+  // Nulo até a pessoa escolher, logo depois de criar a conta. Um id que o site não
+  // conhece mais conta como não escolhido, e a pessoa escolhe de novo.
+  padroeiro_id: z
+    .string()
+    .nullable()
+    .transform((id) => (isPatronId(id) ? id : null)),
 });
 
 export type Profile = z.output<typeof profileSchema>;

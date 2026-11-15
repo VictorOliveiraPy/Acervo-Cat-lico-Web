@@ -3,16 +3,9 @@
 import { useMemo, lazy, Suspense } from "react";
 import { DoubleSide, Quaternion, Vector2, Vector3 } from "three";
 
-import { patronById, type Patron, type PatronId } from "@/lib/padroeiros";
+import { patronById, type Patron, type PatronAttribute, type PatronId } from "@/lib/padroeiros";
 
-/**
- * Modelos `.glb` prontos, por santo. Para trocar um santo de primitivas para modelo,
- * ponha o arquivo em `public/modelos/` e registre aqui, por exemplo:
- *   francisco: "/modelos/francisco.glb"
- */
-const SAINT_GLB: Partial<Record<PatronId, string>> = {};
-
-// Em arquivo separado: enquanto a lista acima estiver vazia, o `drei` nem é baixado.
+// Em arquivo separado: quem tem padroeiro de primitivas nem baixa o `drei`.
 const GlbSaint = lazy(() => import("@/components/perfil/GlbSaint"));
 
 const SKIN = "#E2B48C";
@@ -115,14 +108,6 @@ const MANTO: readonly Point[] = [
   [0.34, 1.63],
   [0.16, 1.74],
 ];
-const CAPA: readonly Point[] = [
-  [0.47, 0.62],
-  [0.42, 1],
-  [0.4, 1.25],
-  [0.42, 1.5],
-  [0.34, 1.63],
-  [0.16, 1.74],
-];
 const CAPUZ: readonly Point[] = [
   [0.17, 1.62],
   [0.27, 1.7],
@@ -210,46 +195,15 @@ function Lily() {
   );
 }
 
-function RosesAndCrucifix() {
-  const wood = "#4A3324";
-  return (
-    <>
-      <mesh position={[0, 1.33, 0.43]}>
-        <boxGeometry args={[0.025, 0.26, 0.025]} />
-        <Matte color={wood} />
-      </mesh>
-      <mesh position={[0, 1.38, 0.43]}>
-        <boxGeometry args={[0.13, 0.025, 0.025]} />
-        <Matte color={wood} />
-      </mesh>
-      {(
-        [
-          [-0.09, 1.22],
-          [0.09, 1.21],
-          [-0.03, 1.16],
-          [0.05, 1.27],
-          [-0.11, 1.3],
-        ] as const
-      ).map(([x, y]) => (
-        <mesh key={`${x}-${y}`} position={[x, y, 0.42]}>
-          <icosahedronGeometry args={[0.045, 0]} />
-          <Matte color="#A8323E" />
-        </mesh>
-      ))}
-    </>
-  );
-}
-
-const ATTRIBUTES: Record<Patron["atributo"], () => JSX.Element> = {
+const ATTRIBUTES: Record<PatronAttribute, () => JSX.Element> = {
   cordao: FranciscanCord,
   estrelas: TwelveStars,
   lirio: Lily,
-  rosas: RosesAndCrucifix,
 };
 
 /** Santo montado com primitivas low-poly, enquanto não há modelo próprio. */
-function LowPolySaint({ patron }: { patron: Patron }) {
-  const { cores, capuz, barba, capa, atributo } = patron;
+function LowPolySaint({ patron }: { patron: Extract<Patron, { atributo: PatronAttribute }> }) {
+  const { cores, capuz, barba, atributo } = patron;
   const Attribute = ATTRIBUTES[atributo];
 
   return (
@@ -266,7 +220,7 @@ function LowPolySaint({ patron }: { patron: Patron }) {
 
       <Lathe profile={TUNICA} color={cores.tunica} />
       {cores.manto ? (
-        <Lathe profile={capa ? CAPA : MANTO} color={cores.manto} start={MANTLE_START} length={MANTLE_LENGTH} />
+        <Lathe profile={MANTO} color={cores.manto} start={MANTLE_START} length={MANTLE_LENGTH} />
       ) : null}
 
       {/* Cabeça */}
@@ -314,19 +268,17 @@ function LowPolySaint({ patron }: { patron: Patron }) {
 }
 
 /**
- * Imagem 3D de um santo: usa o `.glb` quando existir e as primitivas nos demais casos,
- * inclusive enquanto o modelo baixa. Quem usa este componente não precisa saber qual é.
+ * Imagem 3D de um santo: o `.glb` quando ele tem modelo próprio, senão as primitivas.
+ * Quem usa este componente não precisa saber qual é.
  */
 export function SaintModel({ saintId }: { saintId: PatronId }) {
   const patron = patronById(saintId);
-  const url = SAINT_GLB[patron.id];
-  const fallback = <LowPolySaint patron={patron} />;
-
-  return url ? (
-    <Suspense fallback={fallback}>
-      <GlbSaint url={url} />
-    </Suspense>
+  // Enquanto o modelo baixa, o nicho fica vazio: não há primitivas para esses santos.
+  return patron.modelo === undefined ? (
+    <LowPolySaint patron={patron} />
   ) : (
-    fallback
+    <Suspense fallback={null}>
+      <GlbSaint url={patron.modelo} />
+    </Suspense>
   );
 }
