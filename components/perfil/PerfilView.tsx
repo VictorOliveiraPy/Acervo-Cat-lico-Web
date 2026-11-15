@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { setPatronAction } from "@/app/(pt)/perfil/actions";
+import { ActivitiesPanel } from "@/components/perfil/ActivitiesPanel";
 import { ConfessionPanel } from "@/components/perfil/ConfessionPanel";
 import { FavoritesPanel } from "@/components/perfil/FavoritesPanel";
 import { NotesPanel } from "@/components/perfil/NotesPanel";
@@ -14,6 +15,7 @@ import {
   levelFor,
   tabForKey,
   tabFromHash,
+  type Activity,
   type Favorite,
   type Note,
   type ProfileTabId,
@@ -37,8 +39,9 @@ function Stat({ value, label, children }: { value: React.ReactNode; label: strin
  */
 export function PerfilView({
   nome,
-  pontos,
+  pontos: pontosIniciais,
   padroeiroId,
+  atividades: atividadesIniciais,
   licoesConcluidas,
   licoesTotal,
   favoritos,
@@ -48,12 +51,15 @@ export function PerfilView({
   nome: string;
   pontos: number;
   padroeiroId: PatronId;
+  atividades: readonly Activity[];
   licoesConcluidas: number;
   licoesTotal: number;
   favoritos: readonly Favorite[];
   anotacoes: readonly Note[];
   licoes: ReadonlyArray<{ slug: string; title: string }>;
 }) {
+  const [pontos, setPontos] = useState(pontosIniciais);
+  const [atividades, setAtividades] = useState<readonly Activity[]>(atividadesIniciais);
   const [patronId, setPatronId] = useState<PatronId>(padroeiroId);
   const [patronError, setPatronError] = useState("");
   const [favorites, setFavorites] = useState<readonly Favorite[]>(favoritos);
@@ -153,6 +159,14 @@ export function PerfilView({
           </div>
         </div>
       </section>
+
+      <ActivitiesPanel
+        atividades={atividades}
+        onDone={(result) => {
+          setPontos(result.pontos);
+          setAtividades(result.atividades);
+        }}
+      />
 
       <div>
         <div

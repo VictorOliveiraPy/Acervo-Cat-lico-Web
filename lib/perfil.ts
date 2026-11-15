@@ -64,6 +64,17 @@ export const noteInputSchema = z.object({
 export type FavoriteInput = z.input<typeof favoriteInputSchema>;
 export type NoteInput = z.input<typeof noteInputSchema>;
 
+/** Prática do dia, como a API devolve: nomes e pontos só existem lá. */
+export const activitySchema = z.object({
+  id: z.string(),
+  nome: z.string(),
+  descricao: z.string(),
+  pontos: z.number(),
+  feita_hoje: z.boolean(),
+});
+
+export type Activity = z.output<typeof activitySchema>;
+
 export const favoriteSchema = z.object({
   id: z.number(),
   tipo: z.string(),

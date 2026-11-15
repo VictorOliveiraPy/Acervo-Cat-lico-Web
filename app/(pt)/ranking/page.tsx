@@ -7,7 +7,7 @@ import { fetchRanking, type RankingRow } from "@/lib/services/perfilService";
 
 export const metadata: Metadata = {
   title: "Ranking da Academia",
-  description: "Quem mais concluiu lições da Academia da Fé.",
+  description: "Quem mais estudou na Academia da Fé e marcou as práticas do dia.",
   alternates: { canonical: "/ranking" },
   robots: { index: false, follow: true },
 };
@@ -28,7 +28,7 @@ export default async function RankingPage() {
       <PageHeader
         kicker="Academia da Fé"
         title="Ranking"
-        description="Pontos por lições de estudo concluídas. Aparece aqui só quem escolheu aparecer."
+        description="Pontos por lições concluídas e práticas do dia. Aparece aqui só quem escolheu aparecer."
       />
 
       <div className="mt-8 max-w-xl">
@@ -66,7 +66,8 @@ export default async function RankingPage() {
       </div>
 
       <p className="mt-8 max-w-measure text-meta text-ink-muted">
-        A pontuação mede só o estudo dos exercícios. Oração, velas e vida espiritual não contam pontos.
+        Cada lição concluída vale 10 pontos. As práticas do dia (terço, missa, caridade e outras),
+        marcadas no perfil, valem pontos uma vez por dia. Velas não contam pontos.
       </p>
     </div>
   );

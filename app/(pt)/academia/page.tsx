@@ -50,8 +50,8 @@ export default function AcademiaPage() {
       ))}
 
       <p className="mt-10 max-w-measure text-meta text-ink-muted">
-        A Academia não pontua oração nem mede vida espiritual: etapas e pontos servem só para
-        acompanhar o estudo. Nenhum artigo depende de uma lição para ser lido.{" "}
+        Cada lição concluída vale 10 pontos; as práticas do dia, marcadas no perfil, também
+        pontuam. Nenhum artigo depende de uma lição para ser lido.{" "}
         <Link href="/ranking" className="text-accent underline underline-offset-4">
           Ver o ranking
         </Link>

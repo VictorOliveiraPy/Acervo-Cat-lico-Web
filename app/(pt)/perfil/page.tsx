@@ -45,6 +45,7 @@ export default async function PerfilPage() {
         nome={profile.nome}
         pontos={profile.pontos}
         padroeiroId={profile.padroeiro_id}
+        atividades={profile.atividades}
         licoesConcluidas={completed.length}
         licoesTotal={LESSONS.length}
         favoritos={favoritos}
@@ -114,7 +115,7 @@ export default async function PerfilPage() {
 
       <p className="mt-8 max-w-measure text-meta text-ink-muted">
         Guardamos só o identificador do seu login, o nome de exibição, o padroeiro, os temas
-        escolhidos, as lições concluídas, os textos favoritos e as anotações. O exame de consciência
+        escolhidos, as lições concluídas, as práticas marcadas em cada dia, os textos favoritos e as anotações. O exame de consciência
         nunca é salvo nem enviado. Não guardamos seu e-mail nem sua foto. Ao apagar a conta, tudo isso
         é apagado junto.
       </p>

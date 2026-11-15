@@ -8,6 +8,7 @@ import { z } from "zod";
 import { ApiError, apiGet, getApiBaseUrl } from "@/lib/api";
 import { isPatronId } from "@/lib/padroeiros";
 import {
+  activitySchema,
   favoriteSchema,
   noteSchema,
   type Favorite,
@@ -26,6 +27,7 @@ const profileSchema = z.object({
     .string()
     .nullable()
     .transform((id) => (isPatronId(id) ? id : null)),
+  atividades: z.array(activitySchema),
 });
 
 export type Profile = z.output<typeof profileSchema>;
@@ -81,6 +83,10 @@ export async function updateProfile(
 
 export async function completeLessons(subject: string, licoes: string[]): Promise<Profile> {
   return profileFrom(await privateRequest("POST", "/perfil/licoes", subject, { licoes }));
+}
+
+export async function completeActivity(subject: string, atividade: string): Promise<Profile> {
+  return profileFrom(await privateRequest("POST", "/perfil/atividades", subject, { atividade }));
 }
 
 export async function deleteProfile(subject: string): Promise<void> {

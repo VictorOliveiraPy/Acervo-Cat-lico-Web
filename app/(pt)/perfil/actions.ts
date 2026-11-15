@@ -8,6 +8,7 @@ import { ApiError } from "@/lib/api";
 import { currentUser } from "@/lib/auth";
 import { isPatronId } from "@/lib/padroeiros";
 import {
+  type Activity,
   favoriteInputSchema,
   noteInputSchema,
   type Favorite,
@@ -19,6 +20,7 @@ import { CATEGORY_SLUGS } from "@/lib/schemas";
 import {
   addFavorite,
   addNote,
+  completeActivity,
   completeLessons,
   deleteFavorite,
   deleteNote,
@@ -134,6 +136,27 @@ export async function setPatronAction(
   }
   revalidatePath("/perfil");
   return { status: "saved" };
+}
+
+export type CompleteActivityResult =
+  | { status: "saved"; pontos: number; atividades: Activity[] }
+  | { status: "anonymous" | "error" };
+
+/** Marca a prática de hoje. A API diz quais existem e quanto valem. */
+export async function completeActivityAction(atividade: string): Promise<CompleteActivityResult> {
+  if (!/^[a-z_]{1,40}$/.test(atividade)) return { status: "error" };
+  const user = await currentUser();
+  if (!user) return { status: "anonymous" };
+
+  try {
+    const profile = await completeActivity(user.subject, atividade);
+    revalidatePath("/perfil");
+    revalidatePath("/ranking");
+    return { status: "saved", pontos: profile.pontos, atividades: profile.atividades };
+  } catch (error: unknown) {
+    if (error instanceof ApiError) return { status: "error" };
+    throw error;
+  }
 }
 
 export async function addFavoriteAction(input: FavoriteInput): Promise<SaveItemResult<Favorite>> {

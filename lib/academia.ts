@@ -8,8 +8,8 @@ import type { CategorySlug } from "@/lib/schemas";
  * inventada para sustentar a tela. Os artigos do acervo continuam públicos; a
  * lição é um caminho a mais para estudar, nunca uma condição para ler.
  *
- * Concluir um exercício vale pontos no perfil de quem fez login, mas oração não
- * entra aqui como atividade: a regra aprovada é não gamificar a oração nem a santidade.
+ * Concluir um exercício vale pontos no perfil de quem fez login. As práticas de
+ * oração pontuam à parte, no perfil (`/perfil/atividades` na API).
  *
  * Fonte das lições novas, por decisão do responsável pelo acervo, conforme o uso:
  * explicação aprofundada, Catecismo Maior de São Pio X (1905); perguntas curtas e
