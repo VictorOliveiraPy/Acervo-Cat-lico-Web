@@ -2,23 +2,42 @@ import { z } from "zod";
 
 import type { Entry } from "@/lib/schemas";
 
-/** Níveis por pontos. Para mudar nomes ou faixas, basta editar esta lista. */
-export const LEVELS = [
-  { nome: "Catecúmeno", minimo: 0 },
-  { nome: "Discípulo", minimo: 50 },
-  { nome: "Apóstolo", minimo: 200 },
-] as const;
+/**
+ * Nível, vindo do Santo Guardião: a API calcula a partir dos pontos (curva, títulos
+ * e estágios ficam só lá). `xp_proximo_nivel` é zero no último nível.
+ */
+export const levelSchema = z.object({
+  numero: z.number(),
+  titulo: z.string(),
+  estagio: z.number(),
+  xp_no_nivel: z.number(),
+  xp_proximo_nivel: z.number(),
+});
 
-export function levelFor(points: number): {
-  nome: string;
-  proximo: { nome: string; faltam: number } | null;
-} {
-  const index = LEVELS.reduce((found, level, i) => (points >= level.minimo ? i : found), 0);
-  const next = LEVELS[index + 1];
-  return {
-    nome: LEVELS[index]?.nome ?? LEVELS[0].nome,
-    proximo: next ? { nome: next.nome, faltam: next.minimo - points } : null,
-  };
+export type Level = z.output<typeof levelSchema>;
+
+/** Dias seguidos com lição ou prática; o multiplicador é o que vale marcar hoje. */
+export const streakSchema = z.object({
+  atual: z.number(),
+  recorde: z.number(),
+  multiplicador: z.number(),
+});
+
+export type Streak = z.output<typeof streakSchema>;
+
+export function levelProgress(level: Level): number {
+  if (level.xp_proximo_nivel <= 0) return 100;
+  return Math.floor((level.xp_no_nivel / level.xp_proximo_nivel) * 100);
+}
+
+export function levelUpMessage(before: Level, after: Level): string | null {
+  return after.numero > before.numero
+    ? `Você subiu para o nível ${after.numero}: ${after.titulo}!`
+    : null;
+}
+
+export function formatMultiplier(multiplier: number): string | null {
+  return multiplier > 1 ? `×${String(multiplier).replace(".", ",")}` : null;
 }
 
 export const FAVORITE_KINDS = ["Bíblia", "Catecismo", "Oração", "Santos"] as const;
@@ -70,6 +89,8 @@ export const activitySchema = z.object({
   nome: z.string(),
   descricao: z.string(),
   pontos: z.number(),
+  // O que marcar hoje vale, já com o bônus da sequência.
+  pontos_hoje: z.number(),
   feita_hoje: z.boolean(),
 });
 

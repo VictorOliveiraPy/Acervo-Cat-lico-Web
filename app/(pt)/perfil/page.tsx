@@ -46,6 +46,8 @@ export default async function PerfilPage() {
         pontos={profile.pontos}
         padroeiroId={profile.padroeiro_id}
         atividades={profile.atividades}
+        nivel={profile.nivel}
+        sequencia={profile.sequencia}
         licoesConcluidas={completed.length}
         licoesTotal={LESSONS.length}
         favoritos={favoritos}

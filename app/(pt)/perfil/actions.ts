@@ -9,6 +9,8 @@ import { currentUser } from "@/lib/auth";
 import { isPatronId } from "@/lib/padroeiros";
 import {
   type Activity,
+  type Level,
+  type Streak,
   favoriteInputSchema,
   noteInputSchema,
   type Favorite,
@@ -139,7 +141,7 @@ export async function setPatronAction(
 }
 
 export type CompleteActivityResult =
-  | { status: "saved"; pontos: number; atividades: Activity[] }
+  | { status: "saved"; pontos: number; atividades: Activity[]; nivel: Level; sequencia: Streak }
   | { status: "anonymous" | "error" };
 
 /** Marca a prática de hoje. A API diz quais existem e quanto valem. */
@@ -152,7 +154,13 @@ export async function completeActivityAction(atividade: string): Promise<Complet
     const profile = await completeActivity(user.subject, atividade);
     revalidatePath("/perfil");
     revalidatePath("/ranking");
-    return { status: "saved", pontos: profile.pontos, atividades: profile.atividades };
+    return {
+      status: "saved",
+      pontos: profile.pontos,
+      atividades: profile.atividades,
+      nivel: profile.nivel,
+      sequencia: profile.sequencia,
+    };
   } catch (error: unknown) {
     if (error instanceof ApiError) return { status: "error" };
     throw error;

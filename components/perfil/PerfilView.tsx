@@ -12,13 +12,16 @@ import { SaintStage } from "@/components/perfil/SaintStage";
 import { patronById, type PatronId } from "@/lib/padroeiros";
 import {
   PROFILE_TABS,
-  levelFor,
+  levelProgress,
+  levelUpMessage,
   tabForKey,
   tabFromHash,
   type Activity,
   type Favorite,
+  type Level,
   type Note,
   type ProfileTabId,
+  type Streak,
 } from "@/lib/perfil";
 
 function Stat({ value, label, children }: { value: React.ReactNode; label: string; children?: React.ReactNode }) {
@@ -42,6 +45,8 @@ export function PerfilView({
   pontos: pontosIniciais,
   padroeiroId,
   atividades: atividadesIniciais,
+  nivel: nivelInicial,
+  sequencia: sequenciaInicial,
   licoesConcluidas,
   licoesTotal,
   favoritos,
@@ -52,6 +57,8 @@ export function PerfilView({
   pontos: number;
   padroeiroId: PatronId;
   atividades: readonly Activity[];
+  nivel: Level;
+  sequencia: Streak;
   licoesConcluidas: number;
   licoesTotal: number;
   favoritos: readonly Favorite[];
@@ -60,6 +67,9 @@ export function PerfilView({
 }) {
   const [pontos, setPontos] = useState(pontosIniciais);
   const [atividades, setAtividades] = useState<readonly Activity[]>(atividadesIniciais);
+  const [nivel, setNivel] = useState<Level>(nivelInicial);
+  const [sequencia, setSequencia] = useState<Streak>(sequenciaInicial);
+  const [levelUp, setLevelUp] = useState("");
   const [patronId, setPatronId] = useState<PatronId>(padroeiroId);
   const [patronError, setPatronError] = useState("");
   const [favorites, setFavorites] = useState<readonly Favorite[]>(favoritos);
@@ -68,7 +78,7 @@ export function PerfilView({
   const tabRefs = useRef(new Map<ProfileTabId, HTMLButtonElement>());
 
   const patron = patronById(patronId);
-  const level = levelFor(pontos);
+  const xpProgress = levelProgress(nivel);
   const progress = licoesTotal > 0 ? Math.round((licoesConcluidas / licoesTotal) * 100) : 0;
 
   // O hash só existe no navegador: o servidor sempre desenha a primeira aba.
@@ -110,7 +120,7 @@ export function PerfilView({
         aria-label="Identidade"
         className="grid items-center gap-5 min-[820px]:grid-cols-[minmax(260px,380px)_1fr] min-[820px]:gap-9"
       >
-        <SaintStage saintId={patron.id} saintName={patron.nome} />
+        <SaintStage saintId={patron.id} saintName={patron.nome} estagio={nivel.estagio} />
 
         <div className="flex min-w-0 flex-col gap-[18px]">
           <p className="eyebrow">Meu perfil</p>
@@ -118,15 +128,43 @@ export function PerfilView({
           <p className="font-display text-title-sm text-ink-muted">
             Sob a proteção de <em className="text-ink">{patron.nome}</em> · festa em {patron.festa}
           </p>
-          <p className="w-fit rounded-full bg-accent-soft px-3 py-1 text-meta font-semibold text-accent">
-            {level.nome}
-            {level.proximo
-              ? ` · próximo nível: ${level.proximo.nome} em ${level.proximo.faltam} pontos`
-              : ""}
-          </p>
+          <div className="flex flex-col gap-1.5">
+            <p className="w-fit rounded-full bg-accent-soft px-3 py-1 text-meta font-semibold text-accent">
+              Nível {nivel.numero} · {nivel.titulo}
+            </p>
+            <div
+              role="progressbar"
+              aria-label={`Progresso no nível ${nivel.numero}`}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={xpProgress}
+              className="h-1.5 max-w-sm overflow-hidden rounded bg-border"
+            >
+              <div className="h-full bg-gold transition-[width] duration-500" style={{ width: `${xpProgress}%` }} />
+            </div>
+            <p className="text-label text-ink-muted [letter-spacing:0] [font-variant-numeric:tabular-nums]">
+              {nivel.xp_proximo_nivel > 0
+                ? `${nivel.xp_no_nivel} de ${nivel.xp_proximo_nivel} pontos para o nível ${nivel.numero + 1}`
+                : "Nível máximo"}
+            </p>
+            <p role="status" aria-live="polite" className="text-meta font-semibold text-accent">
+              {levelUp}
+            </p>
+          </div>
 
-          <div className="grid grid-cols-3 gap-px overflow-hidden rounded-[12px] border border-border bg-border">
+          <div className="grid grid-cols-2 gap-px overflow-hidden rounded-[12px] border border-border bg-border sm:grid-cols-4">
             <Stat value={pontos} label="pontos" />
+            <Stat
+              value={
+                <>
+                  {sequencia.atual}
+                  <span aria-hidden="true" className="ml-1 text-meta">🔥</span>
+                </>
+              }
+              label={sequencia.atual === 1 ? "dia seguido" : "dias seguidos"}
+            >
+              <p className="mt-1 text-label text-ink-muted [letter-spacing:0]">recorde {sequencia.recorde}</p>
+            </Stat>
             <Stat
               value={
                 <>
@@ -162,9 +200,13 @@ export function PerfilView({
 
       <ActivitiesPanel
         atividades={atividades}
+        multiplicador={sequencia.multiplicador}
         onDone={(result) => {
           setPontos(result.pontos);
           setAtividades(result.atividades);
+          setSequencia(result.sequencia);
+          setLevelUp(levelUpMessage(nivel, result.nivel) ?? "");
+          setNivel(result.nivel);
         }}
       />
 

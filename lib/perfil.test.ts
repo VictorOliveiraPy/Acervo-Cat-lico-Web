@@ -11,27 +11,48 @@ import {
   favoriteFromEntry,
   favoriteInputSchema,
   formatTimeSince,
-  levelFor,
+  formatMultiplier,
+  levelProgress,
+  levelSchema,
+  levelUpMessage,
   noteInputSchema,
+  streakSchema,
   tabForKey,
   tabFromHash,
 } from "@/lib/perfil";
 
-describe("levelFor", () => {
-  it.each([
-    [0, "Catecúmeno"],
-    [49, "Catecúmeno"],
-    [50, "Discípulo"],
-    [199, "Discípulo"],
-    [200, "Apóstolo"],
-    [999, "Apóstolo"],
-  ])("deve dar a %i pontos o nível %s", (points, nome) => {
-    expect(levelFor(points).nome).toBe(nome);
+describe("nível e sequência", () => {
+  const level = (numero: number, xp_no_nivel = 0, xp_proximo_nivel = 114) => ({
+    numero,
+    titulo: numero >= 5 ? "Devoto Fiel" : "Peregrino Iniciante",
+    estagio: 1,
+    xp_no_nivel,
+    xp_proximo_nivel,
   });
 
-  it("deve dizer quanto falta, e nada no último nível", () => {
-    expect(levelFor(10).proximo).toEqual({ nome: "Discípulo", faltam: 40 });
-    expect(levelFor(200).proximo).toBeNull();
+  it("deve aceitar o nível e a sequência que a API devolve", () => {
+    expect(levelSchema.parse(level(1))).toEqual(level(1));
+    expect(streakSchema.parse({ atual: 3, recorde: 7, multiplicador: 1.5 })).toEqual({
+      atual: 3,
+      recorde: 7,
+      multiplicador: 1.5,
+    });
+  });
+
+  it("deve dar o progresso no nível em porcentagem, cheio no último", () => {
+    expect(levelProgress(level(2, 66, 132))).toBe(50);
+    expect(levelProgress(level(100, 0, 0))).toBe(100);
+  });
+
+  it("deve anunciar só quando o nível sobe", () => {
+    expect(levelUpMessage(level(4), level(5))).toBe("Você subiu para o nível 5: Devoto Fiel!");
+    expect(levelUpMessage(level(5), level(5))).toBeNull();
+  });
+
+  it("deve escrever o bônus da sequência no jeito brasileiro, e nada sem bônus", () => {
+    expect(formatMultiplier(1.5)).toBe("×1,5");
+    expect(formatMultiplier(2)).toBe("×2");
+    expect(formatMultiplier(1)).toBeNull();
   });
 });
 

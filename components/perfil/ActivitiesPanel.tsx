@@ -3,16 +3,24 @@
 import { useState } from "react";
 
 import { completeActivityAction } from "@/app/(pt)/perfil/actions";
-import type { Activity } from "@/lib/perfil";
+import { formatMultiplier, type Activity, type Level, type Streak } from "@/lib/perfil";
 
-/** Práticas do dia: cada uma vale pontos uma vez por dia, no horário de Brasília. */
+type Done = { pontos: number; atividades: Activity[]; nivel: Level; sequencia: Streak };
+
+/**
+ * Práticas do dia: cada uma vale pontos uma vez por dia, no horário de Brasília, com
+ * o bônus da sequência de dias quando houver.
+ */
 export function ActivitiesPanel({
   atividades,
+  multiplicador,
   onDone,
 }: {
   atividades: readonly Activity[];
-  onDone: (result: { pontos: number; atividades: Activity[] }) => void;
+  multiplicador: number;
+  onDone: (result: Done) => void;
 }) {
+  const bonus = formatMultiplier(multiplicador);
   const [pending, setPending] = useState<string | null>(null);
   const [error, setError] = useState("");
   const done = atividades.filter((atividade) => atividade.feita_hoje).length;
@@ -34,6 +42,7 @@ export function ActivitiesPanel({
         </h2>
         <p className="text-meta text-ink-muted [font-variant-numeric:tabular-nums]">
           {done} de {atividades.length} feitas
+          {bonus ? ` · bônus da sequência ${bonus}` : ""}
         </p>
       </div>
       <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
@@ -45,7 +54,7 @@ export function ActivitiesPanel({
             <div className="min-w-0">
               <p className="font-semibold text-ink">{atividade.nome}</p>
               <p className="text-meta text-ink-muted">
-                {atividade.descricao} · +{atividade.pontos} pontos
+                {atividade.descricao} · +{atividade.pontos_hoje} pontos
               </p>
             </div>
             {atividade.feita_hoje ? (

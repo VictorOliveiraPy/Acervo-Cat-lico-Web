@@ -46,8 +46,31 @@ function hasWebGl(): boolean {
   }
 }
 
+/**
+ * Luz atrás do santo conforme o estágio do nível, como no Santo Guardião: nada no
+ * primeiro, luz suave no segundo, aura no terceiro e moldura dourada acesa no quarto.
+ * Nada preso a uma altura: cada modelo tem a cabeça num ponto diferente.
+ */
+const STAGE_LIGHT: Record<number, { background: string; boxShadow?: string } | undefined> = {
+  2: { background: "radial-gradient(45% 35% at 50% 32%, rgba(255, 244, 214, 0.55), transparent 70%)" },
+  3: { background: "radial-gradient(55% 45% at 50% 34%, rgba(255, 226, 150, 0.6), transparent 72%)" },
+  4: {
+    background: "radial-gradient(60% 50% at 50% 34%, rgba(255, 214, 120, 0.7), transparent 75%)",
+    boxShadow: "inset 0 0 36px rgba(214, 170, 60, 0.55)",
+  },
+};
+
 /** Nicho em arco, estilo oratório, com o padroeiro dentro. */
-export function SaintStage({ saintId, saintName }: { saintId: PatronId; saintName: string }) {
+export function SaintStage({
+  saintId,
+  saintName,
+  estagio = 1,
+}: {
+  saintId: PatronId;
+  saintName: string;
+  estagio?: number;
+}) {
+  const light = STAGE_LIGHT[estagio];
   const [webGl, setWebGl] = useState<boolean | null>(null);
   const [showHint, setShowHint] = useState(true);
 
@@ -60,6 +83,13 @@ export function SaintStage({ saintId, saintName }: { saintId: PatronId; saintNam
       className="relative mx-auto aspect-[3/4] w-full max-w-[340px] overflow-hidden rounded-b-[14px] rounded-t-[190px] border border-border min-[820px]:max-w-none"
       style={{ background: "radial-gradient(120% 70% at 50% 30%, #E9E4D6, #D9D2BF)" }}
     >
+      {light ? (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 rounded-b-[14px] rounded-t-[190px]"
+          style={light}
+        />
+      ) : null}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-2.5 z-10 rounded-b-lg rounded-t-[180px] border border-gold/45"

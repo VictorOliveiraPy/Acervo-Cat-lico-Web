@@ -10,7 +10,9 @@ import { isPatronId } from "@/lib/padroeiros";
 import {
   activitySchema,
   favoriteSchema,
+  levelSchema,
   noteSchema,
+  streakSchema,
   type Favorite,
   type Note,
 } from "@/lib/perfil";
@@ -28,6 +30,8 @@ const profileSchema = z.object({
     .nullable()
     .transform((id) => (isPatronId(id) ? id : null)),
   atividades: z.array(activitySchema),
+  nivel: levelSchema,
+  sequencia: streakSchema,
 });
 
 export type Profile = z.output<typeof profileSchema>;
