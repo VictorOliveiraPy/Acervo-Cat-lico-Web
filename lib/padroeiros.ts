@@ -2,13 +2,8 @@
  * Santos que a pessoa pode escolher como padroeiro. Os `id` são os mesmos que a API
  * aceita em `padroeiro_id`: acrescentar um santo aqui exige acrescentar lá também.
  */
-export type PatronAttribute = "cordao" | "estrelas" | "lirio";
-
-type PatronBase = {
+export type Patron = {
   id:
-    | "francisco"
-    | "maria"
-    | "jose"
     | "teresinha"
     | "antonio"
     | "pedro"
@@ -20,51 +15,20 @@ type PatronBase = {
   /** Versão curta para os botões do seletor. */
   nomeCurto: string;
   festa: string;
-  /** `tunica` e `manto` também pintam a bolinha do seletor. */
-  cores: { tunica: string; manto?: string; cabelo?: string; veu?: string };
+  /** Pintam a bolinha do seletor. */
+  cores: { tunica: string; manto?: string };
+  /** Modelo `.glb` em `public/modelos`: só entram na lista santos com modelo 3D. */
+  modelo: string;
 };
 
-/** Ou o santo tem modelo `.glb` próprio, ou é montado com primitivas: nunca os dois. */
-export type Patron = PatronBase &
-  (
-    | { modelo: string }
-    | { modelo?: undefined; atributo: PatronAttribute; capuz?: boolean; barba?: boolean }
-  );
-
 /** Modelos vindos do Santo Guardião, com a malha comprimida em Draco. */
-function modelo(id: PatronBase["id"]): string {
+function modelo(id: Patron["id"]): string {
   return `/modelos/${id}.glb`;
 }
 
 export type PatronId = Patron["id"];
 
 export const PATRONS: readonly Patron[] = [
-  {
-    id: "francisco",
-    nome: "São Francisco de Assis",
-    nomeCurto: "São Francisco de Assis",
-    festa: "4 de outubro",
-    atributo: "cordao",
-    cores: { tunica: "#6E4E36", cabelo: "#3B2A1E" },
-    capuz: true,
-  },
-  {
-    id: "maria",
-    nome: "Nossa Senhora da Conceição",
-    nomeCurto: "N. Sra. da Conceição",
-    festa: "8 de dezembro",
-    atributo: "estrelas",
-    cores: { tunica: "#EEEAE0", manto: "#3E5F95", veu: "#3E5F95" },
-  },
-  {
-    id: "jose",
-    nome: "São José",
-    nomeCurto: "São José",
-    festa: "19 de março",
-    atributo: "lirio",
-    cores: { tunica: "#6E5A7A", manto: "#B98A3E", cabelo: "#4A3423" },
-    barba: true,
-  },
   {
     id: "teresinha",
     nome: "Santa Teresinha do Menino Jesus",

@@ -59,9 +59,6 @@ describe("nível e sequência", () => {
 describe("padroeiros", () => {
   it("deve ter os ids que a API aceita", () => {
     expect(PATRONS.map(({ id }) => id)).toEqual([
-      "francisco",
-      "maria",
-      "jose",
       "teresinha",
       "antonio",
       "pedro",
@@ -73,15 +70,15 @@ describe("padroeiros", () => {
   });
 
   it("deve apontar cada modelo 3D para um arquivo publicado", () => {
-    const models = PATRONS.flatMap((patron) => (patron.modelo ? [patron.modelo] : []));
-    expect(models).toHaveLength(7);
-    for (const model of models) expect(existsSync(join("public", model))).toBe(true);
+    for (const { modelo } of PATRONS) expect(existsSync(join("public", modelo))).toBe(true);
   });
 
   it("deve cair no padrão com um id desconhecido", () => {
-    expect(patronById("x").id).toBe("francisco");
+    expect(patronById("x").id).toBe("teresinha");
     expect(isPatronId("x")).toBe(false);
-    expect(isPatronId("jose")).toBe(true);
+    expect(isPatronId("bento")).toBe(true);
+    // Santos sem modelo 3D saíram da lista: quem tinha um deles escolhe de novo.
+    expect(isPatronId("francisco")).toBe(false);
   });
 });
 

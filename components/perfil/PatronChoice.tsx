@@ -14,7 +14,7 @@ import { patronById, type PatronId } from "@/lib/padroeiros";
  */
 export function PatronChoice({ nome }: { nome: string }) {
   const router = useRouter();
-  const [selected, setSelected] = useState<PatronId>("francisco");
+  const [selected, setSelected] = useState<PatronId>("teresinha");
   const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
   const patron = patronById(selected);
 
