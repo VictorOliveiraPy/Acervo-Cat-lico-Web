@@ -100,16 +100,17 @@ export function liturgicalColorHex(cor: string | null): string | null {
   return LITURGICAL_COLOR_HEX[cor.trim().toLowerCase()] ?? null;
 }
 
-/** Só o que a celebração escreve; dia de festa própria não diz o tempo e fica sem. */
-const LITURGICAL_SEASONS: ReadonlyArray<[RegExp, string]> = [
-  [/tempo comum/i, "Tempo Comum"],
-  [/advento/i, "Advento"],
-  [/quaresma/i, "Quaresma"],
-  [/semana santa/i, "Semana Santa"],
-  [/p[áa]scoa|tempo pascal/i, "Tempo Pascal"],
-  [/\bnatal\b/i, "Tempo do Natal"],
-];
-
-export function liturgicalSeason(celebracao: string | null): string | null {
-  return LITURGICAL_SEASONS.find(([pattern]) => pattern.test(celebracao ?? ""))?.[1] ?? null;
+/**
+ * Trecho corrido do Evangelho para a home: sem os números de versículo que a fonte
+ * gruda nas palavras ("41quando", "42“Se"), em uma linha só e cortado numa palavra
+ * inteira. Número separado por espaço ("12 apóstolos") é texto e fica.
+ */
+export function trechoDoEvangelho(texto: string, max: number): string {
+  const limpo = texto
+    .replace(/(^|\s)\d{1,3}(?=[\p{L}“"'«(])/gu, "$1")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (limpo.length <= max) return limpo;
+  const corte = limpo.slice(0, max + 1).replace(/\s+\S*$/, "");
+  return `${corte.replace(/[,;:.!?]+$/, "")}…`;
 }

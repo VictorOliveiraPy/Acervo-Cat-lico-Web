@@ -7,7 +7,7 @@ import { VelaMural } from "@/components/VelaMural";
 import { ApiError, getErrorMessage } from "@/lib/api";
 import { computePagination, parseOffset } from "@/lib/pagination";
 import { VELAS_PAGE_SIZE, fetchVelas } from "@/lib/services/velasService";
-import type { VelaPage } from "@/lib/velasSchemas";
+import { velaTipoSchema, type VelaPage } from "@/lib/velasSchemas";
 
 const TITLE = "Acenda uma Vela";
 const KICKER = "Vamos seguir juntos na mesma oração";
@@ -41,6 +41,9 @@ export default async function VelasPage({
   searchParams: SearchParams;
 }) {
   const offset = parseOffset(searchParams.offset);
+  const tipoBruto = Array.isArray(searchParams.tipo) ? searchParams.tipo[0] : searchParams.tipo;
+  const tipoPedido = velaTipoSchema.safeParse(tipoBruto);
+  const tipoInicial = tipoPedido.success ? tipoPedido.data : undefined;
 
   let page: VelaPage | null = null;
   let loadError: ApiError | null = null;
@@ -57,8 +60,9 @@ export default async function VelasPage({
 
       <PageHeader kicker={KICKER} title={TITLE} description={DESCRIPTION} />
 
-      <div className="mt-10">
-        <VelaForm />
+      {/* `#acender`: o fim dos verbetes de santo traz para cá, com a vela dele escolhida. */}
+      <div id="acender" className="mt-10 scroll-mt-32">
+        <VelaForm tipoInicial={tipoInicial} />
       </div>
 
       <section aria-labelledby="mural" className="mt-14">

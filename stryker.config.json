@@ -1,14 +1,30 @@
 {
   "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
-  "_comment": "Testes mutantes nas regras de lib/. Para um arquivo só: npm run test:mutation -- --mutate lib/conquistas.ts",
+  "_comment": "Testes mutantes nas regras de lib/. Para um arquivo só: npm run test:mutation -- --mutate lib/conquistas.ts. ignoreStatic: mutantes que rodam no import (listas de definição) o runner do Vitest não recarrega.",
   "testRunner": "vitest",
-  "vitest": { "configFile": "vitest.config.ts" },
-  "mutate": ["lib/**/*.ts", "!lib/**/*.test.ts"],
-  "reporters": ["clear-text", "progress", "html"],
-  "htmlReporter": { "fileName": "reports/mutation/index.html" },
-  "thresholds": { "high": 80, "low": 60, "break": null },
+  "vitest": {
+    "configFile": "vitest.config.ts"
+  },
+  "mutate": [
+    "lib/**/*.ts",
+    "!lib/**/*.test.ts"
+  ],
+  "reporters": [
+    "clear-text",
+    "progress",
+    "html"
+  ],
+  "htmlReporter": {
+    "fileName": "reports/mutation/index.html"
+  },
+  "thresholds": {
+    "high": 80,
+    "low": 60,
+    "break": null
+  },
   "incremental": true,
   "incrementalFile": "reports/mutation/stryker-incremental.json",
   "tempDirName": ".stryker-tmp",
-  "concurrency": 4
+  "concurrency": 4,
+  "ignoreStatic": true
 }

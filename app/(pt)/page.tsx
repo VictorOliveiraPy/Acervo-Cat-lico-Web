@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { EntryGrid } from "@/components/EntryGrid";
-import { EditorialStrip, GothicWindow } from "@/components/HomeArt";
-import { HojeBlock } from "@/components/HojeBlock";
+import { EditorialStrip } from "@/components/HomeArt";
+import { HomeHero } from "@/components/HomeHero";
+import { HomeProgress } from "@/components/HomeProgress";
 import { LessonProgressLink } from "@/components/LessonProgressLink";
 import { OrnamentalDivider } from "@/components/OrnamentalDivider";
 import { SearchField } from "@/components/SearchField";
@@ -11,7 +12,7 @@ import { LESSONS } from "@/lib/academia";
 import { ApiError } from "@/lib/api";
 import { CATEGORY_LABELS, categoryPath } from "@/lib/categories";
 import { CATEGORY_GROUPS } from "@/lib/categoryGroups";
-import { formatEntryCount, roundRobin } from "@/lib/entryDisplay";
+import { comImagemPrimeiro, formatEntryCount, roundRobin } from "@/lib/entryDisplay";
 import { languageAlternates } from "@/lib/i18n";
 import { safeJsonLd } from "@/lib/jsonLd";
 import { formatLiturgiaDate, todayInBrazil } from "@/lib/liturgia";
@@ -78,6 +79,9 @@ const SAMPLE_CATEGORIES = ["santos", "milagres-eucaristicos", "concilios"] as co
  * colunas em 3 linhas cheias. */
 const SAMPLE_PER_CATEGORY = 4;
 
+/** Quantos buscar por categoria para escolher os `SAMPLE_PER_CATEGORY` com imagem. */
+const SAMPLE_FETCH = SAMPLE_PER_CATEGORY * 3;
+
 type HomeData = {
   categories: CategoryInfo[];
   sample: Entry[];
@@ -89,7 +93,7 @@ const SAMPLE_ROTATION_MS = 5 * 60 * 1000;
 
 /**
  * Escolhe, dentro do total de uma categoria, um deslocamento (`offset`) que
- * ainda deixa `SAMPLE_PER_CATEGORY` itens inteiros a partir dele — e o mesmo
+ * ainda deixa `SAMPLE_FETCH` itens inteiros a partir dele — e o mesmo
  * deslocamento para todo mundo durante a mesma janela de 5 minutos.
  *
  * De propósito NÃO é `Math.random()`: o offset vira parte da URL buscada
@@ -102,7 +106,7 @@ const SAMPLE_ROTATION_MS = 5 * 60 * 1000;
  * todo mundo ao mesmo tempo, não um sorteio por visita.
  */
 function windowOffset(total: number, slug: string): number {
-  const maxOffset = Math.max(0, total - SAMPLE_PER_CATEGORY);
+  const maxOffset = Math.max(0, total - SAMPLE_FETCH);
   if (maxOffset === 0) return 0;
 
   const window = Math.floor(Date.now() / SAMPLE_ROTATION_MS);
@@ -130,13 +134,16 @@ async function loadHome(): Promise<HomeData> {
   const pages = await Promise.all(
     SAMPLE_CATEGORIES.map((slug) =>
       fetchEntryPage(slug, {
-        limit: SAMPLE_PER_CATEGORY,
+        limit: SAMPLE_FETCH,
         offset: windowOffset(totalBySlug.get(slug) ?? 0, slug),
       }),
     ),
   );
 
-  return { categories, sample: roundRobin(pages.map((page) => page.itens)) };
+  return {
+    categories,
+    sample: roundRobin(pages.map((page) => comImagemPrimeiro(page.itens, SAMPLE_PER_CATEGORY))),
+  };
 }
 
 /**
@@ -199,43 +206,19 @@ export default async function HomePage() {
       />
 
       <div className="mx-auto max-w-shell px-4 sm:px-6">
-        <section className="grid items-center gap-8 py-12 md:grid-cols-[1.1fr_0.9fr] md:py-20">
-          <div className="min-w-0">
-            <p className="eyebrow">Consulta em {categories.length} categorias</p>
-            <h1 className="mt-3 font-display text-title-lg text-ink md:text-title-xl">
-              Uma busca só para todo o mundo católico.
-            </h1>
-            <p className="mt-5 max-w-xl text-lead text-ink-muted">
-              Digite um nome, um tema ou um lugar: a busca cobre {totalEntries}{" "}
-              entradas em {categories.length} categorias, com santos, orações, Catecismo,
-              liturgia diária, papas, sacramentos e a Missa.
-            </p>
-
-            <div className="mt-7 max-w-xl">
-              <SearchField variant="prominent" label="Buscar em todo o acervo" />
-            </div>
-            <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2">
-              <span className="kicker">Experimente</span>
-              {SUGGESTED_TERMS.map((term) => (
-                <Link
-                  key={term}
-                  href={`/busca?q=${encodeURIComponent(term)}`}
-                  className="rounded-edge border border-border bg-surface px-2.5 py-1 text-meta text-ink-muted transition-colors hover:border-accent hover:text-accent"
-                >
-                  {term}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          <GothicWindow className="mx-auto hidden w-full max-w-sm md:block" />
-        </section>
-
-        <HojeBlock
+        <HomeHero
           dateLabel={formatLiturgiaDate(today)}
+          today={today}
           liturgia={liturgia && !liturgia.desatualizada && liturgia.data === today ? liturgia : null}
           saint={saintToday}
+          totalEntries={totalEntries}
+          totalCategories={categories.length}
+          suggestedTerms={SUGGESTED_TERMS}
         />
+
+        <div className="pb-10">
+          <HomeProgress />
+        </div>
 
         <section aria-labelledby="caminhos" className="border-t border-border py-10">
           <p className="eyebrow">Por onde começar</p>

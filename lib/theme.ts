@@ -39,3 +39,20 @@ export function readStoredTheme(): Theme {
     return "system";
   }
 }
+
+const THEME_NAME: Record<Theme, string> = {
+  system: "automático (segue o sistema)",
+  light: "claro",
+  dark: "escuro",
+};
+
+/** O tema seguinte do botão único do cabeçalho, em ciclo. */
+export function nextTheme(theme: Theme): Theme {
+  return THEMES[(THEMES.indexOf(theme) + 1) % THEMES.length] ?? "system";
+}
+
+/** Rótulo acessível do botão: o tema de agora e para onde o clique leva. */
+export function themeButtonLabel(theme: Theme): string {
+  const next = THEME_NAME[nextTheme(theme)].replace(/ \(.*\)$/, "");
+  return `Tema ${THEME_NAME[theme]}. Mudar para ${next}`;
+}

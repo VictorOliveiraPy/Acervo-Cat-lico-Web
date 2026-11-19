@@ -86,9 +86,10 @@ function VelaPicker({
   );
 }
 
-export function VelaForm() {
+/** `tipoInicial`: a vela já escolhida quando a pessoa chega de um verbete de santo. */
+export function VelaForm({ tipoInicial = DEFAULT_VELA_TIPO }: { tipoInicial?: VelaTipo }) {
   const [state, formAction] = useFormState(acenderVelaAction, INITIAL_STATE);
-  const [tipo, setTipo] = useState<VelaTipo>(DEFAULT_VELA_TIPO);
+  const [tipo, setTipo] = useState<VelaTipo>(tipoInicial);
   const formRef = useRef<HTMLFormElement>(null);
 
   // Ao acender com sucesso, limpa nome/intenção para a próxima vela — a

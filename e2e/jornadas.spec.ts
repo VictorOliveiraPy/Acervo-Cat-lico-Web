@@ -80,3 +80,37 @@ test("todo idioma declarado no hreflang abre de verdade", async ({ page, request
     }
   }
 });
+
+test("a home abre com o dia de hoje e o santo", async ({ page }) => {
+  await page.goto("/");
+  // O santo do dia (ou a próxima festa) sempre existe no acervo.
+  await expect(page.getByText(/Santo do dia|Próxima festa/).first()).toBeVisible();
+  await expect(page.getByRole("link", { name: "Conhecer sua história" })).toBeVisible();
+  await expect(page.getByRole("searchbox").first()).toBeVisible();
+});
+
+test("o verbete de um santo leva à vela dele já escolhida", async ({ page }) => {
+  await page.goto("/santos/antonio-de-padua");
+  await expect(page.getByText("Santo Antônio de Pádua, rogai por nós.")).toBeVisible();
+  await page.getByRole("link", { name: "Acender uma vela" }).click();
+  await expect(page).toHaveURL(/\/velas\?tipo=santo_antonio#acender$/);
+  await expect(page.getByRole("radio", { name: /Santo Antônio/ })).toBeChecked();
+});
+
+test("o tema troca num botão só", async ({ page }) => {
+  await page.goto("/sobre");
+  const botao = page.getByRole("button", { name: /^Tema automático/ });
+  await botao.click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await page.getByRole("button", { name: /^Tema claro/ }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+});
+
+test("o calendário dos santos é um iCalendar válido", async ({ request }) => {
+  const resposta = await request.get("/calendario/santos.ics");
+  expect(resposta.status()).toBe(200);
+  expect(resposta.headers()["content-type"]).toContain("text/calendar");
+  const ics = await resposta.text();
+  expect(ics.startsWith("BEGIN:VCALENDAR\r\n")).toBe(true);
+  expect(ics).toContain("UID:francisco-de-assis-10-04@compendio-catolico.com");
+});

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
+import { AssinarCalendario } from "@/components/AssinarCalendario";
 import { Breadcrumbs } from "@/components/Editorial";
 import { entryPath } from "@/lib/categories";
 import { imagePosition } from "@/lib/entryDisplay";
@@ -140,6 +141,8 @@ export default async function SantoDoDiaPage() {
           <p className="mt-3 text-body text-ink-muted">Nenhuma festa no acervo nestes dias.</p>
         )}
       </section>
+
+      <AssinarCalendario />
     </div>
   );
 }

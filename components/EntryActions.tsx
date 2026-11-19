@@ -121,30 +121,3 @@ export function EntryActions({ categoria, slug, titulo }: Props) {
     </div>
   );
 }
-
-/** Compartilhar no fim do artigo. `url` vem do servidor: o link já sai pronto no HTML. */
-export function EntryShare({ titulo, url }: { titulo: string; url: string }) {
-  const { share, shareMessage } = useShare(titulo);
-
-  return (
-    <div className="mt-8 flex flex-wrap items-center gap-3" aria-label="Compartilhar esta entrada">
-      <button type="button" onClick={share} className="btn btn-secondary">
-        Compartilhar
-      </button>
-      <a
-        href={whatsappShareUrl(titulo, url)}
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={() => trackEvent("entry_shared", { method: "whatsapp" })}
-        className="btn btn-secondary"
-      >
-        Compartilhar no WhatsApp
-      </a>
-      {shareMessage ? (
-        <span className="text-meta text-ink-muted" role="status" aria-live="polite">
-          {shareMessage}
-        </span>
-      ) : null}
-    </div>
-  );
-}

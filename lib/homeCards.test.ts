@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 
 import { readingMinutes, roundRobin, whatsappShareUrl } from "@/lib/entryDisplay";
-import { liturgicalSeason } from "@/lib/liturgia";
 
 describe("roundRobin", () => {
   it("deve intercalar os grupos, mesmo de tamanhos diferentes", () => {
@@ -32,19 +31,5 @@ describe("whatsappShareUrl", () => {
     expect(whatsappShareUrl("São José", "https://x.com/a")).toBe(
       "https://wa.me/?text=S%C3%A3o%20Jos%C3%A9%20https%3A%2F%2Fx.com%2Fa",
     );
-  });
-});
-
-describe("liturgicalSeason", () => {
-  it("deve reconhecer o tempo escrito na celebração", () => {
-    expect(liturgicalSeason("6ª feira da 30ª Semana do Tempo Comum")).toBe("Tempo Comum");
-    expect(liturgicalSeason("1º Domingo do Advento")).toBe("Advento");
-    expect(liturgicalSeason("3ª feira da 2ª Semana da Quaresma")).toBe("Quaresma");
-    expect(liturgicalSeason("Sábado da 4ª Semana da Páscoa")).toBe("Tempo Pascal");
-  });
-
-  it("não deve adivinhar quando o texto não diz", () => {
-    expect(liturgicalSeason("Solenidade de Todos os Santos")).toBeNull();
-    expect(liturgicalSeason(null)).toBeNull();
   });
 });

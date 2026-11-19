@@ -10,7 +10,7 @@ import { OrnamentalDivider } from "@/components/OrnamentalDivider";
 import { ReadingSizeControl } from "@/components/ReadingSizeControl";
 import { ApiError } from "@/lib/api";
 import { categoryPath, entryPath } from "@/lib/categories";
-import { paragraphs, imagePosition } from "@/lib/entryDisplay";
+import { paragraphs } from "@/lib/entryDisplay";
 import { HREFLANG, languageAlternates, formatEntryDate, OG_LOCALE, dictionaryFor, isLocale, localePath, type Locale } from "@/lib/i18n";
 import { articleJsonLd, safeJsonLd } from "@/lib/jsonLd";
 import { neighborsOf } from "@/lib/neighbors";
@@ -25,6 +25,7 @@ import {
   fetchTranslationLangs,
 } from "@/lib/services/acervoService";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { shareImageUrl } from "@/lib/wikimedia";
 
 type Params = { lang: string; categoria: string; slug: string };
 
@@ -91,7 +92,10 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
         description: entry.resumo,
         url: ownPath,
         locale: OG_LOCALE[lang],
-        images: entry.imagem ? [{ url: entry.imagem }] : undefined,
+        // Miniatura leve: o original da Wikimedia chega a MB e o WhatsApp não mostra.
+        images: entry.imagem
+          ? [{ url: shareImageUrl(entry.imagem, SITE_URL), alt: entry.titulo }]
+          : undefined,
       },
     };
   } catch (error: unknown) {
@@ -217,15 +221,14 @@ export default async function LocaleEntryPage({ params }: { params: Params }) {
             <figure className="mt-8">
               {/* Altura fixa + `fill`: as imagens vêm da Wikimedia Commons com
                   proporções bem diferentes entre si, e a faixa constante evita
-                  layout shift. */}
-              <div className="relative h-72 w-full max-w-measure overflow-hidden border border-border sm:h-96">
+                  layout shift. Imagem inteira (`contain`), como na página em português. */}
+              <div className="relative h-72 w-full max-w-measure overflow-hidden border border-border bg-canvas sm:h-96">
                 <Image
                   src={entry.imagem}
                   alt={entry.titulo}
                   fill
                   sizes="(min-width: 1024px) 68ch, 100vw"
-                  className="object-cover"
-                  style={{ objectPosition: imagePosition(entry) }}
+                  className="object-contain"
                   priority
                 />
               </div>

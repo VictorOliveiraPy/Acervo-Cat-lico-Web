@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 
 import { LESSONS, lessonBySlug } from "@/lib/academia";
 import { isCorrectAnswer } from "@/lib/academiaProgress";
+import { conquistas, resumoDoProgresso } from "@/lib/conquistas";
 import { ApiError } from "@/lib/api";
 import { currentUser } from "@/lib/auth";
 import { isPatronId } from "@/lib/padroeiros";
@@ -26,6 +27,8 @@ import {
   deleteFavorite,
   deleteNote,
   deleteProfile,
+  listFavorites,
+  listNotes,
   setPatron,
   syncProfile,
   updateProfile,
@@ -235,4 +238,41 @@ export async function deleteAccountAction(): Promise<void> {
   if (!user) return;
   await deleteProfile(user.subject);
   revalidatePath("/perfil");
+}
+
+export type HomeProgressResult =
+  | { status: "anonymous" }
+  | { status: "sem-padroeiro"; nome: string }
+  | { status: "ok"; titulo: string; detalhe: string }
+  | { status: "error" };
+
+/**
+ * A faixa de progresso da home, para quem está logado. A home é igual para todos (e
+ * cacheada); este pedaço vem do navegador depois, só com os dados da pessoa.
+ */
+export async function homeProgressAction(): Promise<HomeProgressResult> {
+  const user = await currentUser();
+  if (!user) return { status: "anonymous" };
+
+  try {
+    const profile = await syncProfile(user.subject, user.name);
+    if (profile.padroeiro_id === null) return { status: "sem-padroeiro", nome: profile.nome };
+    const [favoritos, anotacoes] = await Promise.all([
+      listFavorites(user.subject),
+      listNotes(user.subject),
+    ]);
+    const known = new Set(LESSONS.map(({ slug }) => slug));
+    const lista = conquistas({
+      recorde: profile.sequencia.recorde,
+      nivel: profile.nivel.numero,
+      licoes: profile.licoes.filter((slug) => known.has(slug)).length,
+      licoesTotal: LESSONS.length,
+      favoritos: favoritos.length,
+      anotacoes: anotacoes.length,
+    });
+    return { status: "ok", ...resumoDoProgresso(profile.nome, profile.sequencia.atual, lista) };
+  } catch (error: unknown) {
+    if (error instanceof ApiError) return { status: "error" };
+    throw error;
+  }
 }

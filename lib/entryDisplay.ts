@@ -710,3 +710,14 @@ export function roundRobin<T>(groups: readonly (readonly T[])[]): T[] {
 export function whatsappShareUrl(title: string, url: string): string {
   return `https://wa.me/?text=${encodeURIComponent(`${title} ${url}`)}`;
 }
+
+/**
+ * Os `n` primeiros itens, preferindo os que têm imagem (na ordem em que vieram) e
+ * completando com os sem imagem só quando faltam. Para vitrines: um cartão só com
+ * o ícone no meio de fotos parece quebrado.
+ */
+export function comImagemPrimeiro<T extends { imagem?: string | null }>(itens: readonly T[], n: number): T[] {
+  const comImagem = itens.filter((item) => item.imagem);
+  const semImagem = itens.filter((item) => !item.imagem);
+  return [...comImagem, ...semImagem].slice(0, n);
+}

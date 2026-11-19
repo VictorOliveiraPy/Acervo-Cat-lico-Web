@@ -9,6 +9,7 @@ import {
   formatTextRange,
   formatYearRange,
   paragraphs,
+  comImagemPrimeiro,
 } from "@/lib/entryDisplay";
 import type { Entry } from "@/lib/schemas";
 
@@ -186,5 +187,23 @@ describe("formatEntryCount", () => {
   it("should use the singular for a single entry", () => {
     expect(formatEntryCount(1)).toBe("1 entrada");
     expect(formatEntryCount(3)).toBe("3 entradas");
+  });
+});
+
+describe("comImagemPrimeiro", () => {
+  const e = (slug: string, imagem: string | null) => ({ slug, imagem });
+
+  it("prefere os que têm imagem, mantendo a ordem", () => {
+    const itens = [e("a", null), e("b", "x.jpg"), e("c", null), e("d", "y.jpg"), e("f", "z.jpg")];
+    expect(comImagemPrimeiro(itens, 2).map((i) => i.slug)).toEqual(["b", "d"]);
+  });
+
+  it("completa com os sem imagem quando faltam imagens", () => {
+    const itens = [e("a", null), e("b", "x.jpg"), e("c", null)];
+    expect(comImagemPrimeiro(itens, 3).map((i) => i.slug)).toEqual(["b", "a", "c"]);
+  });
+
+  it("nunca devolve mais que o pedido", () => {
+    expect(comImagemPrimeiro([e("a", "x"), e("b", "y")], 1)).toHaveLength(1);
   });
 });

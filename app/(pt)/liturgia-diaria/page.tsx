@@ -3,9 +3,11 @@ import type { Metadata } from "next";
 import { Breadcrumbs, PageHeader, StatusMessage } from "@/components/Editorial";
 import { LiturgiaView } from "@/components/LiturgiaView";
 import { ApiError } from "@/lib/api";
+import { articleJsonLd, safeJsonLd } from "@/lib/jsonLd";
 import { formatLongDate, todayInBrazil } from "@/lib/liturgia";
 import type { LiturgiaDiaria } from "@/lib/liturgiaSchemas";
 import { fetchLiturgiaDiaria } from "@/lib/services/liturgiaService";
+import { SITE_URL } from "@/lib/site";
 
 // O dia muda à meia-noite: a página revalida a cada 5 minutos, e cada um dos dias
 // vem pronto do banco da API, sem depender da fonte externa nesta hora.
@@ -60,5 +62,33 @@ export default async function LiturgiaDiariaPage() {
     );
   }
 
-  return <LiturgiaView title="Liturgia Diária" liturgia={liturgia} today={todayInBrazil()} />;
+  const url = `${SITE_URL}/liturgia-diaria`;
+  // Dados estruturados: a busca "liturgia diária" é das maiores do país, e o Google
+  // entende melhor a página (e a data dela) com `Article` e o caminho de navegação.
+  const jsonLd = [
+    articleJsonLd({
+      url,
+      titulo: `Liturgia Diária, ${formatLongDate(liturgia.data)}`,
+      resumo: `Evangelho do dia: ${liturgia.evangelho.referencia}. Primeira leitura: ${liturgia.primeira_leitura.referencia}.`,
+      imagem: null,
+      inLanguage: "pt-BR",
+      publicado_em: liturgia.data,
+      atualizado_em: liturgia.data,
+    }),
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Acervo", item: SITE_URL },
+        { "@type": "ListItem", position: 2, name: "Liturgia Diária", item: url },
+      ],
+    },
+  ];
+
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }} />
+      <LiturgiaView title="Liturgia Diária" liturgia={liturgia} today={todayInBrazil()} />
+    </>
+  );
 }

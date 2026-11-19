@@ -36,3 +36,19 @@ export function resolveCardImageSrc(imagem: string, origin: string): string {
   const absolute = imagem.startsWith("/") ? `${origin}${imagem}` : imagem;
   return wikimediaThumbUrl(absolute);
 }
+
+/**
+ * Imagem para a prévia de link (WhatsApp, redes). O original da Wikimedia chega a
+ * vários MB e o WhatsApp desiste de mostrar; a miniatura de 500px (uma das larguras
+ * que a Wikimedia gera de fábrica) fica em ~130 KB. Formatos sem miniatura simples
+ * (tif, pdf) seguem com o original.
+ */
+export function shareImageUrl(imagem: string, siteUrl: string): string {
+  if (imagem.startsWith("/")) return `${siteUrl}${imagem}`;
+  const match = imagem.match(/^(https:\/\/upload\.wikimedia\.org\/wikipedia\/commons)\/(?!thumb\/)(.+\/([^/]+))$/);
+  const [, base, path, file] = match ?? [];
+  if (!base || !path || !file) return imagem;
+  if (/\.svg$/i.test(file)) return `${base}/thumb/${path}/500px-${file}.png`;
+  if (!/\.(jpe?g|png|gif|webp)$/i.test(file)) return imagem;
+  return `${base}/thumb/${path}/500px-${file}`;
+}

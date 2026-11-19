@@ -12,17 +12,17 @@ import {
   TagList,
 } from "@/components/Editorial";
 import { EntryList } from "@/components/EntryList";
-import { EntryActions, EntryShare } from "@/components/EntryActions";
+import { EntryActions } from "@/components/EntryActions";
 import { EntryNeighbors } from "@/components/EntryNeighbors";
 import { GuardarTexto } from "@/components/GuardarTexto";
+import { OracaoFinal } from "@/components/OracaoFinal";
 import { EntrySections, EntrySectionsToc } from "@/components/EntrySections";
 import { OrnamentalDivider } from "@/components/OrnamentalDivider";
 import { ReadingSizeControl } from "@/components/ReadingSizeControl";
-import { ThemeControl } from "@/components/ThemeControl";
 import { lessonForEntry } from "@/lib/academia";
 import { ApiError } from "@/lib/api";
 import { CATEGORY_LABELS, categoryPath, entryPath } from "@/lib/categories";
-import { entryMetaFields, entryOrdinal, imagePosition, paragraphs } from "@/lib/entryDisplay";
+import { entryMetaFields, entryOrdinal, paragraphs } from "@/lib/entryDisplay";
 import { entrySectionLinks } from "@/lib/entrySections";
 import { articleJsonLd, safeJsonLd } from "@/lib/jsonLd";
 import { HREFLANG, formatEntryDate, languageAlternates } from "@/lib/i18n";
@@ -38,6 +38,7 @@ import { isCategorySlug, type CategorySlug, type Entry } from "@/lib/schemas";im
   type CategoryIndexItem,
 } from "@/lib/services/acervoService";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { shareImageUrl } from "@/lib/wikimedia";
 
 /** Quantas outras entradas da mesma categoria aparecem em "Mais de …". */
 const RELATED_COUNT = 4;
@@ -161,7 +162,10 @@ export async function generateMetadata({
         title: entry.titulo,
         description: entry.resumo,
         url: path,
-        images: entry.imagem ? [{ url: entry.imagem }] : undefined,
+        // Miniatura leve: o original da Wikimedia chega a MB e o WhatsApp não mostra.
+        images: entry.imagem
+          ? [{ url: shareImageUrl(entry.imagem, SITE_URL), alt: entry.titulo }]
+          : undefined,
       },
     };
   } catch (error: unknown) {
@@ -297,15 +301,15 @@ export default async function EntryPage({ params }: { params: Params }) {
             <figure className="mt-8">
               {/* Altura fixa + `fill`: as imagens vêm da Wikimedia Commons com
                   proporções bem diferentes entre si, e a faixa constante evita
-                  layout shift. */}
-              <div className="relative h-72 w-full max-w-measure overflow-hidden border border-border sm:h-96">
+                  layout shift. `object-contain`, não `cover`: aqui a imagem é o
+                  assunto, e recortar uma pintura vertical cortava a cabeça do santo. */}
+              <div className="relative h-72 w-full max-w-measure overflow-hidden border border-border bg-canvas sm:h-96">
                 <Image
                   src={entry.imagem}
                   alt={entry.titulo}
                   fill
                   sizes="(min-width: 1024px) 68ch, 100vw"
-                  className="object-cover"
-                  style={{ objectPosition: imagePosition(entry) }}
+                  className="object-contain"
                   priority
                 />
               </div>
@@ -325,11 +329,8 @@ export default async function EntryPage({ params }: { params: Params }) {
 
           <EntrySectionsToc entry={entry} />
 
+          {/* O tema fica só no cabeçalho; aqui, o que é próprio da leitura. */}
           <div id="leitura" className="mt-12 flex flex-wrap items-center justify-end gap-4">
-            <div className="flex items-center gap-2">
-              <p className="kicker">Tema</p>
-              <ThemeControl />
-            </div>
             <div className="flex items-center gap-2">
               <p className="kicker">Tamanho do texto</p>
               <ReadingSizeControl />
@@ -416,7 +417,8 @@ export default async function EntryPage({ params }: { params: Params }) {
             </div>
           ) : null}
 
-          <EntryShare titulo={entry.titulo} url={`${SITE_URL}${path}`} />
+          <OracaoFinal entry={entry} />
+
         </div>
 
         <aside className="hidden lg:block">

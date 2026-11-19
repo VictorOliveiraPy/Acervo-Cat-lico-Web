@@ -132,3 +132,21 @@ export function novasConquistas(antes: readonly Conquista[], depois: readonly Co
   const tinha = new Set(antes.filter((c) => c.ganha).map((c) => c.id));
   return depois.filter((c) => c.ganha && !tinha.has(c.id));
 }
+
+/** A faixa da home para quem está logado: a sequência e a próxima conquista. */
+export function resumoDoProgresso(
+  nome: string,
+  diasSeguidos: number,
+  lista: readonly Conquista[],
+): { titulo: string; detalhe: string } {
+  const primeiroNome = nome.trim().split(/\s+/)[0] ?? nome;
+  const titulo =
+    diasSeguidos > 0
+      ? `${diasSeguidos} ${diasSeguidos === 1 ? "dia seguido" : "dias seguidos"}, ${primeiroNome}`
+      : `Comece hoje uma nova sequência, ${primeiroNome}`;
+  const proxima = proximaConquista(lista);
+  const detalhe = proxima
+    ? `Próxima conquista: ${proxima.nome}, ${quantoFalta(proxima)}`
+    : "Todas as conquistas ganhas. Que graça!";
+  return { titulo, detalhe };
+}

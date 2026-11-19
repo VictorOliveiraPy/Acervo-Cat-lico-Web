@@ -6,6 +6,7 @@ import {
   novasConquistas,
   proximaConquista,
   quantoFalta,
+  resumoDoProgresso,
   type ProgressoDoPerfil,
 } from "@/lib/conquistas";
 
@@ -87,5 +88,33 @@ describe("novas conquistas", () => {
     const antes = conquistas({ ...ZERO, recorde: 7 });
     const depois = conquistas({ ...ZERO, recorde: 7, licoes: 1 });
     expect(novasConquistas(antes, depois).map((c) => c.id)).toEqual(["primeiros-passos"]);
+  });
+});
+
+describe("resumo do progresso na home", () => {
+  const lista = conquistas({ ...ZERO, recorde: 5, nivel: 8 });
+
+  it("celebra a sequência e aponta a próxima conquista", () => {
+    expect(resumoDoProgresso("Victor Oliveira", 9, lista)).toEqual({
+      titulo: "9 dias seguidos, Victor",
+      detalhe: "Próxima conquista: Servo Dedicado, faltam 2 níveis",
+    });
+  });
+
+  it("usa o primeiro nome mesmo com espaços sobrando", () => {
+    expect(resumoDoProgresso("  Ana   Maria ", 2, lista).titulo).toBe("2 dias seguidos, Ana");
+  });
+
+  it("fala no singular com um dia", () => {
+    expect(resumoDoProgresso("Ana", 1, lista).titulo).toBe("1 dia seguido, Ana");
+  });
+
+  it("sem sequência, convida a começar hoje", () => {
+    expect(resumoDoProgresso("Ana", 0, lista).titulo).toBe("Comece hoje uma nova sequência, Ana");
+  });
+
+  it("com tudo ganho, diz isso", () => {
+    const tudo = conquistas({ recorde: 365, nivel: 100, licoes: 12, licoesTotal: 12, favoritos: 25, anotacoes: 10 });
+    expect(resumoDoProgresso("Ana", 3, tudo).detalhe).toBe("Todas as conquistas ganhas. Que graça!");
   });
 });

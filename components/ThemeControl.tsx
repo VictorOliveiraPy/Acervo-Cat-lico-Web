@@ -2,26 +2,29 @@
 
 import { useEffect, useState } from "react";
 
-import { THEMES, applyTheme, readStoredTheme, type Theme } from "@/lib/theme";
+import { applyTheme, nextTheme, readStoredTheme, themeButtonLabel, type Theme } from "@/lib/theme";
 
-const LABEL: Record<Theme, string> = {
-  system: "Auto",
-  light: "☀",
-  dark: "☾",
-};
-
-const DESCRIPTION: Record<Theme, string> = {
-  system: "tema automático (segue o sistema)",
-  light: "tema claro",
-  dark: "tema escuro",
+/** Meio círculo (segue o sistema), sol (claro) e lua (escuro). */
+const ICON: Record<Theme, React.ReactNode> = {
+  system: (
+    <>
+      <circle cx="12" cy="12" r="8" />
+      <path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor" />
+    </>
+  ),
+  light: (
+    <>
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8" />
+    </>
+  ),
+  dark: <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" />,
 };
 
 /**
- * Alterna o tema da interface entre claro, escuro e automático (SO).
- * O estado persiste em localStorage e é aplicado via `data-theme` na <html>.
- *
- * Colocado junto ao ReadingSizeControl nos verbetes, disponível também no
- * SiteHeader para acesso em qualquer página.
+ * Tema da interface num botão só, que alterna automático → claro → escuro. Cabe no
+ * cabeçalho sem espremer a busca. O estado persiste em localStorage e é aplicado via
+ * `data-theme` na <html> (ver lib/theme.ts).
  */
 export function ThemeControl() {
   const [theme, setTheme] = useState<Theme>("system");
@@ -30,29 +33,34 @@ export function ThemeControl() {
     setTheme(readStoredTheme());
   }, []);
 
-  function choose(next: Theme) {
+  function cycle() {
+    const next = nextTheme(theme);
     setTheme(next);
     applyTheme(next);
   }
 
+  const label = themeButtonLabel(theme);
   return (
-    <div className="flex items-center gap-1" role="group" aria-label="Tema da interface">
-      {THEMES.map((option) => (
-        <button
-          key={option}
-          type="button"
-          onClick={() => choose(option)}
-          aria-pressed={theme === option}
-          aria-label={`Tema: ${DESCRIPTION[option]}`}
-          className={`rounded-edge border px-2.5 py-1.5 text-label transition-colors ${
-            theme === option
-              ? "border-accent bg-accent text-surface"
-              : "border-border text-ink-muted hover:border-accent hover:text-accent"
-          }`}
-        >
-          {LABEL[option]}
-        </button>
-      ))}
-    </div>
+    <button
+      type="button"
+      onClick={cycle}
+      aria-label={label}
+      title={label}
+      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border text-ink transition-colors hover:border-accent hover:text-accent"
+    >
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        {ICON[theme]}
+      </svg>
+    </button>
   );
 }
