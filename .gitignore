@@ -15,3 +15,10 @@ coverage/
 
 # Local Netlify folder
 .netlify
+
+# Playwright (relatórios e rastros de falha)
+/test-results/
+/playwright-report/
+# Stryker (testes mutantes)
+/reports/
+/.stryker-tmp/

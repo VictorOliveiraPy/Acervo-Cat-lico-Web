@@ -49,6 +49,17 @@ describe("próxima conquista", () => {
     expect(proximaConquista(lista)?.id).toBe("florilegio");
   });
 
+  it("compara a proporção, não o tamanho do número", () => {
+    // 6 de 7 dias (86%) ganha de 20 de 25 favoritos (80%), mesmo com números menores.
+    expect(proximaConquista(conquistas({ ...ZERO, recorde: 6, favoritos: 20 }))?.id).toBe("semana-santa");
+  });
+
+  it("no empate fica a primeira da lista", () => {
+    const noZero = conquistas(ZERO).filter((c) => c.id === "semana-santa" || c.id === "primeiros-passos");
+    expect(proximaConquista(noZero)?.id).toBe("semana-santa");
+    expect(proximaConquista([...noZero].reverse())?.id).toBe("primeiros-passos");
+  });
+
   it("não existe quando todas foram ganhas", () => {
     const tudo = { recorde: 365, nivel: 100, licoes: 12, licoesTotal: 12, favoritos: 25, anotacoes: 10 };
     expect(proximaConquista(conquistas(tudo))).toBeNull();
@@ -59,6 +70,15 @@ describe("próxima conquista", () => {
     expect(quantoFalta(lista.find((c) => c.id === "semana-santa")!)).toBe("falta 1 dia");
     expect(quantoFalta(lista.find((c) => c.id === "diario-espiritual")!)).toBe("faltam 3 anotações");
     expect(quantoFalta(lista.find((c) => c.id === "primeiro-tesouro")!)).toBe("falta 1 texto");
+  });
+
+  it("fala em níveis e em lições quando é disso que se trata", () => {
+    const lista = conquistas({ ...ZERO, nivel: 8, licoes: 10 });
+    expect(quantoFalta(lista.find((c) => c.id === "servo-dedicado")!)).toBe("faltam 2 níveis");
+    expect(quantoFalta(lista.find((c) => c.id === "doutor-da-academia")!)).toBe("faltam 2 lições");
+    const quase = conquistas({ ...ZERO, nivel: 9, licoes: 11 });
+    expect(quantoFalta(quase.find((c) => c.id === "servo-dedicado")!)).toBe("falta 1 nível");
+    expect(quantoFalta(quase.find((c) => c.id === "doutor-da-academia")!)).toBe("falta 1 lição");
   });
 });
 
