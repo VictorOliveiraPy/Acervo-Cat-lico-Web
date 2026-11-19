@@ -12,3 +12,33 @@ api.compendio-catolico.com {
 	encode zstd gzip
 	reverse_proxy acervo-catolico-api:8000
 }
+
+# Leão XIV no Brasil: site estático (pasta out/ do repositório leao-xiv-no-brasil), copiado
+# para /opt/leaonobrasil/site na VPS. DNS na HostGator; o certificado sai quando o A apontar aqui.
+leaonobrasil.com.br {
+	root * /srv/leaonobrasil
+	encode zstd gzip
+	try_files {path} {path}.html
+	file_server
+
+	# Os mesmos cabeçalhos do netlify.toml: só o próprio site e o Supabase, sem frame.
+	header {
+		Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.supabase.co; font-src 'self'; connect-src 'self' https://*.supabase.co wss://*.supabase.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests"
+		X-Frame-Options DENY
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+	}
+	# O export gera a imagem de compartilhamento sem extensão; sem isto o WhatsApp pode não mostrar a prévia.
+	header /opengraph-image Content-Type image/png
+	header /_next/static/* Cache-Control "public, max-age=31536000, immutable"
+
+	handle_errors 404 {
+		rewrite * /404.html
+		file_server
+	}
+}
+
+www.leaonobrasil.com.br {
+	redir https://leaonobrasil.com.br{uri} permanent
+}

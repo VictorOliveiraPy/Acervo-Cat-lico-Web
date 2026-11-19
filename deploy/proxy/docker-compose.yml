@@ -11,6 +11,8 @@ services:
       - "443:443/udp"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      # Site estático do Leão XIV no Brasil (enviado por rsync para /opt/leaonobrasil/site).
+      - /opt/leaonobrasil/site:/srv/leaonobrasil:ro
       - caddy_dados:/data
       - caddy_config:/config
     logging:
