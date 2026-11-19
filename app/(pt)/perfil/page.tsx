@@ -8,7 +8,6 @@ import { ProfileForm } from "@/components/ProfileForm";
 import { LESSONS } from "@/lib/academia";
 import { currentUser } from "@/lib/auth";
 import { LOGIN_ENABLED } from "@/lib/auth-public";
-import { CATEGORY_NAV, categoryPath } from "@/lib/categories";
 import { listFavorites, listNotes, syncProfile } from "@/lib/services/perfilService";
 
 export const metadata: Metadata = {
@@ -35,9 +34,7 @@ export default async function PerfilPage() {
     listFavorites(user.subject),
     listNotes(user.subject),
   ]);
-  const categories = CATEGORY_NAV.map(({ slug, label }) => ({ slug, label: label.nav }));
   const completed = LESSONS.filter(({ slug }) => profile.licoes.includes(slug));
-  const preferred = categories.filter(({ slug }) => profile.preferencias.includes(slug));
 
   return (
     <div className="mx-auto max-w-shell px-4 py-10 sm:px-6">
@@ -55,34 +52,15 @@ export default async function PerfilPage() {
         licoes={LESSONS.map(({ slug, title }) => ({ slug, title }))}
       />
 
-      {preferred.length > 0 ? (
-        <section aria-labelledby="meus-temas" className="mt-12 border-t border-border pt-8">
-          <h2 id="meus-temas" className="font-display text-title-md text-ink">
-            Meus temas
-          </h2>
-          <ul className="mt-3 flex flex-wrap gap-2">
-            {preferred.map(({ slug, label }) => (
-              <li key={slug}>
-                <Link
-                  href={categoryPath(slug)}
-                  className="inline-flex rounded-edge border border-border bg-surface px-2.5 py-1 text-meta text-ink-muted transition-colors hover:border-accent hover:text-accent"
-                >
-                  {label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
-
-      <section aria-labelledby="minhas-licoes" className="mt-8">
+      <section aria-labelledby="minhas-licoes" className="mt-12 border-t border-border pt-8">
         <h2 id="minhas-licoes" className="font-display text-title-md text-ink">
           Lições concluídas
         </h2>
         {completed.length > 0 ? (
-          <ul className="mt-3 flex flex-col gap-1">
+          <ul className="mt-3 grid gap-x-6 gap-y-1.5 sm:grid-cols-2">
             {completed.map(({ slug, title }) => (
-              <li key={slug}>
+              <li key={slug} className="flex items-baseline gap-2">
+                <span aria-hidden="true" className="text-gold">✓</span>
                 <Link href={`/academia/${slug}`} className="text-meta text-accent underline-offset-4 hover:underline">
                   {title}
                 </Link>
@@ -101,23 +79,17 @@ export default async function PerfilPage() {
         </p>
       </section>
 
-      <section aria-labelledby="preferencias" className="mt-8">
-        <h2 id="preferencias" className="font-display text-title-md text-ink">
-          Preferências
+      <section aria-labelledby="conta" className="mt-12 border-t border-border pt-8">
+        <h2 id="conta" className="font-display text-title-md text-ink">
+          Conta
         </h2>
         <div className="mt-4">
-          <ProfileForm
-            nome={profile.nome}
-            preferencias={profile.preferencias}
-            noRanking={profile.no_ranking}
-            categories={categories}
-          />
+          <ProfileForm nome={profile.nome} noRanking={profile.no_ranking} />
         </div>
       </section>
 
       <p className="mt-8 max-w-measure text-meta text-ink-muted">
-        Guardamos só o identificador do seu login, o nome de exibição, o padroeiro, os temas
-        escolhidos, as lições concluídas, as práticas marcadas em cada dia, os textos favoritos e as anotações. O exame de consciência
+        Guardamos só o identificador do seu login, o nome de exibição, o padroeiro, as lições concluídas, as práticas marcadas em cada dia, os textos favoritos e as anotações. O exame de consciência
         nunca é salvo nem enviado. Não guardamos seu e-mail nem sua foto. Ao apagar a conta, tudo isso
         é apagado junto.
       </p>

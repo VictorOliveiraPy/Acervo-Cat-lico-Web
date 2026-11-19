@@ -18,7 +18,6 @@ import {
   type Note,
   type NoteInput,
 } from "@/lib/perfil";
-import { CATEGORY_SLUGS } from "@/lib/schemas";
 import {
   addFavorite,
   addNote,
@@ -45,13 +44,12 @@ export async function saveProfileAction(
   if (nome.length < 2 || nome.length > 40) {
     return { status: "error", message: "O nome de exibição precisa ter de 2 a 40 caracteres." };
   }
-  const known = new Set<string>(CATEGORY_SLUGS);
-  const preferencias = formData.getAll("preferencias").map(String).filter((slug) => known.has(slug));
 
   try {
     await updateProfile(user.subject, {
       nome,
-      preferencias,
+      // Os temas de interesse saíram do perfil; salvar limpa os que estavam guardados.
+      preferencias: [],
       no_ranking: formData.get("no_ranking") === "on",
     });
   } catch (error: unknown) {

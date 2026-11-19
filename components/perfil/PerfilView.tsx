@@ -3,12 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 
 import { setPatronAction } from "@/app/(pt)/perfil/actions";
+import { AchievementsPanel } from "@/components/perfil/AchievementsPanel";
 import { ActivitiesPanel } from "@/components/perfil/ActivitiesPanel";
 import { ConfessionPanel } from "@/components/perfil/ConfessionPanel";
 import { FavoritesPanel } from "@/components/perfil/FavoritesPanel";
 import { NotesPanel } from "@/components/perfil/NotesPanel";
 import { PatronPicker } from "@/components/perfil/PatronPicker";
 import { SaintStage } from "@/components/perfil/SaintStage";
+import { conquistas, novasConquistas } from "@/lib/conquistas";
 import { patronById, type PatronId } from "@/lib/padroeiros";
 import {
   PROFILE_TABS,
@@ -80,6 +82,15 @@ export function PerfilView({
   const patron = patronById(patronId);
   const xpProgress = levelProgress(nivel);
   const progress = licoesTotal > 0 ? Math.round((licoesConcluidas / licoesTotal) * 100) : 0;
+  const progresso = {
+    recorde: sequencia.recorde,
+    nivel: nivel.numero,
+    licoes: licoesConcluidas,
+    licoesTotal,
+    favoritos: favorites.length,
+    anotacoes: notes.length,
+  };
+  const listaDeConquistas = conquistas(progresso);
 
   // O hash só existe no navegador: o servidor sempre desenha a primeira aba.
   useEffect(() => {
@@ -205,10 +216,20 @@ export function PerfilView({
           setPontos(result.pontos);
           setAtividades(result.atividades);
           setSequencia(result.sequencia);
-          setLevelUp(levelUpMessage(nivel, result.nivel) ?? "");
+          const novas = novasConquistas(
+            listaDeConquistas,
+            conquistas({ ...progresso, recorde: result.sequencia.recorde, nivel: result.nivel.numero }),
+          );
+          const avisos = [
+            levelUpMessage(nivel, result.nivel),
+            ...novas.map((c) => `Nova conquista: ${c.nome}!`),
+          ].filter(Boolean);
+          setLevelUp(avisos.join(" "));
           setNivel(result.nivel);
         }}
       />
+
+      <AchievementsPanel lista={listaDeConquistas} />
 
       <div>
         <div
