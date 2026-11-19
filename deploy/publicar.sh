@@ -57,5 +57,10 @@ REMOTO
 
 # Avisa o Bing (IndexNow) das URLs do sitemap: o Google não tem aviso equivalente.
 if [[ "$ALVO" == tudo || "$ALVO" == web ]]; then
+  # O container novo leva alguns segundos para subir; antes disso o sitemap dá 502.
+  for _ in $(seq 1 30); do
+    curl -sf -o /dev/null https://compendio-catolico.com/sitemap.xml && break
+    sleep 4
+  done
   INDEXNOW=1 node "$WEB_DIR/scripts/submit-indexnow.mjs" || true
 fi
