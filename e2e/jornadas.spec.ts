@@ -52,3 +52,31 @@ test("o perfil pede login a quem não entrou", async ({ page }) => {
   await page.goto("/perfil");
   await expect(page).toHaveURL(/\/api\/auth\/signin/);
 });
+
+test("em inglês, da home até um santo", async ({ page }) => {
+  await page.goto("/");
+  await page.locator('a[hreflang="en"]').first().click();
+  await expect(page).toHaveURL(/\/en$/);
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+
+  await page.goto("/en/santos");
+  const primeiro = page.locator('main a[href^="/en/santos/"]').first();
+  await primeiro.click();
+  await expect(page).toHaveURL(/\/en\/santos\/[^/]+$/);
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+});
+
+test("todo idioma declarado no hreflang abre de verdade", async ({ page, request }) => {
+  // A tradução é parcial: declarar um idioma em que a página não existe manda o
+  // Google para um 404 e o par inteiro é descartado.
+  for (const caminho of ["/", "/santos", "/oracoes", "/santos/francisco-de-assis"]) {
+    await page.goto(caminho);
+    const alternativos = await page
+      .locator('link[rel="alternate"][hreflang]')
+      .evaluateAll((links) => links.map((link) => (link as HTMLLinkElement).href));
+    for (const href of alternativos) {
+      const resposta = await request.get(new URL(href).pathname);
+      expect(resposta.status(), `${caminho} declara ${href}`).toBe(200);
+    }
+  }
+});

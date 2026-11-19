@@ -155,7 +155,7 @@ export async function generateMetadata({
       alternates: {
         canonical: path,
         // hreflang recíproco: só declara idiomas em que a tradução existe.
-        languages: translations.length > 0 ? languageAlternates(path) : undefined,
+        languages: translations.length > 0 ? languageAlternates(path, translations) : undefined,
       },
       openGraph: {
         title: entry.titulo,

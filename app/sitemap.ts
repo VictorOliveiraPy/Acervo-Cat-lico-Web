@@ -6,6 +6,7 @@ import {
   ENABLED_LOCALES,
   languageAlternates,
   localePath,
+  translationLangsByPath,
   stripLocale,
   type Locale,
 } from "@/lib/i18n";
@@ -38,9 +39,9 @@ export const revalidate = 3600;
  * do Google só vale quando os dois lados se apontam. Falha da API num idioma
  * não derruba o sitemap inteiro: ele sai só com o que já foi lido.
  */
-function pair(path: string) {
+function pair(path: string, langs: readonly Locale[]) {
   const languages = Object.fromEntries(
-    Object.entries(languageAlternates(path)).map(([lang, href]) => [lang, `${SITE_URL}${href}`]),
+    Object.entries(languageAlternates(path, langs)).map(([lang, href]) => [lang, `${SITE_URL}${href}`]),
   );
   return { languages };
 }
@@ -71,14 +72,12 @@ async function localizedPages(lang: Locale): Promise<MetadataRoute.Sitemap> {
     return [
       {
         url: `${SITE_URL}${localePath(lang, "/")}`,
-        alternates: pair("/"),
         changeFrequency: "weekly",
         priority: 0.7,
       },
       ...perCategory.map(({ categoria, items }) => ({
         url: `${SITE_URL}${localePath(lang, categoryPath(categoria))}`,
         ...lastModifiedOf(items.map((item) => item.atualizado_em)),
-        alternates: pair(categoryPath(categoria)),
         changeFrequency: "weekly" as const,
         priority: 0.6,
       })),
@@ -86,7 +85,6 @@ async function localizedPages(lang: Locale): Promise<MetadataRoute.Sitemap> {
         items.map((item) => ({
           url: `${SITE_URL}${localePath(lang, entryPath(categoria, item.slug))}`,
           ...lastModifiedOf([item.atualizado_em]),
-          alternates: pair(entryPath(categoria, item.slug)),
           changeFrequency: "monthly" as const,
           priority: 0.5,
         })),
@@ -155,19 +153,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const translated = (await Promise.all(ENABLED_LOCALES.map(localizedPages))).flat();
 
-  // O par em português também declara o hreflang: o Google só confia quando os dois
-  // lados se apontam, e página sem tradução fica sem a declaração.
-  const translatedPaths = new Set(
-    ENABLED_LOCALES.flatMap((lang) =>
-      translated
-        .map(({ url }) => url.slice(SITE_URL.length))
-        .filter((path) => path === `/${lang}` || path.startsWith(`/${lang}/`))
-        .map((path) => stripLocale(path)),
-    ),
+  // Cada página declara o hreflang só nos idiomas em que existe (a tradução de cada
+  // idioma é parcial), dos dois lados do par: o Google só confia quando eles se
+  // apontam. Página sem tradução nenhuma fica sem a declaração.
+  const langsByPath = translationLangsByPath(
+    translated.map(({ url }) => url.slice(SITE_URL.length) || "/"),
   );
   const withAlternates = (page: MetadataRoute.Sitemap[number]) => {
-    const path = page.url.slice(SITE_URL.length) || "/";
-    return translatedPaths.has(path) ? { ...page, alternates: pair(path) } : page;
+    const path = stripLocale(page.url.slice(SITE_URL.length) || "/");
+    const langs = langsByPath.get(path);
+    return langs ? { ...page, alternates: pair(path, langs) } : page;
   };
 
   return [
@@ -176,6 +171,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...categoryPages.map(withAlternates),
     ...entryPages.map(withAlternates),
     ...(await themePages()),
-    ...translated,
+    ...translated.map(withAlternates),
   ];
 }

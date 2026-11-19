@@ -17,10 +17,10 @@ export type SiteLang = Locale | typeof DEFAULT_LOCALE;
 
 /**
  * Idiomas que já têm conteúdo na API (`SUPPORTED_LANGUAGES` do backend) e por
- * isso aparecem no seletor. `en` já roteia mas só entra aqui quando a API o
+ * isso aparecem no seletor. Idioma novo só entra aqui depois que a API o
  * aceitar — senão o seletor levaria a uma página 404.
  */
-export const ENABLED_LOCALES: readonly Locale[] = ["es"];
+export const ENABLED_LOCALES: readonly Locale[] = ["es", "en"];
 
 export function isLocale(value: string | undefined): value is Locale {
   return value !== undefined && (LOCALES as readonly string[]).includes(value);
@@ -46,15 +46,35 @@ export function stripLocale(pathname: string): string {
 }
 
 /**
- * `hreflang` recíproco de uma página com tradução: os dois idiomas e `x-default`
- * apontando para o português. Página sem tradução não deve chamar isto.
+ * `hreflang` recíproco de uma página com tradução: o português, os idiomas em que a
+ * página existe e `x-default` apontando para o português. Passe `langs` sempre que a
+ * tradução for parcial: declarar um idioma em que a página dá 404 faz o Google
+ * descartar o par inteiro. Página sem tradução nenhuma não deve chamar isto.
  */
-export function languageAlternates(ptPath: string): Record<string, string> {
+export function languageAlternates(
+  ptPath: string,
+  langs: readonly Locale[] = ENABLED_LOCALES,
+): Record<string, string> {
   return {
     "pt-BR": ptPath,
-    ...Object.fromEntries(ENABLED_LOCALES.map((lang) => [HREFLANG[lang], localePath(lang, ptPath)])),
+    ...Object.fromEntries(langs.map((lang) => [HREFLANG[lang], localePath(lang, ptPath)])),
     "x-default": ptPath,
   };
+}
+
+/**
+ * Em quais idiomas cada página existe, a partir das URLs traduzidas (`/en/santos`
+ * → `/santos`: `["en"]`). Caminhos em português são ignorados.
+ */
+export function translationLangsByPath(localizedPaths: readonly string[]): Map<string, Locale[]> {
+  const byPath = new Map<string, Locale[]>();
+  for (const path of localizedPaths) {
+    const lang = langFromPathname(path);
+    if (lang === DEFAULT_LOCALE) continue;
+    const ptPath = stripLocale(path);
+    byPath.set(ptPath, [...(byPath.get(ptPath) ?? []), lang]);
+  }
+  return byPath;
 }
 
 /** Data `AAAA-MM-DD` por extenso no idioma da página. */

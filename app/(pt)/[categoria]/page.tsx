@@ -24,7 +24,12 @@ import {
   type CategorySlug,
   type EntryPage,
 } from "@/lib/schemas";
-import { PAGE_SIZE, fetchCategories, fetchEntryPage } from "@/lib/services/acervoService";
+import {
+  PAGE_SIZE,
+  fetchCategories,
+  fetchCategoryTranslationLangs,
+  fetchEntryPage,
+} from "@/lib/services/acervoService";
 
 type Params = { categoria: string };
 type SearchParams = { [key: string]: string | string[] | undefined };
@@ -44,14 +49,10 @@ export function generateStaticParams(): Params[] {
 export const dynamicParams = false;
 
 /** A categoria tem par em espanhol? Sem API, não declara: hreflang errado é pior. */
-async function hasTranslation(categoria: CategorySlug): Promise<boolean> {
-  try {
-    const categories = await fetchCategories(undefined, "es");
-    return categories.some((info) => info.categoria === categoria);
-  } catch (error: unknown) {
-    if (error instanceof ApiError) return false;
-    throw error;
-  }
+/** `hreflang` só com os idiomas em que a categoria já existe; nenhum, nada. */
+async function alternatesFor(categoria: CategorySlug, path: string) {
+  const langs = await fetchCategoryTranslationLangs(categoria);
+  return langs.length > 0 ? languageAlternates(path, langs) : undefined;
 }
 
 export async function generateMetadata({
@@ -81,9 +82,7 @@ export async function generateMetadata({
     alternates: {
       canonical,
       languages:
-        pageOffset === 0 && (await hasTranslation(params.categoria))
-          ? languageAlternates(path)
-          : undefined,
+        pageOffset === 0 ? await alternatesFor(params.categoria, path) : undefined,
     },
     // `images` explícito: declarar `openGraph` aqui substitui por inteiro o
     // que a página raiz herdaria do `app/opengraph-image.tsx` (arquivo de

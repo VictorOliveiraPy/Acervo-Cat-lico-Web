@@ -22,6 +22,7 @@ import {
   fetchEntry,
   fetchEntryPage,
   type CategoryIndexItem,
+  fetchTranslationLangs,
 } from "@/lib/services/acervoService";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 
@@ -82,7 +83,8 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
       description: entry.resumo,
       alternates: {
         canonical: ownPath,
-        languages: languageAlternates(base),
+        // Só os idiomas em que esta entrada existe: a tradução de cada um é parcial.
+        languages: languageAlternates(base, await fetchTranslationLangs(params.categoria, params.slug)),
       },
       openGraph: {
         title: entry.titulo,

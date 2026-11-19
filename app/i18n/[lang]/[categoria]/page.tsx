@@ -9,7 +9,12 @@ import { categoryPath } from "@/lib/categories";
 import { languageAlternates, OG_LOCALE, dictionaryFor, isLocale, localePath, type Locale } from "@/lib/i18n";
 import { computePagination, parseOffset } from "@/lib/pagination";
 import { isCategorySlug, type CategoryInfo, type CategorySlug, type EntryPage } from "@/lib/schemas";
-import { PAGE_SIZE, fetchCategories, fetchEntryPage } from "@/lib/services/acervoService";
+import {
+  PAGE_SIZE,
+  fetchCategories,
+  fetchCategoryTranslationLangs,
+  fetchEntryPage,
+} from "@/lib/services/acervoService";
 
 type Params = { lang: string; categoria: string };
 type SearchParams = { [key: string]: string | string[] | undefined };
@@ -42,8 +47,12 @@ export async function generateMetadata({
       description: info.descricao,
       alternates: {
         canonical,
-        // O original em português sempre existe (a tradução nasce dele).
-        languages: pageOffset > 0 ? undefined : languageAlternates(base),
+        // O original em português sempre existe (a tradução nasce dele); dos outros
+        // idiomas, só os que já têm esta categoria.
+        languages:
+          pageOffset > 0
+            ? undefined
+            : languageAlternates(base, await fetchCategoryTranslationLangs(params.categoria)),
       },
       openGraph: {
         title: info.nome,

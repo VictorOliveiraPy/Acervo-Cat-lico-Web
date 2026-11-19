@@ -171,6 +171,25 @@ export function fetchHealth(): Promise<HealthStatus> {
 }
 
 /**
+ * Idiomas em que uma categoria já tem tradução publicada. Falha de API vira "sem
+ * tradução": o `hreflang` é um extra e não pode derrubar os metadados da página.
+ */
+export async function fetchCategoryTranslationLangs(categoria: CategorySlug): Promise<Locale[]> {
+  const found = await Promise.all(
+    ENABLED_LOCALES.map(async (lang) => {
+      try {
+        const categories = await fetchCategories(undefined, lang);
+        return categories.some((info) => info.categoria === categoria) ? lang : null;
+      } catch (error: unknown) {
+        if (error instanceof ApiError) return null;
+        throw error;
+      }
+    }),
+  );
+  return found.filter((lang): lang is Locale => lang !== null);
+}
+
+/**
  * Idiomas em que uma entrada em português já tem tradução publicada.
  *
  * Alimenta o `hreflang` recíproco da página em português: o Google só aceita o
