@@ -2,6 +2,8 @@
 # Os três se enxergam pela rede `deploy_default`; só o Caddy publica portas.
 services:
   web:
+    # Nome fixo: na VPS Micro a imagem chega pronta (deploy/publicar.sh) e sobe com --no-build.
+    image: compendio-web:latest
     build:
       context: ..
       dockerfile: Dockerfile
