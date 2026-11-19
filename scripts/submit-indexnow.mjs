@@ -44,7 +44,8 @@ async function main() {
   // Só no build de produção de verdade: `VERCEL_ENV` distingue produção de
   // preview (deploy de PR/branch), e sem `VERCEL` nenhum é build local —
   // nos dois casos as URLs de produção não têm por que ser renotificadas.
-  if (process.env.VERCEL_ENV !== "production") {
+  // Na VPS quem chama é o deploy/publicar.sh, com INDEXNOW=1.
+  if (process.env.VERCEL_ENV !== "production" && process.env.INDEXNOW !== "1") {
     console.log(
       `[indexnow] ambiente '${process.env.VERCEL_ENV ?? "local"}' — pulando notificação.`,
     );

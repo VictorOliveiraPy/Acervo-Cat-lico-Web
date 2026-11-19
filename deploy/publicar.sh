@@ -54,3 +54,8 @@ docker image prune -f >/dev/null
 docker ps --format 'table {{.Names}}\t{{.Status}}'
 free -m | sed -n 1,3p
 REMOTO
+
+# Avisa o Bing (IndexNow) das URLs do sitemap: o Google não tem aviso equivalente.
+if [[ "$ALVO" == tudo || "$ALVO" == web ]]; then
+  INDEXNOW=1 node "$WEB_DIR/scripts/submit-indexnow.mjs" || true
+fi
