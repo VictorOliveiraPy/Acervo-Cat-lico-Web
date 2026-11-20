@@ -3,7 +3,6 @@ import Link from "next/link";
 import { CATEGORY_LABELS, categoryPath } from "@/lib/categories";
 import { CATEGORY_GROUPS } from "@/lib/categoryGroups";
 import { ApiError } from "@/lib/api";
-import { HIMETRICA_SHARE_URL } from "@/lib/himetricaShareUrl";
 import { SeloCarlosAcutis } from "@/components/SeloCarlosAcutis";
 import { fetchHealth } from "@/lib/services/acervoService";
 import { INSTAGRAM_URL } from "@/lib/site";
@@ -117,16 +116,6 @@ export async function SiteFooter() {
           >
             Instagram →
           </a>
-          {HIMETRICA_SHARE_URL ? (
-            <a
-              href={HIMETRICA_SHARE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline-offset-4 hover:text-accent hover:underline"
-            >
-              Estatísticas do site →
-            </a>
-          ) : null}
         </div>
 
         {/* Lema em latim clássico (V no lugar de U, grafia de inscrição

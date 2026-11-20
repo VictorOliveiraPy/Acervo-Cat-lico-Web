@@ -27,7 +27,6 @@ if [[ "$ALVO" == tudo || "$ALVO" == web ]]; then
   docker build --platform linux/amd64 -t compendio-web:latest \
     --build-arg API_URL="$(env_vps API_URL_PUBLICA)" \
     --build-arg AUTH_GOOGLE_ID="$(env_vps AUTH_GOOGLE_ID)" \
-    --build-arg NEXT_PUBLIC_HIMETRICA_API_KEY="$(env_vps NEXT_PUBLIC_HIMETRICA_API_KEY)" \
     "$WEB_DIR"
   imagens+=(compendio-web:latest)
 fi

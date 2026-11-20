@@ -113,7 +113,7 @@ export function HomeHero({
               <footer className="mt-2 text-meta text-ink-muted">{liturgia.evangelho.referencia}</footer>
             </blockquote>
             <div className="mt-5 flex flex-wrap items-center gap-3">
-              <Link href="/liturgia-diaria" className="btn btn-primary">
+              <Link href="/liturgia-diaria" data-evento="liturgy_opened" className="btn btn-primary">
                 Rezar com o Evangelho de hoje
               </Link>
               {liturgia.celebracao ? (

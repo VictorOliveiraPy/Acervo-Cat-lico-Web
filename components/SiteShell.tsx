@@ -1,7 +1,5 @@
-import Script from "next/script";
-
 import { ChatWidget } from "@/components/ChatWidget";
-import { NotOnPrivatePages } from "@/components/NotOnPrivatePages";
+import { Metricas } from "@/components/Metricas";
 import { PtOnly } from "@/components/PtOnly";
 import { PwaRegister } from "@/components/PwaRegister";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -47,20 +45,8 @@ export function SiteShell({
         <ChatWidget />
       </PtOnly>
       <PwaRegister />
-      {/* Himetrica é um tracker client-side (a chave é feita pra rodar no
-          navegador — não é segredo, é padrão deles mesmos, igual site ID
-          do Plausible/PostHog). Só carrega se a env var estiver configurada
-          (Vercel → NEXT_PUBLIC_HIMETRICA_API_KEY) — sem ela, undefined
-          viraria a string "undefined" no atributo. */}
-      {process.env.NEXT_PUBLIC_HIMETRICA_API_KEY && (
-        <NotOnPrivatePages>
-          <Script
-            src="https://cdn.himetrica.com/tracker.js"
-            strategy="afterInteractive"
-            data-api-key={process.env.NEXT_PUBLIC_HIMETRICA_API_KEY}
-          />
-        </NotOnPrivatePages>
-      )}
+      {/* Contagem própria de visitas (lib/metricas.ts): anônima, sem cookie. */}
+      <Metricas />
     </body>
   );
 }

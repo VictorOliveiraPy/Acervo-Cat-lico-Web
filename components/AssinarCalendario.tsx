@@ -8,7 +8,7 @@ const GOOGLE = `https://calendar.google.com/calendar/render?cid=${encodeURICompo
 export function AssinarCalendario({ compacto = false }: { compacto?: boolean }) {
   if (compacto) {
     return (
-      <a href={GOOGLE} target="_blank" rel="noopener noreferrer" className="btn-tertiary">
+      <a data-evento="calendar_subscribed" href={GOOGLE} target="_blank" rel="noopener noreferrer" className="btn-tertiary">
         Lembrete no celular <span aria-hidden="true">→</span>
       </a>
     );
@@ -23,10 +23,10 @@ export function AssinarCalendario({ compacto = false }: { compacto?: boolean }) 
         à história do santo. Funciona no Google Agenda, no iPhone e no Outlook.
       </p>
       <div className="mt-4 flex flex-wrap gap-3">
-        <a href={GOOGLE} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+        <a data-evento="calendar_subscribed" href={GOOGLE} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
           Adicionar ao Google Agenda
         </a>
-        <a href={FEED} className="btn btn-secondary">
+        <a data-evento="calendar_subscribed" href={FEED} className="btn btn-secondary">
           iPhone e outros calendários
         </a>
       </div>

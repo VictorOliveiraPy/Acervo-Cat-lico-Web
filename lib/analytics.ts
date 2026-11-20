@@ -1,3 +1,5 @@
+import { enviarMetrica } from "@/lib/metricas";
+
 export type ProductEvent =
   | "search_submitted"
   | "candle_lit"
@@ -5,7 +7,9 @@ export type ProductEvent =
   | "entry_favorited"
   | "entry_shared"
   | "lesson_started"
-  | "lesson_completed";
+  | "lesson_completed"
+  | "calendar_subscribed"
+  | "prayer_action";
 
 type ProductEventPayload = Record<string, string | number | boolean | undefined>;
 
@@ -20,4 +24,5 @@ export function trackEvent(
   windowWithDataLayer.dataLayer ??= [];
   windowWithDataLayer.dataLayer.push(event);
   window.dispatchEvent(new CustomEvent("compendio:analytics", { detail: event }));
+  enviarMetrica({ tipo: "evento", caminho: window.location.pathname, evento: name });
 }

@@ -13,7 +13,7 @@ O Postgres continua fora da VPS (Neon, `DATABASE_URL` da API), então não há b
 ## Hoje (antes da migração)
 
 - Front: Netlify, domínio `compendio-catolico.com`. Variáveis: `API_URL`, `NEXTAUTH_URL`, `AUTH_GOOGLE_ID`,
-  `AUTH_GOOGLE_SECRET`, `AUTH_SECRET`, `INTERNAL_API_SECRET`, `NEXT_PUBLIC_HIMETRICA_API_KEY`.
+  `AUTH_GOOGLE_SECRET`, `AUTH_SECRET`, `INTERNAL_API_SECRET`.
 - API: Render, `https://acervo-cat-lico-api-jqtz.onrender.com`. O registro `api.compendio-catolico.com` não existe
   mais no DNS. Variáveis: `CORS_ORIGINS`, `DATABASE_URL`, `INTERNAL_API_SECRET`, `IMAGE_CDN_BASE_URL`,
   `DEEPSEEK_API_KEY`, `VOYAGE_API_KEY` (as demais têm padrão).

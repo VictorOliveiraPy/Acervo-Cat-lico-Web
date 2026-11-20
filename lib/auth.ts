@@ -23,6 +23,12 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
+/** O e-mail de quem está logado, só para conferir acesso de administração. */
+export async function currentEmail(): Promise<string | null> {
+  const session = await getServerSession(authOptions);
+  return session?.user?.email ?? null;
+}
+
 /** Quem está logado, para uso no servidor; `null` para visitantes. */
 export async function currentUser(): Promise<{ subject: string; name?: string | null } | null> {
   const session = await getServerSession(authOptions);

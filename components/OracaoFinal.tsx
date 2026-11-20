@@ -19,7 +19,7 @@ export function OracaoFinal({ entry }: { entry: { categoria: string; slug: strin
         <p className="mt-3 font-display text-title-sm italic text-ink">{acao.invocacao}</p>
       ) : null}
       <p className="mt-2 max-w-measure text-meta text-ink-muted">{acao.texto}</p>
-      <Link href={acao.href} className="btn btn-primary mt-4">
+      <Link href={acao.href} data-evento="prayer_action" className="btn btn-primary mt-4">
         {acao.rotulo}
       </Link>
     </aside>

@@ -114,3 +114,29 @@ test("o calendário dos santos é um iCalendar válido", async ({ request }) => 
   expect(ics.startsWith("BEGIN:VCALENDAR\r\n")).toBe(true);
   expect(ics).toContain("UID:francisco-de-assis-10-04@compendio-catolico.com");
 });
+
+test("o painel de métricas pede login e não abre para visitantes", async ({ page }) => {
+  await page.goto("/painel");
+  await expect(page).toHaveURL(/\/api\/auth\/signin/);
+});
+
+test("a contagem de visita responde sem atrapalhar a página", async ({ page, request }) => {
+  // O Playwright não mostra o corpo de um beacon: embrulha o sendBeacon para anotar o
+  // que foi enviado, e deixa o envio seguir normalmente.
+  await page.addInitScript(() => {
+    const original = navigator.sendBeacon.bind(navigator);
+    const enviados: string[] = [];
+    (window as unknown as { __metricas: string[] }).__metricas = enviados;
+    navigator.sendBeacon = (url, dados) => {
+      if (dados instanceof Blob) void dados.text().then((texto) => enviados.push(texto));
+      return original(url, dados);
+    };
+  });
+  await page.goto("/santos");
+  await expect
+    .poll(() => page.evaluate(() => (window as unknown as { __metricas: string[] }).__metricas.map((t) => JSON.parse(t))))
+    .toContainEqual({ tipo: "pagina", caminho: "/santos" });
+
+  const resposta = await request.post("/api/metricas", { data: "lixo" });
+  expect(resposta.status()).toBe(204);
+});
