@@ -46,10 +46,10 @@ function NovoPedido() {
       <fieldset className="flex gap-4 text-meta text-ink">
         <legend className="sr-only">Formato</legend>
         <label className="flex items-center gap-2">
-          <input type="radio" name="formato" value="cinema" defaultChecked className="accent-accent" /> Cinema (narrado, 60 a 80 s)
+          <input type="radio" name="formato" value="cinema" defaultChecked className="accent-accent" /> Cinema (pinturas em 3D, 60 a 80 s)
         </label>
         <label className="flex items-center gap-2">
-          <input type="radio" name="formato" value="meme" className="accent-accent" /> Meme (sem voz, 15 a 25 s)
+          <input type="radio" name="formato" value="catequese" className="accent-accent" /> Catequese (aula narrada, 60 a 90 s)
         </label>
       </fieldset>
       <div className="flex flex-wrap items-center gap-3">
