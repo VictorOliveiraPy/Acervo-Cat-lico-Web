@@ -23,7 +23,7 @@ describe("variação contra o período anterior", () => {
     [125, 100, "+25%"],
     [90, 100, "−10%"],
     [100, 100, "0%"],
-    [5, 0, "novo"],
+    [5, 0, null], // período anterior sem dados: não há com o que comparar
     [0, 0, null],
     [1, 3, "−67%"],
   ])("%i contra %i é %s", (atual, antes, esperado) => {

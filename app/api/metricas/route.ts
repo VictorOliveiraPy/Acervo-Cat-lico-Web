@@ -1,4 +1,6 @@
 import { getApiBaseUrl } from "@/lib/api";
+import { currentEmail } from "@/lib/auth";
+import { isAdminEmail } from "@/lib/painel";
 
 /**
  * Recebe a visita do navegador e repassa à API com quem visitou: o IP (que o Caddy
@@ -8,7 +10,9 @@ import { getApiBaseUrl } from "@/lib/api";
 export async function POST(request: Request): Promise<Response> {
   const secret = process.env.INTERNAL_API_SECRET;
   const corpo = await request.text();
-  if (secret && corpo.length <= 2048) {
+  // Quem administra o site não entra na conta: as próprias visitas inflariam os números.
+  const administrador = isAdminEmail(await currentEmail(), process.env.ADMIN_EMAILS);
+  if (secret && corpo.length <= 2048 && !administrador) {
     // O Caddy acrescenta o IP real no fim da lista; o começo pode vir do próprio cliente.
     const ip = (request.headers.get("x-forwarded-for") ?? "").split(",").pop()?.trim() ?? "";
     try {

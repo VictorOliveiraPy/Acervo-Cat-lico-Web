@@ -10,9 +10,9 @@ export function isAdminEmail(email: string | null | undefined, adminEmails: stri
   return lista.includes(email.trim().toLowerCase());
 }
 
-/** "+25%", "−10%", "novo" (antes era zero) ou `null` (nada nos dois). */
+/** "+25%", "−10%" ou `null` quando o período anterior não tem dados para comparar. */
 export function variacao(atual: number, antes: number): string | null {
-  if (antes === 0) return atual === 0 ? null : "novo";
+  if (antes === 0) return null;
   const pct = Math.round(((atual - antes) / antes) * 100);
   if (pct === 0) return "0%";
   return pct > 0 ? `+${pct}%` : `−${Math.abs(pct)}%`;

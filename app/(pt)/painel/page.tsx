@@ -35,7 +35,9 @@ function Numero({ rotulo, valor, antes }: { rotulo: string; valor: number; antes
         {valor.toLocaleString("pt-BR")}
       </p>
       <p className="text-meta text-ink-muted">
-        {mudanca ? `${mudanca} contra o período anterior (${antes.toLocaleString("pt-BR")})` : "sem dados antes"}
+        {mudanca
+          ? `${mudanca} contra o período anterior (${antes.toLocaleString("pt-BR")})`
+          : "Período anterior sem dados para comparar"}
       </p>
     </div>
   );
@@ -186,8 +188,9 @@ export default async function PainelPage({ searchParams }: { searchParams: Searc
           <p className="eyebrow">Painel</p>
           <h1 className="mt-2 font-display text-title-lg text-ink">Visitas do compêndio</h1>
           <p className="mt-1 text-meta text-ink-muted">
-            {diaCurto(resumo.inicio)} a {diaCurto(resumo.fim)} · visitantes contados por dia, sem cookie e
-            sem guardar IP
+            {diaCurto(resumo.inicio)} a {diaCurto(resumo.fim)}. Visitante é cada pessoa diferente em cada
+            dia: quem volta em dois dias conta duas vezes. Sem cookie, sem guardar IP, sem robôs e sem as
+            suas próprias visitas.
           </p>
         </div>
         <nav aria-label="Período" className="flex gap-2">
