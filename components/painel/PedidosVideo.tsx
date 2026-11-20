@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 
-import { mudarPedidoAction, pedirVideoAction } from "@/app/(pt)/painel/videos/actions";
+import { mudarPedidoAction, pedirSerieAction, pedirVideoAction } from "@/app/(pt)/painel/videos/actions";
 import { STATUS_PEDIDO, pedidoEmAndamento } from "@/lib/painel";
 import type { Pedido } from "@/lib/services/estudioService";
 
@@ -32,7 +32,7 @@ function NovoPedido() {
     >
       <h2 className="font-semibold text-ink">Pedir um vídeo novo</h2>
       <label className="flex flex-col gap-1 text-meta text-ink">
-        Tema
+        Tema (na Objeção, escreva a objeção: “Católico adora imagens?”)
         <input name="tema" required maxLength={200} placeholder="A confissão" className={CAMPO} />
       </label>
       <label className="flex flex-col gap-1 text-meta text-ink">
@@ -43,13 +43,16 @@ function NovoPedido() {
         Pedidos ao roteirista (opcional)
         <textarea name="notas" maxLength={2000} rows={3} className={CAMPO} />
       </label>
-      <fieldset className="flex gap-4 text-meta text-ink">
+      <fieldset className="flex flex-wrap gap-x-4 gap-y-2 text-meta text-ink">
         <legend className="sr-only">Formato</legend>
         <label className="flex items-center gap-2">
-          <input type="radio" name="formato" value="cinema" defaultChecked className="accent-accent" /> Cinema (pinturas em 3D, 60 a 80 s)
+          <input type="radio" name="formato" value="cinema" defaultChecked className="accent-accent" /> Cinema (pinturas em 3D, 45 a 60 s)
         </label>
         <label className="flex items-center gap-2">
-          <input type="radio" name="formato" value="catequese" className="accent-accent" /> Catequese (aula narrada, 60 a 90 s)
+          <input type="radio" name="formato" value="catequese" className="accent-accent" /> Catequese (aula narrada, 45 a 60 s)
+        </label>
+        <label className="flex items-center gap-2">
+          <input type="radio" name="formato" value="objecao" className="accent-accent" /> Objeção (resposta curta, 30 a 45 s)
         </label>
       </fieldset>
       <div className="flex flex-wrap items-center gap-3">
@@ -135,10 +138,47 @@ function Pedidos({ pedidos }: { pedidos: Pedido[] }) {
   );
 }
 
+function Series() {
+  const router = useRouter();
+  const [ocupado, iniciar] = useTransition();
+  const [mensagem, setMensagem] = useState("");
+
+  function pedir(serie: "santo" | "evangelho") {
+    iniciar(async () => {
+      const resultado = await pedirSerieAction(serie);
+      setMensagem(resultado.ok ? `Na fila: ${resultado.tema}.` : resultado.mensagem);
+      if (resultado.ok) router.refresh();
+    });
+  }
+
+  return (
+    <section aria-labelledby="series" className="flex flex-col gap-3 rounded-panel border border-border bg-surface p-5">
+      <h2 id="series" className="font-semibold text-ink">Séries do dia</h2>
+      <p className="text-meta text-ink-muted">
+        Um vídeo por dia, sempre no mesmo formato, que leva ao site. Peça à noite: fica pronto para postar de manhã.
+      </p>
+      <div className="flex flex-wrap gap-3">
+        <button type="button" disabled={ocupado} onClick={() => pedir("santo")} className="btn btn-secondary">
+          Santo de amanhã (Cinema)
+        </button>
+        <button type="button" disabled={ocupado} onClick={() => pedir("evangelho")} className="btn btn-secondary">
+          Evangelho de amanhã (Catequese)
+        </button>
+      </div>
+      <p role="status" aria-live="polite" className="text-meta text-ink-muted">
+        {mensagem}
+      </p>
+    </section>
+  );
+}
+
 export function PedidosVideo({ pedidos }: { pedidos: Pedido[] }) {
   return (
     <div className="grid gap-4 lg:grid-cols-[1fr_1fr]">
-      <NovoPedido />
+      <div className="flex flex-col gap-4">
+        <Series />
+        <NovoPedido />
+      </div>
       <section aria-labelledby="pedidos" className="flex flex-col gap-3">
         <h2 id="pedidos" className="font-semibold text-ink">Pedidos recentes</h2>
         <Pedidos pedidos={pedidos} />
