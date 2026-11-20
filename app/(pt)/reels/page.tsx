@@ -3,7 +3,8 @@ import Link from "next/link";
 
 import { PageHeader } from "@/components/Editorial";
 import { ReelCard } from "@/components/ReelCard";
-import { parseTema, REEL_TEMAS, REELS } from "@/lib/reels";
+import { parseTema, REEL_TEMAS } from "@/lib/reels";
+import { fetchReels } from "@/lib/services/reelsService";
 import { INSTAGRAM_URL } from "@/lib/site";
 
 const DESCRIPTION =
@@ -29,9 +30,9 @@ function FilterLink({ href, active, children }: { href: string; active: boolean;
   );
 }
 
-export default function ReelsPage({ searchParams }: { searchParams: { tema?: string | string[] } }) {
+export default async function ReelsPage({ searchParams }: { searchParams: { tema?: string | string[] } }) {
   const tema = parseTema(searchParams.tema);
-  const reels = tema ? REELS.filter((reel) => reel.tema === tema) : REELS;
+  const { itens: reels } = await fetchReels(tema);
 
   return (
     <div className="mx-auto max-w-shell px-4 py-10 sm:px-6">

@@ -1,6 +1,8 @@
 import { getServerSession, type NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
+import { isAdminEmail } from "@/lib/painel";
+
 /**
  * Login com Google. A sessão fica em um cookie assinado (JWT), sem tabela de
  * sessões, e o `sub` do Google identifica a pessoa na API.
@@ -34,4 +36,9 @@ export async function currentUser(): Promise<{ subject: string; name?: string | 
   const session = await getServerSession(authOptions);
   const subject = (session as { sub?: string } | null)?.sub;
   return subject ? { subject, name: session?.user?.name } : null;
+}
+
+/** Se quem está logado administra o site (e-mail em `ADMIN_EMAILS`). */
+export async function isAdmin(): Promise<boolean> {
+  return isAdminEmail(await currentEmail(), process.env.ADMIN_EMAILS);
 }

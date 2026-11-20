@@ -1,22 +1,29 @@
-import reels from "@/lib/reels.json";
+import { z } from "zod";
 
 /**
- * Vídeos do estúdio (projeto videos-py) mostrados em `/reels`, do mais novo para o
- * mais antigo. O JSON e as capas em `public/reels/` são gerados por
- * `scripts/add-reel.ts`; os MP4 ficam no R2, em `reels/`.
+ * Vídeos do estúdio (projeto videos-py) mostrados em `/reels`. Vêm da API
+ * (`/api/reels`), que guarda os reels no banco: o painel (`/painel/videos`) cria,
+ * edita, publica e apaga sem precisar publicar o site de novo. Os MP4 e as capas
+ * novas ficam no R2; as capas antigas continuam em `public/reels/`.
  */
-export type Reel = {
-  slug: string;
-  title: string;
-  caption: string;
-  tema: string;
-  width: number;
-  height: number;
-};
+export const reelSchema = z.object({
+  slug: z.string(),
+  titulo: z.string(),
+  legenda: z.string(),
+  tema: z.string(),
+  largura: z.number(),
+  altura: z.number(),
+  video_url: z.string(),
+  capa_url: z.string(),
+  publicado: z.boolean(),
+  criado_em: z.string().nullable(),
+});
 
-export const REELS: Reel[] = reels;
+export const reelPageSchema = z.object({ itens: z.array(reelSchema), total: z.number() });
 
-/** Temas do filtro de `/reels`, na ordem dos botões. */
+export type Reel = z.output<typeof reelSchema>;
+
+/** Temas do filtro de `/reels`, na ordem dos botões (iguais aos da API). */
 export const REEL_TEMAS: Record<string, string> = {
   santos: "Santos",
   maria: "Nossa Senhora",
@@ -29,12 +36,6 @@ export const REEL_TEMAS: Record<string, string> = {
   igrejas: "Igrejas e devoções",
   curiosidades: "Curiosidades",
 };
-
-export const REELS_CDN = "https://img.compendio-catolico.com";
-
-export function reelVideoUrl(slug: string): string {
-  return `${REELS_CDN}/reels/${slug}.mp4`;
-}
 
 /** Tema válido do `?tema=`; `null` para "todos" ou qualquer valor desconhecido. */
 export function parseTema(value: unknown): string | null {

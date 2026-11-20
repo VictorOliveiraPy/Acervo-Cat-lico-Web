@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
+import { PainelAbas } from "@/components/painel/PainelAbas";
 import { currentEmail } from "@/lib/auth";
 import { LOGIN_ENABLED } from "@/lib/auth-public";
 import { isAdminEmail, nomeDoEvento, variacao } from "@/lib/painel";
@@ -183,6 +184,9 @@ export default async function PainelPage({ searchParams }: { searchParams: Searc
 
   return (
     <div className="mx-auto max-w-shell px-4 py-10 sm:px-6">
+      <div className="mb-6">
+        <PainelAbas atual="/painel" />
+      </div>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="eyebrow">Painel</p>

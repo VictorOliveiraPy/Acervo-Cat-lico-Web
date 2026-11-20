@@ -30,16 +30,11 @@ npm run build       # build de produção
 npm audit           # dependências vulneráveis
 ```
 
-Para pôr vídeos do estúdio (projeto `videos-py`, ao lado deste) em `/reels`, do mais novo
-para o mais antigo (precisa de Node 22.18+ e FFmpeg; `npx wrangler login` uma vez antes):
-
-```bash
-R2_BUCKET=nome-do-bucket node scripts/add-reel.ts santos sao-francisco-de-assis [outro-slug...]
-```
-
-O primeiro argumento é o tema do filtro (lista em `REEL_TEMAS`, `lib/reels.ts`). O script
-comprime o MP4 para 720p, envia para `reels/` no R2, grava a capa em `public/reels/` e põe
-título e legenda (lidos do `.md` do estúdio) em `lib/reels.json`.
+Os vídeos de `/reels` ficam no banco da API e são cuidados pelo painel
+`/painel/videos` (só para os e-mails de `ADMIN_EMAILS`): pedir um vídeo novo ao
+gerador do `videos-py`, acompanhar, baixar para o Instagram, publicar, editar e apagar.
+O gerador roda no computador de quem administra (`python -m videos trabalhador`, no
+`videos-py`); os arquivos vão para o R2 por links que a API assina.
 
 ## Estrutura
 

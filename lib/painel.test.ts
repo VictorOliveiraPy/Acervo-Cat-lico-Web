@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { isAdminEmail, nomeDoEvento, variacao } from "@/lib/painel";
+import { STATUS_PEDIDO, isAdminEmail, nomeDoEvento, pedidoEmAndamento, slugDoTitulo, variacao } from "@/lib/painel";
 
 describe("acesso ao painel", () => {
   it("aceita só e-mails da lista, sem diferença de maiúsculas e espaços", () => {
@@ -36,5 +36,23 @@ describe("nome dos eventos", () => {
     expect(nomeDoEvento("candle_lit")).toBe("Velas acesas");
     expect(nomeDoEvento("search_submitted")).toBe("Buscas");
     expect(nomeDoEvento("algo_novo")).toBe("algo_novo");
+  });
+});
+
+describe("endereço de um vídeo enviado", () => {
+  it("vira o mesmo slug que a API e o estúdio aceitam", () => {
+    expect(slugDoTitulo("São Leão Magno, Papa!")).toBe("sao-leao-magno-papa");
+    expect(slugDoTitulo("   ")).toBe("video");
+    expect(slugDoTitulo("x".repeat(200)).length).toBeLessThanOrEqual(60);
+    expect(slugDoTitulo("A  —  B")).toBe("a-b");
+  });
+});
+
+describe("status dos pedidos", () => {
+  it("tem texto para cada estado e diz quais ainda andam", () => {
+    expect(STATUS_PEDIDO.gerando).toBe("Gerando");
+    expect(pedidoEmAndamento("na_fila")).toBe(true);
+    expect(pedidoEmAndamento("gerando")).toBe(true);
+    expect(pedidoEmAndamento("pronto")).toBe(false);
   });
 });

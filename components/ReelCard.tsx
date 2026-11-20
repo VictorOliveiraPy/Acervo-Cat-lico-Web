@@ -3,19 +3,18 @@
 import Image from "next/image";
 import { useState } from "react";
 
-import { reelVideoUrl, type Reel } from "@/lib/reels";
+import type { Reel } from "@/lib/reels";
 
 /** Um vídeo da grade de `/reels`. O MP4 só começa a baixar depois do clique. */
 export function ReelCard({ reel }: { reel: Reel }) {
-  const { slug, title, caption, width, height } = reel;
-  const cover = `/reels/${slug}.jpg`;
+  const { titulo: title, legenda: caption, largura: width, altura: height, capa_url: cover, video_url: video } = reel;
   const [playing, setPlaying] = useState(false);
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-edge border border-border bg-raised">
       {playing ? (
         <video
-          src={reelVideoUrl(slug)}
+          src={video}
           poster={cover}
           width={width}
           height={height}

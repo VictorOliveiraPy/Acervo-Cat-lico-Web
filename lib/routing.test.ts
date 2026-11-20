@@ -80,3 +80,12 @@ describe("classifyPath", () => {
     });
   });
 });
+
+describe("painel", () => {
+  it("aceita as telas do painel até a de baixar um vídeo", () => {
+    for (const path of ["/painel", "/painel/videos", "/painel/videos/enviar", "/painel/videos/baixar/sao-jose"]) {
+      expect(classifyPath(path), path).toEqual({ kind: "ok" });
+    }
+    expect(classifyPath("/painel/videos/baixar/sao-jose/extra")).toEqual({ kind: "not-found" });
+  });
+});

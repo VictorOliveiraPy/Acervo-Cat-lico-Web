@@ -22,6 +22,7 @@ export type PathVerdict =
   | { kind: "rewrite"; to: string }
   | { kind: "not-found" };
 
+const MAX_PAINEL_SEGMENTS = 4;
 const CATEGORIES = new Set<string>(CATEGORY_SLUGS);
 
 /** Rotas de um único segmento (`/busca`, `/velas`...) e os arquivos gerados pelo Next. */
@@ -29,7 +30,6 @@ const SINGLE_SEGMENT_ROUTES = new Set([
   "busca",
   "velas",
   "perfil",
-  "painel",
   "sobre",
   "santo-do-dia",
   "ranking",
@@ -92,6 +92,8 @@ export function classifyPath(pathname: string): PathVerdict {
   }
   if (first === "academia") return segments.length <= MAX_ACADEMIA_SEGMENTS ? OK : NOT_FOUND;
   if (first === "instagram") return segments.length <= MAX_INSTAGRAM_SEGMENTS ? OK : NOT_FOUND;
+  // `/painel`, `/painel/videos`, `/painel/videos/baixar/{slug}`: só administração.
+  if (first === "painel") return segments.length <= MAX_PAINEL_SEGMENTS ? OK : NOT_FOUND;
   if (SINGLE_SEGMENT_ROUTES.has(first)) return segments.length === 1 ? OK : NOT_FOUND;
   return NOT_FOUND;
 }

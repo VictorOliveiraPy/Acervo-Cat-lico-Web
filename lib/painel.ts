@@ -33,3 +33,22 @@ const EVENTOS: Readonly<Record<string, string>> = {
 export function nomeDoEvento(nome: string): string {
   return EVENTOS[nome] ?? nome;
 }
+
+/** O endereço do vídeo a partir do título, igual ao `slugify` da API e do estúdio. */
+export function slugDoTitulo(titulo: string): string {
+  const simples = titulo.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  return simples.replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60).replace(/-+$/, "") || "video";
+}
+
+export const STATUS_PEDIDO: Readonly<Record<string, string>> = {
+  na_fila: "Na fila",
+  gerando: "Gerando",
+  pronto: "Pronto",
+  erro: "Parou com erro",
+  cancelado: "Cancelado",
+};
+
+/** Pedido que ainda pode mudar sozinho: o painel se atualiza enquanto houver um. */
+export function pedidoEmAndamento(status: string): boolean {
+  return status === "na_fila" || status === "gerando";
+}
