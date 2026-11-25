@@ -97,8 +97,13 @@ function CartaoReel({ reel }: { reel: Reel }) {
                 {reel.publicado ? "Tirar do site" : "Publicar no site"}
               </button>
               <a href={`/painel/videos/baixar/${reel.slug}`} className="btn-tertiary">
-                Baixar para o Instagram
+                Baixar vídeo
               </a>
+              {reel.capa_url ? (
+                <a href={`/painel/videos/baixar/${reel.slug}?tipo=capa`} className="btn-tertiary">
+                  Baixar capa
+                </a>
+              ) : null}
               <button type="button" className="btn-tertiary" onClick={() => void copiarLegenda()}>
                 Copiar legenda
               </button>
