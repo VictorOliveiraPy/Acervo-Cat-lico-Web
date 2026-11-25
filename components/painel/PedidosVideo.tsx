@@ -36,7 +36,7 @@ function NovoPedido() {
           setMensagem(
             resultado.ok
               ? podeVoz && minhaVoz
-                ? "Pedido na fila. Sai narrado com a sua voz clonada; sem o ElevenLabs, o roteiro aparece aqui para você gravar."
+                ? "Pedido na fila. Sai com a sua voz clonada, ou com a sintética se o ElevenLabs estiver sem crédito."
                 : "Pedido na fila. O gerador começa assim que estiver ligado."
               : resultado.mensagem,
           );
@@ -87,7 +87,7 @@ function NovoPedido() {
           onChange={(evento) => setMinhaVoz(evento.target.checked)}
           className="accent-accent"
         />
-        Narrar com a minha voz (a clonada no ElevenLabs; sem ela, você grava o roteiro aqui)
+        Narrar com a minha voz clonada (ElevenLabs; sem crédito, sai com a voz sintética)
       </label>
       <div className="flex flex-wrap items-center gap-3">
         <button type="submit" disabled={enviando} className="btn btn-primary disabled:opacity-60">
