@@ -14,11 +14,17 @@ describe("séries do estúdio", () => {
       { titulo: "Santa Cecília de Roma", slug: "cecilia-de-roma", resumo: "Mártir romana, padroeira da música." },
       "2026-11-22",
     );
-    expect(pedido).toMatchObject({ formato: "cinema", tema: "Santa Cecília de Roma", pergunta: "" });
+    expect(pedido).toMatchObject({ formato: "cinema", tema: "Santa Cecília de Roma", pergunta: "", voz_propria: false });
+    expect(pedido.notas).toContain("mistério");
     expect(pedido.notas).toContain("Santo do dia");
     expect(pedido.notas).toContain("22 de novembro");
     expect(pedido.notas).toContain("https://compendio-catolico.com/santos/cecilia-de-roma");
     expect(pedido.notas).toContain("padroeira da música");
+  });
+
+  it("santo com a minha voz pede a gravação", () => {
+    const pedido = pedidoSantoDoDia({ titulo: "São José", slug: "sao-jose", resumo: "" }, "2027-03-19", true);
+    expect(pedido.voz_propria).toBe(true);
   });
 
   it("Evangelho vira uma Catequese com o texto e o link do dia", () => {

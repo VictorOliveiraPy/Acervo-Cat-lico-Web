@@ -15,6 +15,7 @@ import {
   criarPedido,
   criarReel,
   editarReel,
+  enviarVoz,
   listarPedidos,
   mudarPedido,
 } from "@/lib/services/estudioService";
@@ -40,6 +41,7 @@ export async function pedirVideoAction(dados: {
   pergunta: string;
   notas: string;
   formato: string;
+  voz_propria: boolean;
 }): Promise<Resultado> {
   return comoAdmin(() => criarPedido(dados));
 }
@@ -78,7 +80,10 @@ export async function cadastrarReelAction(dados: {
  * Séries: o santo e o Evangelho de amanhã viram pedidos prontos, com o link do site.
  * Não pede de novo o que já está na fila, sendo feito ou pronto.
  */
-export async function pedirSerieAction(serie: "santo" | "evangelho"): Promise<Resultado & { tema?: string }> {
+export async function pedirSerieAction(
+  serie: "santo" | "evangelho",
+  comMinhaVoz = false,
+): Promise<Resultado & { tema?: string }> {
   if (!(await isAdmin())) return { ok: false, mensagem: "Acesso só para quem administra o site." };
   const data = amanha(todayInBrazil());
   let pedido;
@@ -86,7 +91,7 @@ export async function pedirSerieAction(serie: "santo" | "evangelho"): Promise<Re
     if (serie === "santo") {
       const santo = saintOfDay((await fetchAllEntries("santos")) as Santo[], data);
       if (!santo) return { ok: false, mensagem: "Não achei santo com festa nos próximos dias." };
-      pedido = pedidoSantoDoDia(santo.saint, santo.date);
+      pedido = pedidoSantoDoDia(santo.saint, santo.date, comMinhaVoz);
     } else {
       pedido = pedidoEvangelho(await fetchLiturgiaDiaria(data));
     }
@@ -99,4 +104,9 @@ export async function pedirSerieAction(serie: "santo" | "evangelho"): Promise<Re
   }
   const resultado = await comoAdmin(() => criarPedido(pedido));
   return resultado.ok ? { ok: true, tema: pedido.tema } : resultado;
+}
+
+/** A gravação da voz já subiu para o R2: o pedido volta à fila para montar com ela. */
+export async function enviarVozAction(id: number, vozUrl: string): Promise<Resultado> {
+  return comoAdmin(() => enviarVoz(id, vozUrl));
 }

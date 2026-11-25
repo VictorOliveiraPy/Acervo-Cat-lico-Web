@@ -9,7 +9,13 @@ import { formatDayMonth } from "@/lib/santoDoDia";
 const SITE = "https://compendio-catolico.com";
 const MAX_NOTAS = 2000;
 
-type PedidoDeSerie = { tema: string; pergunta: string; notas: string; formato: "cinema" | "catequese" };
+type PedidoDeSerie = {
+  tema: string;
+  pergunta: string;
+  notas: string;
+  formato: "cinema" | "catequese";
+  voz_propria: boolean;
+};
 
 export function amanha(hoje: string): string {
   const data = new Date(`${hoje}T12:00:00Z`);
@@ -17,14 +23,19 @@ export function amanha(hoje: string): string {
   return data.toISOString().slice(0, 10);
 }
 
-export function pedidoSantoDoDia(santo: { titulo: string; slug: string; resumo: string }, data: string): PedidoDeSerie {
+export function pedidoSantoDoDia(
+  santo: { titulo: string; slug: string; resumo: string },
+  data: string,
+  comMinhaVoz = false,
+): PedidoDeSerie {
   const notas = [
     `Série "Santo do dia", para ${formatDayMonth(data)}.`,
     `Verbete no site: ${SITE}/santos/${santo.slug}`,
     `Resumo do verbete: ${santo.resumo}`,
-    "Conte a história com as pinturas do santo e termine com o que a vida dele ensina hoje.",
+    "Conte a história como um mistério que se revela: abra com um detalhe enigmático da vida dele e só depois diga o nome.",
+    "Termine com o que a vida dele ensina hoje.",
   ].join("\n");
-  return { tema: santo.titulo, pergunta: "", notas: notas.slice(0, MAX_NOTAS), formato: "cinema" };
+  return { tema: santo.titulo, pergunta: "", notas: notas.slice(0, MAX_NOTAS), formato: "cinema", voz_propria: comMinhaVoz };
 }
 
 export function pedidoEvangelho(liturgia: {
@@ -44,6 +55,7 @@ export function pedidoEvangelho(liturgia: {
     pergunta: "",
     notas: `${cabecalho}${texto}`,
     formato: "catequese",
+    voz_propria: false, // o Pergaminho só tem voz sintética
   };
 }
 

@@ -16,7 +16,7 @@ export async function POST(request: Request): Promise<Response> {
   const slug = params.get("slug") ?? "";
   const tipo = params.get("tipo");
   const tamanho = Number(request.headers.get("content-length"));
-  if ((tipo !== "video" && tipo !== "capa") || !request.body || !tamanho || tamanho > LIMITE) {
+  if ((tipo !== "video" && tipo !== "capa" && tipo !== "voz") || !request.body || !tamanho || tamanho > LIMITE) {
     return Response.json({ mensagem: "Arquivo inválido ou grande demais." }, { status: 400 });
   }
 

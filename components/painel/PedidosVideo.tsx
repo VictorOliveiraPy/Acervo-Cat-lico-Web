@@ -4,8 +4,11 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 
 import { mudarPedidoAction, pedirSerieAction, pedirVideoAction } from "@/app/(pt)/painel/videos/actions";
-import { STATUS_PEDIDO, pedidoEmAndamento } from "@/lib/painel";
+import { GravarVoz } from "@/components/painel/GravarVoz";
+import { STATUS_PEDIDO, aceitaVozPropria, pedidoEmAndamento } from "@/lib/painel";
 import type { Pedido } from "@/lib/services/estudioService";
+
+const NOME_DO_FORMATO: Record<string, string> = { cinema: "Cinema", catequese: "Catequese", objecao: "Objeção" };
 
 const CAMPO = "w-full rounded-edge border border-border-strong bg-raised px-3 py-2 text-body text-ink focus:border-accent focus:outline-none";
 
@@ -13,6 +16,9 @@ function NovoPedido() {
   const router = useRouter();
   const [enviando, iniciar] = useTransition();
   const [mensagem, setMensagem] = useState("");
+  const [formato, setFormato] = useState("cinema");
+  const [minhaVoz, setMinhaVoz] = useState(false);
+  const podeVoz = aceitaVozPropria(formato);
 
   return (
     <form
@@ -23,9 +29,16 @@ function NovoPedido() {
             tema: String(form.get("tema") ?? ""),
             pergunta: String(form.get("pergunta") ?? ""),
             notas: String(form.get("notas") ?? ""),
-            formato: String(form.get("formato") ?? "cinema"),
+            formato,
+            voz_propria: podeVoz && minhaVoz,
           });
-          setMensagem(resultado.ok ? "Pedido na fila. O gerador começa assim que estiver ligado." : resultado.mensagem);
+          setMensagem(
+            resultado.ok
+              ? podeVoz && minhaVoz
+                ? "Pedido na fila. Quando o roteiro ficar pronto, ele aparece aqui para você gravar."
+                : "Pedido na fila. O gerador começa assim que estiver ligado."
+              : resultado.mensagem,
+          );
           if (resultado.ok) router.refresh();
         })
       }
@@ -46,15 +59,25 @@ function NovoPedido() {
       <fieldset className="flex flex-wrap gap-x-4 gap-y-2 text-meta text-ink">
         <legend className="sr-only">Formato</legend>
         <label className="flex items-center gap-2">
-          <input type="radio" name="formato" value="cinema" defaultChecked className="accent-accent" /> Cinema (pinturas em 3D, 45 a 60 s)
+          <input type="radio" name="formato" value="cinema" checked={formato === "cinema"} onChange={() => setFormato("cinema")} className="accent-accent" /> Cinema (pinturas em 3D, 45 a 60 s)
         </label>
         <label className="flex items-center gap-2">
-          <input type="radio" name="formato" value="catequese" className="accent-accent" /> Catequese (aula narrada, 45 a 60 s)
+          <input type="radio" name="formato" value="catequese" checked={formato === "catequese"} onChange={() => setFormato("catequese")} className="accent-accent" /> Catequese (aula narrada, 45 a 60 s)
         </label>
         <label className="flex items-center gap-2">
-          <input type="radio" name="formato" value="objecao" className="accent-accent" /> Objeção (resposta curta, 30 a 45 s)
+          <input type="radio" name="formato" value="objecao" checked={formato === "objecao"} onChange={() => setFormato("objecao")} className="accent-accent" /> Objeção (resposta curta, 30 a 45 s)
         </label>
       </fieldset>
+      <label className={`flex items-center gap-2 text-meta ${podeVoz ? "text-ink" : "text-ink-muted"}`}>
+        <input
+          type="checkbox"
+          checked={podeVoz && minhaVoz}
+          disabled={!podeVoz}
+          onChange={(evento) => setMinhaVoz(evento.target.checked)}
+          className="accent-accent"
+        />
+        Narrar com a minha voz {podeVoz ? "(você grava o roteiro aqui no painel)" : "(só no Cinema e na Objeção)"}
+      </label>
       <div className="flex flex-wrap items-center gap-3">
         <button type="submit" disabled={enviando} className="btn btn-primary disabled:opacity-60">
           {enviando ? "Enviando…" : "Pedir vídeo"}
@@ -92,7 +115,11 @@ function Pedidos({ pedidos }: { pedidos: Pedido[] }) {
         <li key={pedido.id} className="rounded-panel border border-border bg-surface p-4">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <p className="font-semibold text-ink">
-              {pedido.tema} <span className="text-meta font-normal text-ink-muted">· {pedido.formato}</span>
+              {pedido.tema}{" "}
+              <span className="text-meta font-normal text-ink-muted">
+                · {NOME_DO_FORMATO[pedido.formato] ?? pedido.formato}
+                {pedido.voz_propria ? " · com a sua voz" : ""}
+              </span>
             </p>
             <span className="text-meta font-semibold text-accent">{STATUS_PEDIDO[pedido.status] ?? pedido.status}</span>
           </div>
@@ -112,6 +139,7 @@ function Pedidos({ pedidos }: { pedidos: Pedido[] }) {
               </div>
             </div>
           ) : null}
+          {pedido.status === "aguardando_voz" ? <GravarVoz pedido={pedido} /> : null}
           {pedido.status === "erro" ? <p className="mt-1 text-meta text-danger">{pedido.erro}</p> : null}
           {pedido.status === "pronto" && pedido.slug ? (
             <a href={`#reel-${pedido.slug}`} className="btn-tertiary mt-2">
@@ -142,10 +170,11 @@ function Series() {
   const router = useRouter();
   const [ocupado, iniciar] = useTransition();
   const [mensagem, setMensagem] = useState("");
+  const [minhaVoz, setMinhaVoz] = useState(false);
 
   function pedir(serie: "santo" | "evangelho") {
     iniciar(async () => {
-      const resultado = await pedirSerieAction(serie);
+      const resultado = await pedirSerieAction(serie, serie === "santo" && minhaVoz);
       setMensagem(resultado.ok ? `Na fila: ${resultado.tema}.` : resultado.mensagem);
       if (resultado.ok) router.refresh();
     });
@@ -165,6 +194,10 @@ function Series() {
           Evangelho de amanhã (Catequese)
         </button>
       </div>
+      <label className="flex items-center gap-2 text-meta text-ink">
+        <input type="checkbox" checked={minhaVoz} onChange={(evento) => setMinhaVoz(evento.target.checked)} className="accent-accent" />
+        Santo narrado com a minha voz
+      </label>
       <p role="status" aria-live="polite" className="text-meta text-ink-muted">
         {mensagem}
       </p>

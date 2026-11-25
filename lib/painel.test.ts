@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { STATUS_PEDIDO, isAdminEmail, nomeDoEvento, pedidoEmAndamento, slugDoTitulo, variacao } from "@/lib/painel";
+import { STATUS_PEDIDO, aceitaVozPropria, isAdminEmail, nomeDoEvento, pedidoEmAndamento, slugDoTitulo, variacao } from "@/lib/painel";
 
 describe("acesso ao painel", () => {
   it("aceita só e-mails da lista, sem diferença de maiúsculas e espaços", () => {
@@ -48,9 +48,19 @@ describe("endereço de um vídeo enviado", () => {
   });
 });
 
+describe("voz própria", () => {
+  it("só no Cinema e na Objeção", () => {
+    expect(aceitaVozPropria("cinema")).toBe(true);
+    expect(aceitaVozPropria("objecao")).toBe(true);
+    expect(aceitaVozPropria("catequese")).toBe(false);
+  });
+});
+
 describe("status dos pedidos", () => {
   it("tem texto para cada estado e diz quais ainda andam", () => {
     expect(STATUS_PEDIDO.gerando).toBe("Gerando");
+    expect(STATUS_PEDIDO.aguardando_voz).toBe("Esperando a sua voz");
+    expect(pedidoEmAndamento("aguardando_voz")).toBe(false); // espera você, não se atualiza sozinho
     expect(pedidoEmAndamento("na_fila")).toBe(true);
     expect(pedidoEmAndamento("gerando")).toBe(true);
     expect(pedidoEmAndamento("pronto")).toBe(false);

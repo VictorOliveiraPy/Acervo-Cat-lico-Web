@@ -14,11 +14,14 @@ export const pedidoSchema = z.object({
   pergunta: z.string(),
   notas: z.string(),
   formato: z.string(),
-  status: z.enum(["na_fila", "gerando", "pronto", "erro", "cancelado"]),
+  status: z.enum(["na_fila", "gerando", "aguardando_voz", "pronto", "erro", "cancelado"]),
   etapa: z.string(),
   progresso: z.number(),
   erro: z.string(),
   slug: z.string().nullable(),
+  voz_propria: z.boolean().default(false),
+  roteiro: z.string().default(""),
+  voz_url: z.string().nullable().default(null),
   criado_em: z.string().nullable(),
   atualizado_em: z.string().nullable(),
 });
@@ -69,7 +72,11 @@ export async function apagarReel(slug: string): Promise<void> {
   await admin("DELETE", `/admin/reels/${encodeURIComponent(slug)}`);
 }
 
-export async function linkDeEnvio(slug: string, tipo: "video" | "capa") {
+export async function enviarVoz(id: number, vozUrl: string): Promise<Pedido> {
+  return pedidoSchema.parse(await (await admin("POST", `/admin/pedidos/${id}/voz`, { voz_url: vozUrl })).json());
+}
+
+export async function linkDeEnvio(slug: string, tipo: "video" | "capa" | "voz") {
   return uploadSchema.parse(await (await admin("POST", "/admin/uploads", { slug, tipo })).json());
 }
 

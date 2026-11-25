@@ -44,6 +44,7 @@ export function slugDoTitulo(titulo: string): string {
 export const STATUS_PEDIDO: Readonly<Record<string, string>> = {
   na_fila: "Na fila",
   gerando: "Gerando",
+  aguardando_voz: "Esperando a sua voz",
   pronto: "Pronto",
   erro: "Parou com erro",
   cancelado: "Cancelado",
@@ -52,4 +53,9 @@ export const STATUS_PEDIDO: Readonly<Record<string, string>> = {
 /** Pedido que ainda pode mudar sozinho: o painel se atualiza enquanto houver um. */
 export function pedidoEmAndamento(status: string): boolean {
   return status === "na_fila" || status === "gerando";
+}
+
+/** Só o modelo Cinema (e a Objeção, que usa o Cinema) sincroniza uma gravação real. */
+export function aceitaVozPropria(formato: string): boolean {
+  return formato === "cinema" || formato === "objecao";
 }
