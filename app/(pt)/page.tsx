@@ -5,6 +5,7 @@ import { EntryGrid } from "@/components/EntryGrid";
 import { EditorialStrip } from "@/components/HomeArt";
 import { HomeHero } from "@/components/HomeHero";
 import { HomeProgress } from "@/components/HomeProgress";
+import { LeaoNoBrasil } from "@/components/LeaoNoBrasil";
 import { LessonProgressLink } from "@/components/LessonProgressLink";
 import { OrnamentalDivider } from "@/components/OrnamentalDivider";
 import { SearchField } from "@/components/SearchField";
@@ -218,6 +219,10 @@ export default async function HomePage() {
 
         <div className="pb-10">
           <HomeProgress />
+        </div>
+
+        <div className="pb-10">
+          <LeaoNoBrasil origem="home" />
         </div>
 
         <section aria-labelledby="caminhos" className="border-t border-border py-10">

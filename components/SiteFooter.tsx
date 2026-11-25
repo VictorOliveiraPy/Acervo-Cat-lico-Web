@@ -116,6 +116,14 @@ export async function SiteFooter() {
           >
             Instagram →
           </a>
+          <a
+            href="https://leaonobrasil.com.br/"
+            target="_blank"
+            rel="noopener"
+            className="underline-offset-4 hover:text-accent hover:underline"
+          >
+            Leão XIV no Brasil →
+          </a>
         </div>
 
         {/* Lema em latim clássico (V no lugar de U, grafia de inscrição

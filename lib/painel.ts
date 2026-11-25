@@ -28,6 +28,7 @@ const EVENTOS: Readonly<Record<string, string>> = {
   lesson_completed: "Lições concluídas",
   calendar_subscribed: "Calendário assinado",
   prayer_action: "Cliques em \"Leve para a oração\"",
+  leao_confirmar: "Cliques em \"Eu vou!\" (Leão XIV)",
 };
 
 export function nomeDoEvento(nome: string): string {

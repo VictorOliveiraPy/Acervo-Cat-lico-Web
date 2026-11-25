@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { AssinarCalendario } from "@/components/AssinarCalendario";
 import { Breadcrumbs } from "@/components/Editorial";
+import { LeaoNoBrasil } from "@/components/LeaoNoBrasil";
 import { entryPath } from "@/lib/categories";
 import { imagePosition } from "@/lib/entryDisplay";
 import { safeJsonLd } from "@/lib/jsonLd";
@@ -141,6 +142,10 @@ export default async function SantoDoDiaPage() {
           <p className="mt-3 text-body text-ink-muted">Nenhuma festa no acervo nestes dias.</p>
         )}
       </section>
+
+      <div className="mt-10">
+        <LeaoNoBrasil origem="santo-do-dia" />
+      </div>
 
       <AssinarCalendario />
     </div>
