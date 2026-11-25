@@ -26,7 +26,7 @@ export function amanha(hoje: string): string {
 export function pedidoSantoDoDia(
   santo: { titulo: string; slug: string; resumo: string },
   data: string,
-  comMinhaVoz = false,
+  comMinhaVoz = true,
 ): PedidoDeSerie {
   const notas = [
     `Série "Santo do dia", para ${formatDayMonth(data)}.`,
@@ -38,11 +38,14 @@ export function pedidoSantoDoDia(
   return { tema: santo.titulo, pergunta: "", notas: notas.slice(0, MAX_NOTAS), formato: "cinema", voz_propria: comMinhaVoz };
 }
 
-export function pedidoEvangelho(liturgia: {
-  data: string;
-  celebracao: string | null;
-  evangelho: { referencia: string; texto: string };
-}): PedidoDeSerie {
+export function pedidoEvangelho(
+  liturgia: {
+    data: string;
+    celebracao: string | null;
+    evangelho: { referencia: string; texto: string };
+  },
+  comMinhaVoz = true,
+): PedidoDeSerie {
   const cabecalho = [
     `Série "Evangelho do dia", para ${formatDayMonth(liturgia.data)}${liturgia.celebracao ? ` (${liturgia.celebracao})` : ""}.`,
     `Link no site: ${SITE}/liturgia-diaria/${liturgia.data}`,
@@ -55,7 +58,7 @@ export function pedidoEvangelho(liturgia: {
     pergunta: "",
     notas: `${cabecalho}${texto}`,
     formato: "catequese",
-    voz_propria: false, // o Pergaminho só tem voz sintética
+    voz_propria: comMinhaVoz,
   };
 }
 

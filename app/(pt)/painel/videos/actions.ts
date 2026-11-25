@@ -82,7 +82,7 @@ export async function cadastrarReelAction(dados: {
  */
 export async function pedirSerieAction(
   serie: "santo" | "evangelho",
-  comMinhaVoz = false,
+  comMinhaVoz = true,
 ): Promise<Resultado & { tema?: string }> {
   if (!(await isAdmin())) return { ok: false, mensagem: "Acesso só para quem administra o site." };
   const data = amanha(todayInBrazil());
@@ -93,7 +93,7 @@ export async function pedirSerieAction(
       if (!santo) return { ok: false, mensagem: "Não achei santo com festa nos próximos dias." };
       pedido = pedidoSantoDoDia(santo.saint, santo.date, comMinhaVoz);
     } else {
-      pedido = pedidoEvangelho(await fetchLiturgiaDiaria(data));
+      pedido = pedidoEvangelho(await fetchLiturgiaDiaria(data), comMinhaVoz);
     }
   } catch (error: unknown) {
     if (error instanceof ApiError) return { ok: false, mensagem: "A liturgia ou o acervo não responderam agora." };

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { STATUS_PEDIDO, aceitaVozPropria, isAdminEmail, nomeDoEvento, pedidoEmAndamento, slugDoTitulo, variacao } from "@/lib/painel";
+import { DURACOES, STATUS_PEDIDO, aceitaVozPropria, notasComDuracao, isAdminEmail, nomeDoEvento, pedidoEmAndamento, slugDoTitulo, variacao } from "@/lib/painel";
 
 describe("acesso ao painel", () => {
   it("aceita só e-mails da lista, sem diferença de maiúsculas e espaços", () => {
@@ -49,10 +49,27 @@ describe("endereço de um vídeo enviado", () => {
 });
 
 describe("voz própria", () => {
-  it("só no Cinema e na Objeção", () => {
+  it("em todos os formatos de vídeo", () => {
     expect(aceitaVozPropria("cinema")).toBe(true);
     expect(aceitaVozPropria("objecao")).toBe(true);
-    expect(aceitaVozPropria("catequese")).toBe(false);
+    expect(aceitaVozPropria("catequese")).toBe(true);
+    expect(aceitaVozPropria("meme")).toBe(false);
+  });
+});
+
+describe("duração pedida", () => {
+  it("automática deixa as notas como estão", () => {
+    expect(notasComDuracao("Fale da infância.", "auto")).toBe("Fale da infância.");
+  });
+
+  it("escolhida vai para o roteirista nas notas", () => {
+    expect(notasComDuracao("", "longo")).toBe("Duração: de 6 a 10 minutos de fala.");
+    expect(notasComDuracao("Fale da infância.", "curto")).toBe("Fale da infância.\nDuração: de 1 a 2 minutos de fala.");
+  });
+
+  it("toda opção tem um nome e a automática vem primeiro", () => {
+    expect(DURACOES[0].valor).toBe("auto");
+    expect(DURACOES.map((d) => d.valor)).toEqual(["auto", "curto", "medio", "longo"]);
   });
 });
 

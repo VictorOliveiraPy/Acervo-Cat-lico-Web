@@ -5,7 +5,7 @@ import { useEffect, useState, useTransition } from "react";
 
 import { mudarPedidoAction, pedirSerieAction, pedirVideoAction } from "@/app/(pt)/painel/videos/actions";
 import { GravarVoz } from "@/components/painel/GravarVoz";
-import { STATUS_PEDIDO, aceitaVozPropria, pedidoEmAndamento } from "@/lib/painel";
+import { DURACOES, STATUS_PEDIDO, aceitaVozPropria, notasComDuracao, pedidoEmAndamento } from "@/lib/painel";
 import type { Pedido } from "@/lib/services/estudioService";
 
 const NOME_DO_FORMATO: Record<string, string> = { cinema: "Cinema", catequese: "Catequese", objecao: "Objeção" };
@@ -17,7 +17,8 @@ function NovoPedido() {
   const [enviando, iniciar] = useTransition();
   const [mensagem, setMensagem] = useState("");
   const [formato, setFormato] = useState("cinema");
-  const [minhaVoz, setMinhaVoz] = useState(false);
+  const [minhaVoz, setMinhaVoz] = useState(true);
+  const [duracao, setDuracao] = useState("auto");
   const podeVoz = aceitaVozPropria(formato);
 
   return (
@@ -28,7 +29,7 @@ function NovoPedido() {
           const resultado = await pedirVideoAction({
             tema: String(form.get("tema") ?? ""),
             pergunta: String(form.get("pergunta") ?? ""),
-            notas: String(form.get("notas") ?? ""),
+            notas: notasComDuracao(String(form.get("notas") ?? ""), duracao),
             formato,
             voz_propria: podeVoz && minhaVoz,
           });
@@ -59,15 +60,25 @@ function NovoPedido() {
       <fieldset className="flex flex-wrap gap-x-4 gap-y-2 text-meta text-ink">
         <legend className="sr-only">Formato</legend>
         <label className="flex items-center gap-2">
-          <input type="radio" name="formato" value="cinema" checked={formato === "cinema"} onChange={() => setFormato("cinema")} className="accent-accent" /> Cinema (pinturas em 3D, 45 a 60 s)
+          <input type="radio" name="formato" value="cinema" checked={formato === "cinema"} onChange={() => setFormato("cinema")} className="accent-accent" /> Cinema (pinturas em 3D, com mistério)
         </label>
         <label className="flex items-center gap-2">
-          <input type="radio" name="formato" value="catequese" checked={formato === "catequese"} onChange={() => setFormato("catequese")} className="accent-accent" /> Catequese (aula narrada, 45 a 60 s)
+          <input type="radio" name="formato" value="catequese" checked={formato === "catequese"} onChange={() => setFormato("catequese")} className="accent-accent" /> Catequese (aula, formação)
         </label>
         <label className="flex items-center gap-2">
-          <input type="radio" name="formato" value="objecao" checked={formato === "objecao"} onChange={() => setFormato("objecao")} className="accent-accent" /> Objeção (resposta curta, 30 a 45 s)
+          <input type="radio" name="formato" value="objecao" checked={formato === "objecao"} onChange={() => setFormato("objecao")} className="accent-accent" /> Objeção (resposta a uma acusação)
         </label>
       </fieldset>
+      <label className="flex flex-col gap-1 text-meta text-ink">
+        Duração
+        <select value={duracao} onChange={(evento) => setDuracao(evento.target.value)} className={CAMPO}>
+          {DURACOES.map((opcao) => (
+            <option key={opcao.valor} value={opcao.valor}>
+              {opcao.nome}
+            </option>
+          ))}
+        </select>
+      </label>
       <label className={`flex items-center gap-2 text-meta ${podeVoz ? "text-ink" : "text-ink-muted"}`}>
         <input
           type="checkbox"
@@ -76,7 +87,7 @@ function NovoPedido() {
           onChange={(evento) => setMinhaVoz(evento.target.checked)}
           className="accent-accent"
         />
-        Narrar com a minha voz {podeVoz ? "(você grava o roteiro aqui no painel)" : "(só no Cinema e na Objeção)"}
+        Narrar com a minha voz (você grava o roteiro aqui no painel)
       </label>
       <div className="flex flex-wrap items-center gap-3">
         <button type="submit" disabled={enviando} className="btn btn-primary disabled:opacity-60">
@@ -87,7 +98,7 @@ function NovoPedido() {
         </p>
       </div>
       <p className="text-meta text-ink-muted">
-        Leva de 20 a 35 minutos no seu computador. O roteiro traz afirmações de fé: revise antes de publicar.
+        O roteiro fica pronto em 15 a 40 minutos; depois da sua gravação, o vídeo leva de 10 minutos (curto) a uma hora (10 minutos de vídeo). O roteiro traz afirmações de fé: revise antes de publicar.
       </p>
     </form>
   );
@@ -170,11 +181,11 @@ function Series() {
   const router = useRouter();
   const [ocupado, iniciar] = useTransition();
   const [mensagem, setMensagem] = useState("");
-  const [minhaVoz, setMinhaVoz] = useState(false);
+  const [minhaVoz, setMinhaVoz] = useState(true);
 
   function pedir(serie: "santo" | "evangelho") {
     iniciar(async () => {
-      const resultado = await pedirSerieAction(serie, serie === "santo" && minhaVoz);
+      const resultado = await pedirSerieAction(serie, minhaVoz);
       setMensagem(resultado.ok ? `Na fila: ${resultado.tema}.` : resultado.mensagem);
       if (resultado.ok) router.refresh();
     });
@@ -196,7 +207,7 @@ function Series() {
       </div>
       <label className="flex items-center gap-2 text-meta text-ink">
         <input type="checkbox" checked={minhaVoz} onChange={(evento) => setMinhaVoz(evento.target.checked)} className="accent-accent" />
-        Santo narrado com a minha voz
+        Narrados com a minha voz
       </label>
       <p role="status" aria-live="polite" className="text-meta text-ink-muted">
         {mensagem}

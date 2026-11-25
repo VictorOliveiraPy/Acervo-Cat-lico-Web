@@ -55,7 +55,20 @@ export function pedidoEmAndamento(status: string): boolean {
   return status === "na_fila" || status === "gerando";
 }
 
-/** Só o modelo Cinema (e a Objeção, que usa o Cinema) sincroniza uma gravação real. */
+/** Todos os modelos de vídeo (Cinema, Catequese e Objeção) sincronizam a gravação real. */
 export function aceitaVozPropria(formato: string): boolean {
-  return formato === "cinema" || formato === "objecao";
+  return formato === "cinema" || formato === "catequese" || formato === "objecao";
+}
+
+/** Quanto o vídeo dura. Na automática, o roteirista decide pelo assunto (1 a 10 minutos). */
+export const DURACOES = [
+  { valor: "auto", nome: "Conforme o assunto (1 a 10 min)", nota: "" },
+  { valor: "curto", nome: "Curto (1 a 2 min)", nota: "Duração: de 1 a 2 minutos de fala." },
+  { valor: "medio", nome: "Médio (3 a 5 min)", nota: "Duração: de 3 a 5 minutos de fala." },
+  { valor: "longo", nome: "Longo (6 a 10 min)", nota: "Duração: de 6 a 10 minutos de fala." },
+] as const;
+
+export function notasComDuracao(notas: string, duracao: string): string {
+  const nota = DURACOES.find((opcao) => opcao.valor === duracao)?.nota ?? "";
+  return [notas.trim(), nota].filter(Boolean).join("\n");
 }
