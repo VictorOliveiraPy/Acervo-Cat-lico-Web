@@ -48,9 +48,18 @@ test("endereço que não existe responde 404 com a página do site", async ({ pa
   await expect(page.getByRole("link", { name: /compêndio/i }).first()).toBeVisible();
 });
 
-test("o perfil pede login a quem não entrou", async ({ page }) => {
+test("o perfil leva quem não entrou à página da jornada", async ({ page }) => {
   await page.goto("/perfil");
-  await expect(page).toHaveURL(/\/api\/auth\/signin/);
+  await expect(page).toHaveURL(/\/jornada$/);
+  await expect(page.getByRole("button", { name: /criar minha conta/i }).first()).toBeVisible();
+});
+
+test("o cabeçalho convida o visitante para a jornada", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("link", { name: /comece sua jornada/i }).click();
+  await expect(page).toHaveURL(/\/jornada$/);
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(/santo/i);
+  await expect(page.getByRole("listitem").filter({ hasText: /^100Santo Glorificado$/ })).toBeVisible();
 });
 
 test("em inglês, da home até um santo", async ({ page }) => {

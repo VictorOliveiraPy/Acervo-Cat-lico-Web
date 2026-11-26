@@ -102,6 +102,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // A página /sobre é fundamental para E-E-A-T — precisa estar no sitemap
     // agora que o conteúdo foi escrito e index: true está ativo.
     { url: `${SITE_URL}/sobre`, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${SITE_URL}/jornada`, changeFrequency: "monthly", priority: 0.8 },
     // Indexável desde a auditoria de SEO de 2026-09-18 (ver
     // app/liturgia-diaria/page.tsx) — troca de conteúdo todo dia, daí
     // `changeFrequency: "daily"` em vez de "weekly".

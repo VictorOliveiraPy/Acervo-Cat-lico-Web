@@ -4,7 +4,7 @@ import { notFound, redirect } from "next/navigation";
 
 import { PatronChoice } from "@/components/perfil/PatronChoice";
 import { PerfilView } from "@/components/perfil/PerfilView";
-import { ProfileForm } from "@/components/ProfileForm";
+import { ProfileForm, SairDaConta } from "@/components/ProfileForm";
 import { LESSONS } from "@/lib/academia";
 import { currentUser } from "@/lib/auth";
 import { LOGIN_ENABLED } from "@/lib/auth-public";
@@ -20,7 +20,8 @@ export default async function PerfilPage() {
   if (!LOGIN_ENABLED) notFound();
 
   const user = await currentUser();
-  if (!user) redirect("/api/auth/signin?callbackUrl=/perfil");
+  // Quem não entrou vê primeiro o que a conta oferece, e cria a conta de lá.
+  if (!user) redirect("/jornada");
 
   const profile = await syncProfile(user.subject, user.name);
   if (profile.padroeiro_id === null) {
@@ -38,6 +39,9 @@ export default async function PerfilPage() {
 
   return (
     <div className="mx-auto max-w-shell px-4 py-10 sm:px-6">
+      <div className="mb-4 flex justify-end">
+        <SairDaConta />
+      </div>
       <PerfilView
         nome={profile.nome}
         pontos={profile.pontos}

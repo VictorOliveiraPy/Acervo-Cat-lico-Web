@@ -20,6 +20,15 @@ function SaveButton() {
   );
 }
 
+/** Sair da conta, no topo do perfil: no fim da página, quase ninguém achava. */
+export function SairDaConta() {
+  return (
+    <button type="button" onClick={() => void signOut({ callbackUrl: "/" })} className="btn-tertiary">
+      Sair da conta
+    </button>
+  );
+}
+
 export function ProfileForm({ nome, noRanking }: { nome: string; noRanking: boolean }) {
   const [state, action] = useFormState(saveProfileAction, INITIAL_STATE);
 

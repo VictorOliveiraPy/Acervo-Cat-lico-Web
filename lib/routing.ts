@@ -33,6 +33,7 @@ const SINGLE_SEGMENT_ROUTES = new Set([
   "sobre",
   "santo-do-dia",
   "ranking",
+  "jornada",
   "reels",
   "icon",
   "apple-icon",
