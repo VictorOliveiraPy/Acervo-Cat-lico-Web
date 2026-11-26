@@ -12,6 +12,13 @@ const ICONES: Record<Grupo, React.ReactNode> = {
       <path d="M6 21c.6-3.4 3-5 6-5s5.4 1.6 6 5" />
     </>
   ),
+  // Estrada que sobe até uma cruz: o Caminho da Santidade.
+  santidade: (
+    <>
+      <path d="M6 21c0-4 6-4 6-8s-4-4-4-7" />
+      <path d="M12 3v5M10 5h4" />
+    </>
+  ),
   // Livro aberto: a Academia da Fé.
   estudo: <path d="M12 6.5C10 5 7.5 4.5 4 4.5v13c3.5 0 6 .5 8 2 2-1.5 4.5-2 8-2v-13c-3.5 0-6 .5-8 2Zm0 0v13" />,
   // Pergaminho: o que a pessoa guarda e escreve.

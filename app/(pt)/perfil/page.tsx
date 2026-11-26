@@ -8,7 +8,7 @@ import { ProfileForm, SairDaConta } from "@/components/ProfileForm";
 import { LESSONS } from "@/lib/academia";
 import { currentUser } from "@/lib/auth";
 import { LOGIN_ENABLED } from "@/lib/auth-public";
-import { listFavorites, listNotes, syncProfile } from "@/lib/services/perfilService";
+import { fetchCaminho, listFavorites, listNotes, syncProfile } from "@/lib/services/perfilService";
 
 export const metadata: Metadata = {
   title: "Meu perfil",
@@ -31,10 +31,12 @@ export default async function PerfilPage() {
       </div>
     );
   }
-  const [favoritos, anotacoes] = await Promise.all([
+  const [favoritos, anotacoes, trilha] = await Promise.all([
     listFavorites(user.subject),
     listNotes(user.subject),
+    fetchCaminho().catch(() => null),
   ]);
+  const proxima = trilha?.casas.find((casa) => casa.numero === profile.caminho.concluidas + 1);
   const completed = LESSONS.filter(({ slug }) => profile.licoes.includes(slug));
 
   return (
@@ -54,6 +56,13 @@ export default async function PerfilPage() {
         favoritos={favoritos}
         anotacoes={anotacoes}
         licoes={LESSONS.map(({ slug, title }) => ({ slug, title }))}
+        caminho={{
+          concluidas: profile.caminho.concluidas,
+          total: trilha?.casas.length ?? 36,
+          proxima: proxima
+            ? { titulo: proxima.titulo, via: trilha?.vias.find((via) => via.id === proxima.via)?.nome ?? "" }
+            : null,
+        }}
       />
 
       <section aria-labelledby="minhas-licoes" className="mt-12 border-t border-border pt-8">

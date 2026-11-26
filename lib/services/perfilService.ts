@@ -6,6 +6,7 @@
 import { z } from "zod";
 
 import { ApiError, apiGet, getApiBaseUrl } from "@/lib/api";
+import { caminhoSchema, progressoNoCaminhoSchema, type Caminho } from "@/lib/caminho";
 import { isPatronId } from "@/lib/padroeiros";
 import {
   activitySchema,
@@ -32,6 +33,7 @@ const profileSchema = z.object({
   atividades: z.array(activitySchema),
   nivel: levelSchema,
   sequencia: streakSchema,
+  caminho: progressoNoCaminhoSchema,
 });
 
 export type Profile = z.output<typeof profileSchema>;
@@ -60,6 +62,11 @@ async function privateRequest(
     });
   } catch {
     throw new ApiError("Não foi possível falar com o acervo.", 503, "NETWORK_ERROR");
+  }
+  if (response.status === 409) {
+    // Regra de negócio recusada (ex.: casa do Caminho ainda bloqueada): a API explica.
+    const body = (await response.json().catch(() => ({}))) as { message?: string; code?: string };
+    throw new ApiError(body.message ?? "Ainda não dá para fazer isso.", 409, body.code ?? "CONFLITO");
   }
   if (!response.ok) {
     throw new ApiError("Não foi possível acessar o perfil.", response.status, "PERFIL_ERRO");
@@ -91,6 +98,16 @@ export async function completeLessons(subject: string, licoes: string[]): Promis
 
 export async function completeActivity(subject: string, atividade: string): Promise<Profile> {
   return profileFrom(await privateRequest("POST", "/perfil/atividades", subject, { atividade }));
+}
+
+/** Conclui a próxima casa do Caminho da Santidade; 409 traz o motivo quando não dá. */
+export async function advanceOnPath(subject: string, casa: number): Promise<Profile> {
+  return profileFrom(await privateRequest("POST", "/perfil/caminho", subject, { casa }));
+}
+
+/** A trilha é pública e muda pouco: uma hora de cache. */
+export async function fetchCaminho(): Promise<Caminho> {
+  return apiGet("/caminho", caminhoSchema, { revalidateSeconds: 3600 });
 }
 
 export async function deleteProfile(subject: string): Promise<void> {

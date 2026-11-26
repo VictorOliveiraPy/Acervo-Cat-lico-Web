@@ -29,11 +29,11 @@ const CATEGORIES = new Set<string>(CATEGORY_SLUGS);
 const SINGLE_SEGMENT_ROUTES = new Set([
   "busca",
   "velas",
-  "perfil",
   "sobre",
   "santo-do-dia",
   "ranking",
   "jornada",
+  "caminho-da-santidade",
   "reels",
   "icon",
   "apple-icon",
@@ -95,6 +95,10 @@ export function classifyPath(pathname: string): PathVerdict {
   if (first === "instagram") return segments.length <= MAX_INSTAGRAM_SEGMENTS ? OK : NOT_FOUND;
   // `/painel`, `/painel/videos`, `/painel/videos/baixar/{slug}`: só administração.
   if (first === "painel") return segments.length <= MAX_PAINEL_SEGMENTS ? OK : NOT_FOUND;
+  // `/perfil` e `/perfil/caminho` (a trilha do Caminho da Santidade).
+  if (first === "perfil") {
+    return segments.length === 1 || (segments.length === 2 && segments[1] === "caminho") ? OK : NOT_FOUND;
+  }
   if (SINGLE_SEGMENT_ROUTES.has(first)) return segments.length === 1 ? OK : NOT_FOUND;
   return NOT_FOUND;
 }

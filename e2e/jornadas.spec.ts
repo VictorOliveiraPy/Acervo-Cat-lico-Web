@@ -149,3 +149,19 @@ test("a contagem de visita responde sem atrapalhar a página", async ({ page, re
   const resposta = await request.post("/api/metricas", { data: "lixo" });
   expect(resposta.status()).toBe(204);
 });
+
+test("a home convida para o Caminho da Santidade e a trilha mostra as 36 casas", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("link", { name: "Conhecer o Caminho" }).click();
+  await expect(page).toHaveURL(/\/caminho-da-santidade$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Caminho da Santidade");
+  await expect(page.locator("li[id^='casa-']")).toHaveCount(36);
+  await expect(page.getByRole("heading", { name: "Via Unitiva", level: 3 }).first()).toBeVisible();
+  const jsonLd = await page.locator("script[type='application/ld+json']").allTextContents();
+  expect(jsonLd.join(" ")).toContain("FAQPage");
+});
+
+test("a trilha pessoal leva quem não entrou à página pública do Caminho", async ({ page }) => {
+  await page.goto("/perfil/caminho");
+  await expect(page).toHaveURL(/\/caminho-da-santidade$/);
+});

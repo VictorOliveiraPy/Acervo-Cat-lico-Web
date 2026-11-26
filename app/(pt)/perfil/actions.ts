@@ -6,6 +6,7 @@ import { LESSONS, lessonBySlug } from "@/lib/academia";
 import { isCorrectAnswer } from "@/lib/academiaProgress";
 import { conquistas, resumoDoProgresso } from "@/lib/conquistas";
 import { ApiError } from "@/lib/api";
+import type { ProgressoNoCaminho } from "@/lib/caminho";
 import { currentUser } from "@/lib/auth";
 import { isPatronId } from "@/lib/padroeiros";
 import {
@@ -22,6 +23,7 @@ import {
 import {
   addFavorite,
   addNote,
+  advanceOnPath,
   completeActivity,
   completeLessons,
   deleteFavorite,
@@ -269,9 +271,39 @@ export async function homeProgressAction(): Promise<HomeProgressResult> {
       licoesTotal: LESSONS.length,
       favoritos: favoritos.length,
       anotacoes: anotacoes.length,
+      caminho: profile.caminho.concluidas,
     });
     return { status: "ok", ...resumoDoProgresso(profile.nome, profile.sequencia.atual, lista) };
   } catch (error: unknown) {
+    if (error instanceof ApiError) return { status: "error" };
+    throw error;
+  }
+}
+
+export type AdvancePathResult =
+  | { status: "saved"; caminho: ProgressoNoCaminho; pontos: number; atividades: Activity[]; nivel: Level; sequencia: Streak }
+  | { status: "blocked"; mensagem: string }
+  | { status: "anonymous" | "error" };
+
+/** Conclui a próxima casa do Caminho da Santidade. A regra (qual casa, com que tarefa) é da API. */
+export async function advancePathAction(casa: number): Promise<AdvancePathResult> {
+  if (!Number.isInteger(casa) || casa < 1 || casa > 100) return { status: "error" };
+  const user = await currentUser();
+  if (!user) return { status: "anonymous" };
+  try {
+    const profile = await advanceOnPath(user.subject, casa);
+    revalidatePath("/perfil");
+    revalidatePath("/perfil/caminho");
+    return {
+      status: "saved",
+      caminho: profile.caminho,
+      pontos: profile.pontos,
+      atividades: profile.atividades,
+      nivel: profile.nivel,
+      sequencia: profile.sequencia,
+    };
+  } catch (error: unknown) {
+    if (error instanceof ApiError && error.status === 409) return { status: "blocked", mensagem: error.message };
     if (error instanceof ApiError) return { status: "error" };
     throw error;
   }

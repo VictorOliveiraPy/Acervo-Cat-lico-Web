@@ -12,9 +12,11 @@ export type ProgressoDoPerfil = {
   licoesTotal: number;
   favoritos: number;
   anotacoes: number;
+  /** Casas do Caminho da Santidade concluídas. */
+  caminho: number;
 };
 
-export type Grupo = "constancia" | "caminho" | "estudo" | "tesouro";
+export type Grupo = "constancia" | "caminho" | "estudo" | "tesouro" | "santidade";
 
 type Definicao = {
   id: string;
@@ -49,6 +51,14 @@ const nivel = (id: string, nome: string, alvo: number, descricao: string): Defin
   descricao,
   grupo: "caminho",
   meta: (p) => ({ atual: p.nivel, alvo }),
+});
+
+const trilha = (id: string, nome: string, casas: number, descricao: string): Definicao => ({
+  id,
+  nome,
+  descricao,
+  grupo: "santidade",
+  meta: (p) => ({ atual: p.caminho, alvo: casas }),
 });
 
 export const CONQUISTAS: readonly Definicao[] = [
@@ -95,6 +105,9 @@ export const CONQUISTAS: readonly Definicao[] = [
     grupo: "tesouro",
     meta: (p) => ({ atual: p.anotacoes, alvo: 10 }),
   },
+  trilha("via-purgativa", "Via Purgativa", 12, "Conclua a primeira via do Caminho da Santidade"),
+  trilha("via-iluminativa", "Via Iluminativa", 24, "Conclua a segunda via do Caminho da Santidade"),
+  trilha("santidade", "Santidade", 36, "Chegue ao fim do Caminho da Santidade"),
 ];
 
 export function conquistas(p: ProgressoDoPerfil): Conquista[] {
@@ -122,6 +135,7 @@ export function quantoFalta(conquista: Conquista): string {
     caminho: ["nível", "níveis"],
     estudo: ["lição", "lições"],
     tesouro: conquista.id === "diario-espiritual" ? ["anotação", "anotações"] : ["texto", "textos"],
+    santidade: ["casa", "casas"],
   };
   const [singular, plural] = unidade[conquista.grupo];
   return falta === 1 ? `falta 1 ${singular}` : `faltam ${falta} ${plural}`;

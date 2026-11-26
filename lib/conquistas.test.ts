@@ -10,7 +10,7 @@ import {
   type ProgressoDoPerfil,
 } from "@/lib/conquistas";
 
-const ZERO: ProgressoDoPerfil = { recorde: 0, nivel: 1, licoes: 0, licoesTotal: 12, favoritos: 0, anotacoes: 0 };
+const ZERO: ProgressoDoPerfil = { recorde: 0, nivel: 1, licoes: 0, licoesTotal: 12, favoritos: 0, anotacoes: 0, caminho: 0 };
 const ganhas = (p: ProgressoDoPerfil) => conquistas(p).filter((c) => c.ganha).map((c) => c.id);
 
 describe("conquistas", () => {
@@ -62,7 +62,7 @@ describe("próxima conquista", () => {
   });
 
   it("não existe quando todas foram ganhas", () => {
-    const tudo = { recorde: 365, nivel: 100, licoes: 12, licoesTotal: 12, favoritos: 25, anotacoes: 10 };
+    const tudo = { recorde: 365, nivel: 100, licoes: 12, licoesTotal: 12, favoritos: 25, anotacoes: 10, caminho: 36 };
     expect(proximaConquista(conquistas(tudo))).toBeNull();
   });
 
@@ -114,7 +114,23 @@ describe("resumo do progresso na home", () => {
   });
 
   it("com tudo ganho, diz isso", () => {
-    const tudo = conquistas({ recorde: 365, nivel: 100, licoes: 12, licoesTotal: 12, favoritos: 25, anotacoes: 10 });
+    const tudo = conquistas({ recorde: 365, nivel: 100, licoes: 12, licoesTotal: 12, favoritos: 25, anotacoes: 10, caminho: 36 });
     expect(resumoDoProgresso("Ana", 3, tudo).detalhe).toBe("Todas as conquistas ganhas. Que graça!");
+  });
+});
+
+
+describe("Caminho da Santidade", () => {
+  it("cada via concluída é uma conquista, e a última é a santidade", () => {
+    expect(ganhas({ ...ZERO, caminho: 11 })).toEqual([]);
+    expect(ganhas({ ...ZERO, caminho: 12 })).toEqual(["via-purgativa"]);
+    expect(ganhas({ ...ZERO, caminho: 36 })).toEqual(["via-purgativa", "via-iluminativa", "santidade"]);
+  });
+
+  it("diz quantas casas faltam", () => {
+    const santidade = conquistas({ ...ZERO, caminho: 35 }).find((c) => c.id === "santidade")!;
+    expect(quantoFalta(santidade)).toBe("falta 1 casa");
+    const via = conquistas({ ...ZERO, caminho: 2 }).find((c) => c.id === "via-purgativa")!;
+    expect(quantoFalta(via)).toBe("faltam 10 casas");
   });
 });

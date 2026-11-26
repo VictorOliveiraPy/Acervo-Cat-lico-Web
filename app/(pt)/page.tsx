@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { CaminhoConvite } from "@/components/CaminhoConvite";
 import { EntryGrid } from "@/components/EntryGrid";
 import { EditorialStrip } from "@/components/HomeArt";
 import { HomeHero } from "@/components/HomeHero";
@@ -219,6 +220,10 @@ export default async function HomePage() {
 
         <div className="pb-10">
           <HomeProgress />
+        </div>
+
+        <div className="pb-10">
+          <CaminhoConvite />
         </div>
 
         <div className="pb-10">

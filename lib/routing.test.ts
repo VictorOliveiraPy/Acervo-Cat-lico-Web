@@ -26,6 +26,11 @@ describe("classifyPath", () => {
     expect(classifyPath("/liturgia-diaria/2026-10-30/x")).toEqual({ kind: "not-found" });
     expect(classifyPath("/ranking")).toEqual({ kind: "ok" });
     expect(classifyPath("/jornada")).toEqual({ kind: "ok" });
+    expect(classifyPath("/caminho-da-santidade")).toEqual({ kind: "ok" });
+    expect(classifyPath("/perfil")).toEqual({ kind: "ok" });
+    expect(classifyPath("/perfil/caminho")).toEqual({ kind: "ok" });
+    expect(classifyPath("/perfil/outra")).toEqual({ kind: "not-found" });
+    expect(classifyPath("/perfil/caminho/x")).toEqual({ kind: "not-found" });
     expect(classifyPath("/reels")).toEqual({ kind: "ok" });
     expect(classifyPath("/reels/x")).toEqual({ kind: "not-found" });
     expect(classifyPath("/santo-do-dia")).toEqual({ kind: "ok" });

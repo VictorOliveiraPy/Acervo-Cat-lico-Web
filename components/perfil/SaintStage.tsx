@@ -65,10 +65,13 @@ export function SaintStage({
   saintId,
   saintName,
   estagio = 1,
+  compacto = false,
 }: {
   saintId: PatronId;
   saintName: string;
   estagio?: number;
+  /** Pequeno, sobre a trilha do Caminho: sem a dica de girar, que não cabe ali. */
+  compacto?: boolean;
 }) {
   const light = STAGE_LIGHT[estagio];
   const [webGl, setWebGl] = useState<boolean | null>(null);
@@ -103,7 +106,7 @@ export function SaintStage({
             label={`Imagem 3D de ${saintName}. Arraste para girar.`}
             onFirstDrag={() => setShowHint(false)}
           />
-          {showHint ? (
+          {showHint && !compacto ? (
             <p className="pointer-events-none absolute inset-x-0 bottom-3.5 text-center text-label text-ink-muted [letter-spacing:0]">
               Arraste para girar
             </p>

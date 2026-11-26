@@ -54,6 +54,7 @@ export function PerfilView({
   favoritos,
   anotacoes,
   licoes,
+  caminho,
 }: {
   nome: string;
   pontos: number;
@@ -66,6 +67,7 @@ export function PerfilView({
   favoritos: readonly Favorite[];
   anotacoes: readonly Note[];
   licoes: ReadonlyArray<{ slug: string; title: string }>;
+  caminho: { concluidas: number; total: number; proxima: { titulo: string; via: string } | null };
 }) {
   const [pontos, setPontos] = useState(pontosIniciais);
   const [atividades, setAtividades] = useState<readonly Activity[]>(atividadesIniciais);
@@ -89,6 +91,7 @@ export function PerfilView({
     licoesTotal,
     favoritos: favorites.length,
     anotacoes: notes.length,
+    caminho: caminho.concluidas,
   };
   const listaDeConquistas = conquistas(progresso);
 
@@ -207,6 +210,39 @@ export function PerfilView({
             </p>
           </div>
         </div>
+      </section>
+
+      <section
+        aria-labelledby="caminho-titulo"
+        className="flex flex-col gap-4 rounded-panel border border-gold/50 bg-gradient-to-r from-accent-soft to-surface p-5 sm:flex-row sm:items-center sm:justify-between"
+      >
+        <div className="min-w-0">
+          <p className="text-label font-semibold uppercase text-accent">Novo · Caminho da Santidade</p>
+          <h2 id="caminho-titulo" className="mt-1 font-display text-title-sm text-ink">
+            {caminho.proxima
+              ? caminho.concluidas === 0
+                ? "Comece a trilha: 36 casas até a santidade"
+                : `Próxima casa: ${caminho.proxima.titulo}`
+              : "Você chegou ao fim do Caminho!"}
+          </h2>
+          <div
+            role="progressbar"
+            aria-label="Casas concluídas no Caminho da Santidade"
+            aria-valuemin={0}
+            aria-valuemax={caminho.total}
+            aria-valuenow={caminho.concluidas}
+            className="mt-2 h-2 max-w-sm overflow-hidden rounded-full bg-border"
+          >
+            <div className="h-full rounded-full bg-gold" style={{ width: `${caminho.total ? (caminho.concluidas / caminho.total) * 100 : 0}%` }} />
+          </div>
+          <p className="mt-1 text-label text-ink-muted [letter-spacing:0]">
+            {caminho.concluidas} de {caminho.total} casas{caminho.proxima ? ` · ${caminho.proxima.via}` : ""}
+          </p>
+        </div>
+        {/* `<a>`: a trilha tem conteúdo privado e abre do zero, como o perfil. */}
+        <a href="/perfil/caminho" className="btn btn-primary shrink-0">
+          {caminho.concluidas === 0 ? "Começar o Caminho" : "Continuar o Caminho"}
+        </a>
       </section>
 
       <ActivitiesPanel

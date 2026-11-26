@@ -98,6 +98,17 @@ export default function JornadaPage() {
         </ol>
       </section>
 
+      <section className="mt-12 flex flex-col items-start gap-3 rounded-panel border border-gold/50 bg-accent-soft p-6 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-label font-semibold uppercase text-accent">Novo</p>
+          <h2 className="font-display text-title-sm text-ink">Caminho da Santidade: 36 casas até a santidade</h2>
+          <p className="mt-1 text-meta text-ink-muted">Uma trilha com tarefas de oração, estudo e sacramentos, e o seu santo caminhando com você.</p>
+        </div>
+        <Link href="/caminho-da-santidade" className="btn btn-primary shrink-0">
+          Conhecer o Caminho
+        </Link>
+      </section>
+
       <section aria-labelledby="titulos-titulo" className="mt-20">
         <h2 id="titulos-titulo" className="font-display text-title-md text-ink">
           Do Peregrino ao Santo Glorificado

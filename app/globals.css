@@ -260,3 +260,39 @@
     background-position: -120% 0;
   }
 }
+
+@layer components {
+  /* Casa atual do Caminho da Santidade: um anel que pulsa chamando para a próxima tarefa. */
+  .trilha-atual {
+    animation: trilha-pulso 1.8s ease-out infinite;
+  }
+
+  /* Casa recém-concluída: salta e brilha. */
+  .trilha-festa {
+    animation: trilha-festa 0.9s cubic-bezier(0.2, 1.6, 0.4, 1);
+  }
+}
+
+@keyframes trilha-pulso {
+  0% {
+    box-shadow: 0 6px 0 #5b2333, 0 0 0 0 rgb(140 49 62 / 0.45);
+  }
+  70% {
+    box-shadow: 0 6px 0 #5b2333, 0 0 0 18px rgb(140 49 62 / 0);
+  }
+  100% {
+    box-shadow: 0 6px 0 #5b2333, 0 0 0 0 rgb(140 49 62 / 0);
+  }
+}
+
+@keyframes trilha-festa {
+  0% {
+    transform: scale(0.6);
+  }
+  60% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
