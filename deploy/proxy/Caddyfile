@@ -42,3 +42,13 @@ leaonobrasil.com.br {
 www.leaonobrasil.com.br {
 	redir https://leaonobrasil.com.br{uri} permanent
 }
+
+# Invitationem (site de casamento): API Go em /opt/invitationem na VPS, rede deploy_default.
+# Endereço provisório via sslip.io (resolve sozinho para o IP da VPS); trocar pelo domínio definitivo depois.
+api-168-138-150-171.sslip.io {
+	encode zstd gzip
+	request_body {
+		max_size 20MB
+	}
+	reverse_proxy invitationem-api:8080
+}
