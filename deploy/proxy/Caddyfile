@@ -52,3 +52,13 @@ api-168-138-150-171.sslip.io {
 	}
 	reverse_proxy invitationem-api:8080
 }
+
+# Victor Hugo · Dev (site de divulgação): API Go em /opt/victorhugo-dev na VPS, rede deploy_default.
+# Só o servidor da Vercel chama esta API (segredo interno); endereço provisório via sslip.io.
+vhdev-168-138-150-171.sslip.io {
+	encode zstd gzip
+	request_body {
+		max_size 64KB
+	}
+	reverse_proxy victorhugo-dev-api:8080
+}
